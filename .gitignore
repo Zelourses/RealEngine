@@ -1,0 +1,8 @@
+# IDE dir
+.vs/
+
+# Build dir
+out/
+
+# IDE Files
+*.user
