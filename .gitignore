@@ -6,3 +6,8 @@ out/
 
 # IDE Files
 *.user
+*.sln
+*.vcxproj*
+
+#Buld config
+*.bat
