@@ -10,3 +10,4 @@
 	#error Engine supports only Windows on that moment
 #endif 
 
+#define BIT_SHIFT(x) (1<<x)
