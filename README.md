@@ -8,6 +8,17 @@ You can:
 + write logs
 + call event system
 
+## How to build it?
+Of course by using precious [PreMake](https://github.com/premake/premake-core)  
+`git pull` this project, then `cd ./RealEngine`  
+And just run `premake <build type>`  
+And then you can run this thing
+
+## Structure
+This project has 2 "modules" in it.  
+1) `RealEngine` - the engine himself, works like dynamic library
+2) `Sandbox` - project that will use the engine, more like Editor
+
 ## Libraries
 For now this engine is using:
 + [spdlog](https://github.com/gabime/spdlog)
