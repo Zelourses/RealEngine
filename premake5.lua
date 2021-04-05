@@ -17,6 +17,9 @@ project "RealEngine"
     targetdir ("out/"..outputDir.. "/%{prj.name}")
     objdir ("out/build/"..outputDir.. "/%{prj.name}")
 
+    pchheader "repch.h"
+    pchsource "RealEngine/src/repch.cpp"
+
     files {
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.cpp"

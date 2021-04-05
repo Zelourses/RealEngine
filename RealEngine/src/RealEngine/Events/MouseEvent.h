@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Event.h"
-#include <sstream>
+
 
 namespace RealEngine {
 	class RE_API MouseMovedEvent : public Event {
