@@ -3,16 +3,18 @@ Game engine that i realistically could create by myself(almost). I'll try to do 
 
 ## What this thing can do?
 On this time, well...  
-It's initial building stage, so you don't have big possibilities.  
+It's developing, so you don't have big possibilities(for now, i hope).  
 You can: 
 + write logs
 + call event system
++ look at one-color non-closing window
 
 ## How to build it?
 Of course by using precious [PreMake](https://github.com/premake/premake-core)  
-`git pull` this project, then `cd ./RealEngine`  
+`git clone --recursive` this project, then `cd RealEngine`  
 And just run `premake <build type>`  
-And then you can run this thing
+And then you will get project to run.  
+Launch `Sandbox` module and it will build everything for you
 
 ## Structure
 This project has 2 "modules" in it.  
@@ -22,3 +24,4 @@ This project has 2 "modules" in it.
 ## Libraries
 For now this engine is using:
 + [spdlog](https://github.com/gabime/spdlog)
++ My forked [GLFW](https://github.com/Zelourses/glfw) with `premake5.lua` inside
