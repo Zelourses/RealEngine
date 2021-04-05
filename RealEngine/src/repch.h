@@ -13,6 +13,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "RealEngine/Log.h"
+
 #ifdef RE_PLATFORM_WINDOWS
 #include <Windows.h>
 #endif

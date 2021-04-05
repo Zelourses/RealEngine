@@ -9,6 +9,11 @@ workspace "RealEngine"
 
 outputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+includeDir = {}
+includeDir["GLFW"] = "RealEngine/vendor/glfw/include"
+
+include "RealEngine/vendor/glfw"
+
 project "RealEngine"
     location "RealEngine"
     kind "SharedLib"
@@ -27,7 +32,13 @@ project "RealEngine"
 
     includedirs {
         "%{prj.name}/src",
-        "%{prj.name}/vendor/spdlog/include"
+        "%{prj.name}/vendor/spdlog/include",
+        "%{includeDir.GLFW}"
+    }
+
+    links{
+        "GLFW",
+        "opengl32.lib"
     }
 
     filter "system:windows"
@@ -44,7 +55,8 @@ project "RealEngine"
         }
     filter "configurations:Debug"
         defines {
-            "RE_DEBUG"
+            "RE_DEBUG",
+            "RE_ENABLE_ASSERTS"
         }
         symbols "On"
     
