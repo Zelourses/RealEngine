@@ -24,7 +24,7 @@ namespace RealEngine {
 
 		std::string toString() const override {
 			std::stringstream stream;
-			stream << "KeyPressedEvent: " << keyCode << " (" << repeatCount << "repeats)";
+			stream << "KeyPressedEvent: " << keyCode << " (" << repeatCount << " repeats)";
 			return stream.str();
 		}
 
