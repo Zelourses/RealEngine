@@ -43,10 +43,10 @@ namespace RealEngine {
 		inline bool isInCategory(EventCategory category) {
 			return getCategoryFlags() & category;
 		}
-	private:
-		friend class EventDispatcher;
-	protected:
+
+		
 		bool handled = false;
+		
 	};
 
 	class EventDispatcher {

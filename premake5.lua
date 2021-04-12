@@ -58,18 +58,21 @@ project "RealEngine"
             "RE_DEBUG",
             "RE_ENABLE_ASSERTS"
         }
+        buildoptions "/MDd"
         symbols "On"
     
     filter "configurations:Release"
         defines {
             "RE_RELEASE"
         }
+        buildoptions "/MD"
         optimize "On"
 
     filter "configurations:Dist"
         defines {
             "RE_DIST"
         }
+        buildoptions "/MD"
         optimize "On"
 
 
@@ -108,16 +111,19 @@ project "Sandbox"
         defines {
             "RE_DEBUG"
         }
+        buildoptions "/MDd"
         symbols "On"
     
     filter "configurations:Release"
         defines {
             "RE_RELEASE"
         }
+        buildoptions "/MD"
         optimize "On"
 
     filter "configurations:Dist"
         defines {
             "RE_DIST"
         }
+        buildoptions "/MD"
         optimize "On"

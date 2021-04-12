@@ -1,9 +1,11 @@
 #pragma once
 
 #include "Core.h"
-#include "Events/Event.h"
+
 #include "Window.h"
-#include "Events/ApplicationEvent.h"
+#include "LayerStack.h"
+#include "Events/Event.h"
+#include "RealEngine/Events/ApplicationEvent.h"
 
 namespace RealEngine {
 	class RE_API Application {
@@ -11,6 +13,9 @@ namespace RealEngine {
 		void run();
 
 		void onEvent(Event& e);
+
+		void pushLayer(Layer* layer);
+		void pushOverlay(Layer* overlay);
 		
 		Application();
 		virtual ~Application();
@@ -19,6 +24,8 @@ namespace RealEngine {
 		
 		std::unique_ptr<Window> window;
 		bool windowRunning = true;
+
+		LayerStack layerStack;
 	};
 
 	//Client definition

@@ -8,6 +8,7 @@
 namespace RealEngine {
 
 #define BIND_EVENT_FN(x) std::bind(&x,this, std::placeholders::_1)
+
 	Application::Application()
 	{
 		window = std::unique_ptr<Window>(Window::create());
@@ -17,18 +18,33 @@ namespace RealEngine {
 	void Application::onEvent(Event& e) {
 		EventDispatcher dispatcher(e);
 		dispatcher.dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
-		
-		RE_CORE_TRACE("{0}",e);
+
+		for (auto it = layerStack.end(); it != layerStack.begin();) {
+			(*--it)->onEvent(e);
+			if (e.handled)
+				break;
+		}
 	}
-	
-	
 
 	void Application::run() {
 		while (windowRunning){
 			glClearColor(.3f, .2f, .8f, 1.f);
 			glClear(GL_COLOR_BUFFER_BIT);
+
+			for(Layer* layer: layerStack) {
+				layer->onUpdate();
+			}
+			
 			window->onUpdate();
 		}
+	}
+
+	void Application::pushLayer(Layer* layer) {
+		layerStack.pushLayer(layer);
+	}
+
+	void Application::pushOverlay(Layer* overlay) {
+		layerStack.pushOverlay(overlay);
 	}
 
 	Application::~Application()
