@@ -11,8 +11,10 @@ outputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 includeDir = {}
 includeDir["GLFW"] = "RealEngine/vendor/glfw/include"
+includeDir["Glad"] = "RealEngine/vendor/glad/include"
 
 include "RealEngine/vendor/glfw"
+include "RealEngine/vendor/glad"
 
 project "RealEngine"
     location "RealEngine"
@@ -33,11 +35,13 @@ project "RealEngine"
     includedirs {
         "%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include",
-        "%{includeDir.GLFW}"
+        "%{includeDir.GLFW}",
+        "%{includeDir.Glad}"
     }
 
     links{
         "GLFW",
+        "Glad",
         "opengl32.lib"
     }
 
@@ -48,7 +52,8 @@ project "RealEngine"
 
         defines {
             "RE_PLATFORM_WINDOWS",
-            "RE_BUILD_DLL"
+            "RE_BUILD_DLL",
+            "GLFW_INCLUDE_NONE"
         }
         postbuildcommands {
             ("{COPY} %{cfg.buildtarget.relpath} ../out/" .. outputDir .. "/Sandbox")
