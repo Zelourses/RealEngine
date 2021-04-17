@@ -4,3 +4,6 @@
 [submodule "RealEngine/vendor/glfw"]
 	path = RealEngine/vendor/glfw
 	url = https://github.com/Zelourses/glfw
+[submodule "RealEngine/vendor/imgui"]
+	path = RealEngine/vendor/imgui
+	url = https://github.com/Zelourses/imgui.git

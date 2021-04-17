@@ -95,6 +95,14 @@ namespace RealEngine{
 			}
 		});
 
+
+		glfwSetCharCallback(window,[](GLFWwindow* _window, unsigned int keyCode) {
+			WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(_window));
+
+			KeyTypedEvent event(static_cast<int>(keyCode));
+			data.eventCallback(event);
+		});
+
 		glfwSetMouseButtonCallback(window, [](GLFWwindow* _window, int button, int action, int mods) {
 			WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(_window));
 

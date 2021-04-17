@@ -16,6 +16,10 @@ namespace RealEngine {
 
 		void pushLayer(Layer* layer);
 		void pushOverlay(Layer* overlay);
+
+		inline static Application& getApplication() { return *appInstance; }
+
+		inline Window& getWindow() const { return *window; }
 		
 		Application();
 		virtual ~Application();
@@ -26,6 +30,8 @@ namespace RealEngine {
 		bool windowRunning = true;
 
 		LayerStack layerStack;
+
+		static Application* appInstance;
 	};
 
 	//Client definition

@@ -19,3 +19,5 @@
 #endif
 
 #define BIT_SHIFT(x) (1<<x)
+
+#define RE_BIND_EVENT_FN(x) std::bind(&x,this, std::placeholders::_1)

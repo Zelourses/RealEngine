@@ -35,7 +35,6 @@ namespace RealEngine {
 
 	};
 
-
 	class RE_API KeyReleasedEvent : public KeyEvent {
 	public:
 		KeyReleasedEvent(int keyCode)
@@ -48,5 +47,20 @@ namespace RealEngine {
 		}
 
 		EVENT_CLASS_TYPE(KeyReleased)
+	};
+
+	class RE_API KeyTypedEvent : public KeyEvent {
+	public:
+		KeyTypedEvent(int keyCode)
+			: KeyEvent(keyCode) {}
+
+		std::string toString() const override {
+			std::stringstream stream;
+			stream << "KeyTypedEvent: " << keyCode;
+			return stream.str();
+		}
+
+		EVENT_CLASS_TYPE(KeyTyped)
+
 	};
 }

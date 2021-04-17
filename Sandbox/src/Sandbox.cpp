@@ -18,6 +18,7 @@ class Sandbox : public RealEngine::Application {
 public:
 	Sandbox() {
 		pushLayer(new ExampleLayer());
+		pushOverlay(new RealEngine::ImGUILayer());
 	}
 	~Sandbox() {
 

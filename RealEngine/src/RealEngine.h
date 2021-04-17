@@ -6,5 +6,7 @@
 #include "RealEngine/Layer.h"
 #include "RealEngine/Log.h"
 
+#include "RealEngine/ImGUI/ImGUILayer.h"
+
 //----------------Engine entry point----------------
 #include "RealEngine/EntryPoint.h"
