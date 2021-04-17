@@ -81,8 +81,87 @@ namespace RealEngine {
 		
 		
 	}
+	
 	void ImGUILayer::onEvent(Event& event) {
-		
+		EventDispatcher dispatcher(event);
+		dispatcher.dispatch<MouseButtonPressedEvent>(RE_BIND_EVENT_FN(ImGUILayer::onMouseButtonPressedEvent));
+		dispatcher.dispatch<MouseButtonReleasedEvent>(RE_BIND_EVENT_FN(ImGUILayer::onMouseButtonReleasedEvent));
+		dispatcher.dispatch<MouseScrolledEvent>(RE_BIND_EVENT_FN(ImGUILayer::onMouseScrolledEvent));
+		dispatcher.dispatch<MouseMovedEvent>(RE_BIND_EVENT_FN(ImGUILayer::onMouseMovedEvent));
+		dispatcher.dispatch<KeyPressedEvent>(RE_BIND_EVENT_FN(ImGUILayer::onKeyPressedEvent));
+		dispatcher.dispatch<KeyReleasedEvent>(RE_BIND_EVENT_FN(ImGUILayer::onKeyReleasedEvent));
+		dispatcher.dispatch<KeyTypedEvent>(RE_BIND_EVENT_FN(ImGUILayer::onKeyTypedEvent));
+		dispatcher.dispatch<WindowResizeEvent>(RE_BIND_EVENT_FN(ImGUILayer::onWindowResizeEvent));
+	}
+
+	bool ImGUILayer::onMouseButtonPressedEvent(MouseButtonPressedEvent& e) {
+		ImGuiIO& io = ImGui::GetIO();
+		io.MouseDown[e.getMouseButton()] = true;
+
+		//We don't want to consume all events by this debug ImgUI callback, so we return false
+		return false;
+	}
+	bool ImGUILayer::onMouseButtonReleasedEvent(MouseButtonReleasedEvent& e) {
+		ImGuiIO& io = ImGui::GetIO();
+		io.MouseDown[e.getMouseButton()] = false;
+
+		//We don't want to consume all events by this debug ImgUI callback, so we return false
+		return false;
+	}
+	bool ImGUILayer::onMouseMovedEvent(MouseMovedEvent& e) {
+		ImGuiIO& io = ImGui::GetIO();
+		io.MousePos = ImVec2(e.getX(), e.getY());
+
+		//We don't want to consume all events by this debug ImgUI callback, so we return false
+		return false;
+	}
+	bool ImGUILayer::onMouseScrolledEvent(MouseScrolledEvent& e) {
+		ImGuiIO& io = ImGui::GetIO();
+		io.MouseWheel += e.getOffsetX();
+		io.MouseWheelH += e.getOffsetY();
+
+		//We don't want to consume all events by this debug ImgUI callback, so we return false
+		return false;
+	}
+	bool ImGUILayer::onKeyPressedEvent(KeyPressedEvent& e) {
+		ImGuiIO& io = ImGui::GetIO();
+		io.KeysDown[e.getKeyCode()] = true;
+
+		io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
+		io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
+		io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
+		io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
+
+		//We don't want to consume all events by this debug ImgUI callback, so we return false
+		return false;
+	}
+
+	bool ImGUILayer::onKeyTypedEvent(KeyTypedEvent& e) {
+		ImGuiIO& io = ImGui::GetIO();
+		int keyCode = e.getKeyCode();
+		if (keyCode > 0 && keyCode < 0x10000) {
+			io.AddInputCharacter(static_cast<unsigned short>(keyCode));
+		}
+
+		//We don't want to consume all events by this debug ImgUI callback, so we return false
+		return false;
+	}
+
+
+	bool ImGUILayer::onKeyReleasedEvent(KeyReleasedEvent& e) {
+		ImGuiIO& io = ImGui::GetIO();
+		io.KeysDown[e.getKeyCode()] = false;
+
+		//We don't want to consume all events by this debug ImgUI callback, so we return false
+		return false;
+	}
+	bool ImGUILayer::onWindowResizeEvent(WindowResizeEvent& e) {
+		ImGuiIO& io = ImGui::GetIO();
+		io.DisplaySize = ImVec2(e.getWidth(), e.getHeight());
+		io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
+		glViewport(0, 0, e.getWidth(), e.getHeight());
+
+		return false;
 	}
 
 }
