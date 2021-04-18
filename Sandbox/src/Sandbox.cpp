@@ -6,11 +6,16 @@ public:
 		: Layer("Example"){}
 
 	void onUpdate() override {
-		RE_INFO("ExampleLayer: update");
+		if (RealEngine::Input::isKeyPressed(RE_KEY_TAB))
+			RE_TRACE("Tab button was pressed!");
 	}
 
 	void onEvent(RealEngine::Event& event) override {
-		RE_TRACE("{0}", event);
+		//RE_TRACE("{0}", event);
+		if (event.getEventType() == RealEngine::EventType::KeyPressed) {
+			RealEngine::KeyPressedEvent& e = static_cast<RealEngine::KeyPressedEvent&>(event);
+			RE_TRACE("{0}", static_cast<char>(e.getKeyCode()));
+		}
 	}
 };
 
