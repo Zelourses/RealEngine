@@ -11,10 +11,12 @@ namespace RealEngine {
 
 		void onUpdate() override;
 
-		unsigned getWidth() const override;
-		unsigned getHeight() const override;
+		unsigned int getWidth() const override;
+		unsigned int getHeight() const override;
 
 		void setEventCallback(const EventCallbackFn& callback) override { windowData.eventCallback = callback; }
+
+		void* getNativeWindow() const override { return window; }
 
 		void setVsync(bool enabled) override;
 		bool isVsync() const override;

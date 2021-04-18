@@ -158,11 +158,11 @@ namespace RealEngine{
 		return windowData.Vsync;
 	}
 
-	unsigned WindowsWindow::getWidth() const {
+	unsigned int WindowsWindow::getWidth() const {
 		return windowData.width;
 	}
 
-	unsigned WindowsWindow::getHeight() const {
+	unsigned int WindowsWindow::getHeight() const {
 		return windowData.height;
 	}
 
