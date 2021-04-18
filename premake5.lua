@@ -14,6 +14,7 @@ includeDir = {}
 includeDir["GLFW"] = "RealEngine/vendor/glfw/include"
 includeDir["Glad"] = "RealEngine/vendor/glad/include"
 includeDir["ImGUI"] = "RealEngine/vendor/imgui"
+includeDir["glm"] = "RealEngine/vendor/glm"
 
 group "Dependencies"
 	include "RealEngine/vendor/glfw"
@@ -44,7 +45,8 @@ project "RealEngine"
         "%{prj.name}/vendor/spdlog/include",
         "%{includeDir.GLFW}",
         "%{includeDir.Glad}",
-        "%{includeDir.ImGUI}"
+        "%{includeDir.ImGUI}",
+        "%{includeDir.glm}"
     }
 
     links{
@@ -105,7 +107,8 @@ project "Sandbox"
 
     includedirs {
         "RealEngine/vendor/spdlog/include",
-        "RealEngine/src"
+        "RealEngine/src",
+        "%{includeDir.glm}"
     }
 
     links{

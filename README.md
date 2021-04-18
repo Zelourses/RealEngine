@@ -5,9 +5,10 @@ Game engine that i realistically could create by myself(almost). I'll try to do 
 On this time, well...  
 It's developing, so you don't have big possibilities(for now, i hope).  
 You can: 
-+ write logs
-+ call event system
-+ look at one-color non-closing window
++ Read logs!
++ Look at demo window of imgui!
++ check what buttons you are pressing!
++ Resizing window!
 
 ## How to build it?
 Of course by using precious [PreMake](https://github.com/premake/premake-core)  
@@ -15,6 +16,12 @@ Of course by using precious [PreMake](https://github.com/premake/premake-core)
 And just run `premake <build type>`  
 And then you will get project to run.  
 Launch `Sandbox` module and it will build everything for you
+
+## Build options
+You can build it in 3 modes:
++ `Debug` - for development purposes
++ `Release` - optimization things all on and all debug things are off
++ `Dist` - (or distribution) For now, it's the same as `Release` mode
 
 ## Structure
 This project has 2 "modules" in it.  
@@ -24,4 +31,7 @@ This project has 2 "modules" in it.
 ## Libraries
 For now this engine is using:
 + [spdlog](https://github.com/gabime/spdlog)
-+ My forked [GLFW](https://github.com/Zelourses/glfw) with `premake5.lua` inside
++ [GLFW](https://github.com/Zelourses/glfw) (my fork)
++ [Glad](https://glad.dav1d.de/) (great thing)
++ [ImGUI](https://github.com/Zelourses/imgui) (my fork)
++ [glm](https://github.com/g-truc/glm) (Great math lib)
