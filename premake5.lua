@@ -1,5 +1,6 @@
 workspace "RealEngine"
     architecture "x64"
+	startproject "Sandbox"
 
     configurations {
         "Debug",
@@ -14,14 +15,18 @@ includeDir["GLFW"] = "RealEngine/vendor/glfw/include"
 includeDir["Glad"] = "RealEngine/vendor/glad/include"
 includeDir["ImGUI"] = "RealEngine/vendor/imgui"
 
-include "RealEngine/vendor/glfw"
-include "RealEngine/vendor/glad"
-include "RealEngine/vendor/imgui"
+group "Dependencies"
+	include "RealEngine/vendor/glfw"
+	include "RealEngine/vendor/glad"
+	include "RealEngine/vendor/imgui"
+	
+group ""
 
 project "RealEngine"
     location "RealEngine"
     kind "SharedLib"
     language "C++"
+    staticruntime "off"
 
     targetdir ("out/"..outputDir.. "/%{prj.name}")
     objdir ("out/build/"..outputDir.. "/%{prj.name}")
@@ -51,7 +56,6 @@ project "RealEngine"
 
     filter "system:windows"
         cppdialect "C++17"
-        staticruntime "On"
         systemversion "latest"
 
         defines {
@@ -60,28 +64,28 @@ project "RealEngine"
             "GLFW_INCLUDE_NONE"
         }
         postbuildcommands {
-            ("{COPY} %{cfg.buildtarget.relpath} ../out/" .. outputDir .. "/Sandbox")
+            ("{COPY} %{cfg.buildtarget.relpath} \"../out/" ..outputDir.. "/Sandbox/\"")
         }
     filter "configurations:Debug"
         defines {
             "RE_DEBUG",
             "RE_ENABLE_ASSERTS"
         }
-        buildoptions "/MDd"
+        runtime "Debug"
         symbols "On"
     
     filter "configurations:Release"
         defines {
             "RE_RELEASE"
         }
-        buildoptions "/MD"
+        runtime "Release"
         optimize "On"
 
     filter "configurations:Dist"
         defines {
             "RE_DIST"
         }
-        buildoptions "/MD"
+        runtime "Release"
         optimize "On"
 
 
@@ -89,6 +93,7 @@ project "Sandbox"
     location "Sandbox"
     kind "ConsoleApp"
     language "C++"
+    staticruntime "off"
 
     targetdir ("out/"..outputDir.. "/%{prj.name}")
     objdir ("out/build/"..outputDir.. "/%{prj.name}")
@@ -109,7 +114,6 @@ project "Sandbox"
 
     filter "system:windows"
         cppdialect "C++17"
-        staticruntime "On"
         systemversion "latest"
 
         defines {
@@ -120,19 +124,19 @@ project "Sandbox"
         defines {
             "RE_DEBUG"
         }
-        buildoptions "/MDd"
+        runtime "Debug"
         symbols "On"
     
     filter "configurations:Release"
         defines {
             "RE_RELEASE"
         }
-        buildoptions "/MD"
+        runtime "Release"
         optimize "On"
 
     filter "configurations:Dist"
         defines {
             "RE_DIST"
         }
-        buildoptions "/MD"
+        runtime "Release"
         optimize "On"
