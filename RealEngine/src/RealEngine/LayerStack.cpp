@@ -2,9 +2,7 @@
 #include "LayerStack.h"
 
 namespace RealEngine{
-	LayerStack::LayerStack() {
-		layerInsert = layers.begin();
-	}
+	LayerStack::LayerStack() {}
 
 	LayerStack::~LayerStack() {
 		for (Layer* val : layers) {
@@ -13,8 +11,8 @@ namespace RealEngine{
 	}
 
 	void LayerStack::pushLayer(Layer* layer) {
-		layerInsert = layers.emplace(layerInsert,layer );
-		++layerInsert;
+		layers.emplace(layers.begin()+layerInsertindex,layer );
+		++layerInsertindex;
 	}
 
 	void LayerStack::pushOverlay(Layer* overlay) {
@@ -25,7 +23,7 @@ namespace RealEngine{
 		auto it = std::find(layers.begin(), layers.end(), layer);
 		if (it != layers.end()) {
 			layers.erase(it);
-			--layerInsert;
+			--layerInsertindex;
 		}
 	}
 

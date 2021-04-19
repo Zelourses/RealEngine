@@ -14,20 +14,12 @@ namespace RealEngine {
 		void onAttach() override;
 		void onDetach() override;
 
-		void onUpdate() override;
-		void onEvent(Event& event) override;
+		void onImGUIRender() override;
 
+		void begin();
+		void end();
+		
 	private:
-		bool onMouseButtonPressedEvent(MouseButtonPressedEvent& e);
-		bool onMouseButtonReleasedEvent(MouseButtonReleasedEvent& e);
-		bool onMouseScrolledEvent(MouseScrolledEvent& e);
-		bool onMouseMovedEvent(MouseMovedEvent& e);
-		bool onKeyPressedEvent(KeyPressedEvent& e);
-		bool onKeyReleasedEvent(KeyReleasedEvent& e);
-		bool onKeyTypedEvent(KeyTypedEvent& e);
-		bool onWindowResizeEvent(WindowResizeEvent& e);
-		
-		
 		float frameTime = 0.0f;
 	};
 }

@@ -12,6 +12,8 @@ namespace RealEngine {
 		
 		virtual void onAttach() {}
 		virtual void onDetach() {}
+
+		virtual void onImGUIRender() {}
 		
 		virtual void onUpdate() {}
 		virtual void onEvent(Event& event) {}

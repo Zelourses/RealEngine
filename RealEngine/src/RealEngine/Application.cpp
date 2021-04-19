@@ -17,6 +17,8 @@ namespace RealEngine {
 		
 		window = std::unique_ptr<Window>(Window::create());
 		window->setEventCallback(RE_BIND_EVENT_FN(Application::onEvent));
+		imGUILayer = new ImGUILayer;
+		pushOverlay(imGUILayer);
 	}
 
 	void Application::onEvent(Event& e) {
@@ -38,6 +40,11 @@ namespace RealEngine {
 			for(Layer* layer: layerStack) {
 				layer->onUpdate();
 			}
+			imGUILayer->begin();
+			for (Layer* layer : layerStack) {
+				layer->onImGUIRender();
+			}
+			imGUILayer->end();
 			window->onUpdate();
 		}
 	}

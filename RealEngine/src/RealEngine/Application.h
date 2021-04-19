@@ -7,6 +7,8 @@
 #include "Events/Event.h"
 #include "RealEngine/Events/ApplicationEvent.h"
 
+#include "RealEngine/ImGUI/ImGUILayer.h" 
+
 namespace RealEngine {
 	class RE_API Application {
 	public:
@@ -27,6 +29,7 @@ namespace RealEngine {
 		bool OnWindowClose(WindowCloseEvent& e);
 		
 		std::unique_ptr<Window> window;
+		ImGUILayer* imGUILayer;
 		bool windowRunning = true;
 
 		LayerStack layerStack;
