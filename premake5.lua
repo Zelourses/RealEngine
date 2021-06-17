@@ -1,12 +1,12 @@
 workspace "RealEngine"
-    architecture "x64"
+	architecture "x64"
 	startproject "Sandbox"
 
-    configurations {
-        "Debug",
-        "Release",
-        "Dist"
-    }
+	configurations {
+		"Debug",
+		"Release",
+		"Dist"
+	}
 
 outputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -24,122 +24,123 @@ group "Dependencies"
 group ""
 
 project "RealEngine"
-    location "RealEngine"
-    kind "SharedLib"
-    language "C++"
-    staticruntime "off"
+	location "RealEngine"
+	kind "StaticLib"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
 
-    targetdir ("out/"..outputDir.. "/%{prj.name}")
-    objdir ("out/build/"..outputDir.. "/%{prj.name}")
+	targetdir ("out/"..outputDir.. "/%{prj.name}")
+	objdir ("out/build/"..outputDir.. "/%{prj.name}")
 
-    pchheader "repch.h"
-    pchsource "RealEngine/src/repch.cpp"
+	pchheader "repch.h"
+	pchsource "RealEngine/src/repch.cpp"
 
-    files {
-        "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
-    }
+	files {
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
 
-    includedirs {
-        "%{prj.name}/src",
-        "%{prj.name}/vendor/spdlog/include",
-        "%{includeDir.GLFW}",
-        "%{includeDir.Glad}",
-        "%{includeDir.ImGUI}",
-        "%{includeDir.glm}"
-    }
+	includedirs {
+		"%{prj.name}/src",
+		"%{prj.name}/vendor/spdlog/include",
+		"%{includeDir.GLFW}",
+		"%{includeDir.Glad}",
+		"%{includeDir.ImGUI}",
+		"%{includeDir.glm}"
+	}
 
-    links{
-        "GLFW",
-        "Glad",
-        "ImGUI",
-        "opengl32.lib"
-    }
+	links{
+		"GLFW",
+		"Glad",
+		"ImGUI",
+		"opengl32.lib"
+	}
 
-    filter "system:windows"
-        cppdialect "C++17"
-        systemversion "latest"
+	defines {
+		"_CRT_SECURE_NO_WARNINGS"
+	}
 
-        defines {
-            "RE_PLATFORM_WINDOWS",
-            "RE_BUILD_DLL",
-            "GLFW_INCLUDE_NONE"
-        }
-        postbuildcommands {
-            ("{COPY} %{cfg.buildtarget.relpath} \"../out/" ..outputDir.. "/Sandbox/\"")
-        }
-    filter "configurations:Debug"
-        defines {
-            "RE_DEBUG",
-            "RE_ENABLE_ASSERTS"
-        }
-        runtime "Debug"
-        symbols "On"
-    
-    filter "configurations:Release"
-        defines {
-            "RE_RELEASE"
-        }
-        runtime "Release"
-        optimize "On"
+	filter "system:windows"
+		systemversion "latest"
 
-    filter "configurations:Dist"
-        defines {
-            "RE_DIST"
-        }
-        runtime "Release"
-        optimize "On"
+		defines {
+			"RE_PLATFORM_WINDOWS",
+			"RE_BUILD_DLL",
+			"GLFW_INCLUDE_NONE"
+		}
+
+	filter "configurations:Debug"
+		defines {
+			"RE_DEBUG",
+		}
+		runtime "Debug"
+		symbols "on"
+	
+	filter "configurations:Release"
+		defines {
+			"RE_RELEASE"
+		}
+		runtime "Release"
+		optimize "on"
+
+	filter "configurations:Dist"
+		defines {
+			"RE_DIST"
+		}
+		runtime "Release"
+		optimize "on"
 
 
 project "Sandbox"
-    location "Sandbox"
-    kind "ConsoleApp"
-    language "C++"
-    staticruntime "off"
+	location "Sandbox"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
 
-    targetdir ("out/"..outputDir.. "/%{prj.name}")
-    objdir ("out/build/"..outputDir.. "/%{prj.name}")
+	targetdir ("out/"..outputDir.. "/%{prj.name}")
+	objdir ("out/build/"..outputDir.. "/%{prj.name}")
 
-    files {
-        "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
-    }
+	files {
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
 
-    includedirs {
-        "RealEngine/vendor/spdlog/include",
-        "RealEngine/src",
-        "%{includeDir.glm}"
-    }
+	includedirs {
+		"RealEngine/vendor/spdlog/include",
+		"RealEngine/src",
+		"%{includeDir.glm}"
+	}
 
-    links{
-        "RealEngine"
-    }
+	links{
+		"RealEngine"
+	}
 
-    filter "system:windows"
-        cppdialect "C++17"
-        systemversion "latest"
+	filter "system:windows"
+		systemversion "latest"
 
-        defines {
-            "RE_PLATFORM_WINDOWS"
-        }
+		defines {
+			"RE_PLATFORM_WINDOWS"
+		}
 
-    filter "configurations:Debug"
-        defines {
-            "RE_DEBUG"
-        }
-        runtime "Debug"
-        symbols "On"
-    
-    filter "configurations:Release"
-        defines {
-            "RE_RELEASE"
-        }
-        runtime "Release"
-        optimize "On"
+	filter "configurations:Debug"
+		defines {
+			"RE_DEBUG"
+		}
+		runtime "Debug"
+		symbols "on"
+	
+	filter "configurations:Release"
+		defines {
+			"RE_RELEASE"
+		}
+		runtime "Release"
+		optimize "on"
 
-    filter "configurations:Dist"
-        defines {
-            "RE_DIST"
-        }
-        runtime "Release"
-        optimize "On"
+	filter "configurations:Dist"
+		defines {
+			"RE_DIST"
+		}
+		runtime "Release"
+		optimize "on"
