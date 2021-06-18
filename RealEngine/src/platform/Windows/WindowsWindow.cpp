@@ -5,7 +5,8 @@
 #include "RealEngine/Events/MouseEvent.h"
 #include "RealEngine/Events/KeyEvent.h"
 
-#include "glad/glad.h"
+#include "platform/OpenGL/OpenGLContext.h"
+
 
 namespace RealEngine{
 
@@ -45,10 +46,12 @@ namespace RealEngine{
 
 		window = glfwCreateWindow(static_cast<int>(prop.width), 
 				static_cast<int>(prop.height), prop.title.c_str(), nullptr,nullptr);
-		glfwMakeContextCurrent(window);
 
-		int status = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
-		RE_CORE_ASSERT(status, "Failed to initialize Glad");
+		// setting up context
+		
+		context = new OpenGLContext(window);
+		context->init();
+		
 		
 		glfwSetWindowUserPointer(window, &windowData);
 		setVsync(true);
@@ -142,7 +145,7 @@ namespace RealEngine{
 
 	void WindowsWindow::onUpdate() {
 		glfwPollEvents();
-		glfwSwapBuffers(window);
+		context->swapBuffers();
 	}
 
 	void WindowsWindow::setVsync(const bool enabled) {

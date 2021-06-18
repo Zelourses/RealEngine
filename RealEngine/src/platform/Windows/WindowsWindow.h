@@ -3,6 +3,9 @@
 
 #include "GLFW/glfw3.h"
 
+#include "RealEngine/Renderer/GraphicsContext.h"
+
+
 namespace RealEngine {
 	class WindowsWindow : public Window {
 	public:
@@ -22,10 +25,11 @@ namespace RealEngine {
 		bool isVsync() const override;
 
 	private:
+		GLFWwindow* window;
+		GraphicsContext* context;
+
 		virtual void init(const WindowProps& prop);
 		virtual void shutdown();
-
-		GLFWwindow* window;
 		
 		struct WindowData {
 			std::string title;
