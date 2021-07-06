@@ -35,6 +35,8 @@ namespace RealEngine {
 		LayerStack layerStack;
 
 		static Application* appInstance;
+
+		unsigned int vertexArray, vertexBuffer, indexBuffer; // temp things
 	};
 
 	//Client definition
