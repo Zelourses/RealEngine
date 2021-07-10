@@ -44,6 +44,34 @@ namespace RealEngine {
 
 		unsigned int indices[] = {0, 1, 2};
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+		std::string vertexSrc = R"(
+			#version 330 core
+
+			layout(location = 0) in vec3 position;
+
+			out vec3 outPosition; //varying variables, so.. v_... but no
+		
+			void main(){
+				gl_Position = vec4(position,1.0);
+				outPosition = position;
+				
+			}
+		)";
+
+		std::string pixelShader = R"(
+			#version 330 core
+
+			layout(location = 0) out vec4 color;
+
+			in vec3 outPosition;
+		
+			void main(){
+				color = vec4(outPosition* 0.5 + 0.5, 1.0);
+			}
+		)";
+		
+		shader.reset(new Shader(vertexSrc, pixelShader));
 	}
 
 	void Application::onEvent(Event& e) {
@@ -62,6 +90,7 @@ namespace RealEngine {
 			glClearColor(.2f, .2f, .2f, 1.f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
+			shader->bind();
 			glBindVertexArray(vertexArray);
 			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 

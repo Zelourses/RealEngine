@@ -7,7 +7,10 @@
 #include "Events/Event.h"
 #include "RealEngine/Events/ApplicationEvent.h"
 
-#include "RealEngine/ImGUI/ImGUILayer.h" 
+#include "RealEngine/ImGUI/ImGUILayer.h"
+
+//FIXME: leaking abstraction
+#include "RealEngine/Renderer/Shader.h"
 
 namespace RealEngine {
 	class RE_API Application {
@@ -36,7 +39,8 @@ namespace RealEngine {
 
 		static Application* appInstance;
 
-		unsigned int vertexArray, vertexBuffer, indexBuffer; // temp things
+		unsigned int vertexArray, vertexBuffer, indexBuffer; //FIXME: temp things
+		std::unique_ptr<Shader> shader;
 	};
 
 	//Client definition
