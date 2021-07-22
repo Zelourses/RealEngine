@@ -12,6 +12,8 @@
 //FIXME: leaking abstraction
 #include "RealEngine/Renderer/Shader.h"
 
+#include "RealEngine/Renderer/Buffer.h"
+
 namespace RealEngine {
 	class RE_API Application {
 	public:
@@ -39,8 +41,11 @@ namespace RealEngine {
 
 		static Application* appInstance;
 
-		unsigned int vertexArray, vertexBuffer, indexBuffer; //FIXME: temp things
+		unsigned int vertexArray; //FIXME: temp things
+		
 		std::unique_ptr<Shader> shader;
+		std::unique_ptr<VertexBuffer> vertexBuffer;
+		std::unique_ptr<IndexBuffer> indexBuffer;
 	};
 
 	//Client definition

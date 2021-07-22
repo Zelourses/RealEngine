@@ -28,4 +28,12 @@
 
 #define BIT_SHIFT(x) (1<<x)
 
+//maybe I need to rewrite it in lambda thing
+/*
+ * RE_BIND_EVENT_FN(Application::onEvent) ->
+ * [this](auto&& PH1) { onEvent(std::forward<decltype(PH1)>(PH1)); }
+ *
+ * ^ is an example of transforming into lambda
+ * But [this] ... I am not sure if it's ok
+ */
 #define RE_BIND_EVENT_FN(x) std::bind(&x,this, std::placeholders::_1)
