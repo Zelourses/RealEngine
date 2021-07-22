@@ -7,10 +7,14 @@ namespace RealEngine {
 		void bind() const override;
 		void unbind() const override;
 
+		void setLayout(const BufferLayout& layout_) override { layout = layout_; }
+		const BufferLayout& getLayout() const override { return layout; }
+
 		~OpenGLVertexBuffer() override;
 
 	private:
 		uint32_t rendererId;
+		BufferLayout layout;
 	};
 
 

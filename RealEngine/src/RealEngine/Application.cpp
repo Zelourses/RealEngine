@@ -11,6 +11,28 @@ namespace RealEngine {
 
 	Application* Application::appInstance = nullptr;
 
+	static GLenum shaderDataTypeToOpenGLBaseType(SDT type) {
+		switch (type) {
+			case SDT::None: break;
+			
+			case SDT::Float:	//fallthrough
+			case SDT::Float2:	//fallthrough
+			case SDT::Float3:	//fallthrough
+			case SDT::Float4:	//fallthrough
+			case SDT::Mat3:		//fallthrough
+			case SDT::Mat4:		return GL_FLOAT;
+			
+			case SDT::Int:		//fallthrough
+			case SDT::Int2:		//fallthrough
+			case SDT::Int3:		//fallthrough
+			case SDT::Int4:		return GL_INT;
+			
+			case SDT::Bool:		return GL_BOOL;
+		}
+		RE_CORE_ASSERT(false, "Unknown ShaderDataType");
+		return 0;
+	}
+
 	Application::Application() {
 		RE_CORE_ASSERT(!appInstance, "Creating already existing application!");
 		appInstance = this;
@@ -35,8 +57,24 @@ namespace RealEngine {
 		vertexBuffer.reset(VertexBuffer::create(vertices, sizeof(vertices)));
 
 
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT,GL_FALSE, 3*sizeof(float), nullptr);
+		BufferLayout layout = {
+			{SDT::Float3, "position"}
+		};
+
+		vertexBuffer->setLayout(layout);
+		
+		uint32_t i = 0;
+		for(const auto& l : layout) {
+			glEnableVertexAttribArray(i);
+			glVertexAttribPointer(i, 
+				l.getComponentCount(), 
+				shaderDataTypeToOpenGLBaseType(l.type), 
+				l.normalized ? GL_TRUE : GL_FALSE, 
+				layout.getStride(), 
+				reinterpret_cast<const void *>(l.offset));
+			i++;
+		}
+	
 
 		uint32_t indices[] = {0, 1, 2};
 
