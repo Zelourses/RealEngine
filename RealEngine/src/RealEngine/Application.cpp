@@ -11,27 +11,7 @@ namespace RealEngine {
 
 	Application* Application::appInstance = nullptr;
 
-	static GLenum shaderDataTypeToOpenGLBaseType(SDT type) {
-		switch (type) {
-			case SDT::None: break;
-			
-			case SDT::Float:	//fallthrough
-			case SDT::Float2:	//fallthrough
-			case SDT::Float3:	//fallthrough
-			case SDT::Float4:	//fallthrough
-			case SDT::Mat3:		//fallthrough
-			case SDT::Mat4:		return GL_FLOAT;
-			
-			case SDT::Int:		//fallthrough
-			case SDT::Int2:		//fallthrough
-			case SDT::Int3:		//fallthrough
-			case SDT::Int4:		return GL_INT;
-			
-			case SDT::Bool:		return GL_BOOL;
-		}
-		RE_CORE_ASSERT(false, "Unknown ShaderDataType");
-		return 0;
-	}
+	
 
 	Application::Application() {
 		RE_CORE_ASSERT(!appInstance, "Creating already existing application!");
@@ -42,10 +22,7 @@ namespace RealEngine {
 		imGUILayer = new ImGUILayer;
 		pushOverlay(imGUILayer);
 
-
-		// temp things
-		glGenVertexArrays(1, &vertexArray);
-		glBindVertexArray(vertexArray);
+		vertexArray.reset(VertexArray::create());
 
 
 		float vertices[3*3] = {
@@ -53,7 +30,7 @@ namespace RealEngine {
 			 0.5f, -0.5f, 0.0f,
 			 0.0f,  0.5f, 0.0f
 		};
-
+		std::shared_ptr<VertexBuffer> vertexBuffer;
 		vertexBuffer.reset(VertexBuffer::create(vertices, sizeof(vertices)));
 
 
@@ -62,23 +39,41 @@ namespace RealEngine {
 		};
 
 		vertexBuffer->setLayout(layout);
+
+		vertexArray->addVertexBuffer(vertexBuffer);
 		
-		uint32_t i = 0;
-		for(const auto& l : layout) {
-			glEnableVertexAttribArray(i);
-			glVertexAttribPointer(i, 
-				l.getComponentCount(), 
-				shaderDataTypeToOpenGLBaseType(l.type), 
-				l.normalized ? GL_TRUE : GL_FALSE, 
-				layout.getStride(), 
-				reinterpret_cast<const void *>(l.offset));
-			i++;
-		}
-	
-
 		uint32_t indices[] = {0, 1, 2};
-
+		std::shared_ptr<IndexBuffer> indexBuffer;
 		indexBuffer.reset(IndexBuffer::create(indices, 3));
+
+		vertexArray->setIndexBuffer(indexBuffer);
+
+		float squareVertices[3 * 4] = {
+			-0.75f, -0.75f, 0.0f,
+			 0.75f, -0.75f, 0.0f,
+			 0.75f,  0.75f, 0.0f,
+			 -0.75f,  0.75f, 0.0f
+		};
+
+		
+
+		squareVA.reset(VertexArray::create());
+
+		std::shared_ptr<VertexBuffer> squareVB;
+		squareVB.reset(VertexBuffer::create(squareVertices, sizeof(squareVertices)));
+		
+		squareVB->setLayout({
+			{SDT::Float3, "position"}
+			});
+		squareVA->addVertexBuffer(squareVB);
+
+		uint32_t squareIndices[] = { 0, 1, 2, 2, 3, 0};
+
+		std::shared_ptr<IndexBuffer> squareIB;
+		squareIB.reset(IndexBuffer::create(squareIndices, sizeof(squareIndices)));
+
+		squareVA->setIndexBuffer(squareIB);
+		
 
 		std::string vertexSrc = R"(
 			#version 330 core
@@ -93,7 +88,6 @@ namespace RealEngine {
 				
 			}
 		)";
-
 		std::string pixelShader = R"(
 			#version 330 core
 
@@ -107,6 +101,28 @@ namespace RealEngine {
 		)";
 		
 		shader.reset(new Shader(vertexSrc, pixelShader));
+
+
+		std::string squareVertexSrc = R"(
+			#version 330 core
+
+			layout(location = 0) in vec3 position;
+		
+			void main(){
+				gl_Position = vec4(position,1.0);
+			}
+		)";
+
+		std::string squarePixelShader = R"(
+			#version 330 core
+
+			layout(location = 0) out vec4 color;
+		
+			void main(){
+				color = vec4(0.3,0.4,0.7,1.0);
+			}
+		)";
+		blueShader.reset(new Shader(squareVertexSrc, squarePixelShader));
 	}
 
 	void Application::onEvent(Event& e) {
@@ -125,9 +141,13 @@ namespace RealEngine {
 			glClearColor(.2f, .2f, .2f, 1.f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
+			blueShader->bind();
+			squareVA->bind();
+			glDrawElements(GL_TRIANGLES, squareVA->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, nullptr);
+			
 			shader->bind();
-			glBindVertexArray(vertexArray);
-			glDrawElements(GL_TRIANGLES, indexBuffer->getCount(), GL_UNSIGNED_INT, nullptr);
+			vertexArray->bind();
+			glDrawElements(GL_TRIANGLES, vertexArray->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, nullptr);
 
 			for(Layer* layer: layerStack) {
 				layer->onUpdate();
