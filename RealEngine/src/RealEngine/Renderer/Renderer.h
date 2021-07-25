@@ -1,16 +1,17 @@
 #pragma once
 
+#include "RenderCommand.h"
+
 namespace RealEngine {
-	enum class RendererAPI {
-		None = 0,
-		OpenGL = 1
-	};
-
-
+	
 	class Renderer {
 	public:
-		inline static RendererAPI getRenderAPI() { return rendererAPI; }
-	private:
-		static RendererAPI rendererAPI;
+
+		static void beginScene();
+		static void endScene();
+
+		static void submit(const std::shared_ptr<VertexArray>& vertexArray);
+		
+		inline static RendererAPI::API getRenderAPI() { return RendererAPI::getAPI(); }
 	};
 }

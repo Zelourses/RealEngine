@@ -3,7 +3,7 @@
 #include "Application.h"
 #include "RealEngine/Log.h"
 
-#include "glad/glad.h"
+#include "RealEngine/Renderer/Renderer.h"
 
 #include "Input.h"
 
@@ -138,17 +138,21 @@ namespace RealEngine {
 
 	void Application::run() {
 		while (windowRunning){
-			glClearColor(.2f, .2f, .2f, 1.f);
-			glClear(GL_COLOR_BUFFER_BIT);
+			RenderCommand::setClearColor({ .2f, .2f, .2f, 1.f });
+			RenderCommand::clear();
 
-			blueShader->bind();
-			squareVA->bind();
-			glDrawElements(GL_TRIANGLES, squareVA->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, nullptr);
+
+			Renderer::beginScene();
 			
-			shader->bind();
-			vertexArray->bind();
-			glDrawElements(GL_TRIANGLES, vertexArray->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, nullptr);
+			blueShader->bind();
+			Renderer::submit(squareVA);
 
+			shader->bind();
+			Renderer::submit(vertexArray);
+
+			Renderer::endScene();
+
+			
 			for(Layer* layer: layerStack) {
 				layer->onUpdate();
 			}
