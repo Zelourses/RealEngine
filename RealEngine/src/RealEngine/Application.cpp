@@ -13,7 +13,8 @@ namespace RealEngine {
 
 	
 
-	Application::Application() {
+	Application::Application()
+		: camera(-1.6f, 1.6f, -0.9f, 0.9f){
 		RE_CORE_ASSERT(!appInstance, "Creating already existing application!");
 		appInstance = this;
 		
@@ -81,9 +82,11 @@ namespace RealEngine {
 			layout(location = 0) in vec3 position;
 
 			out vec3 outPosition; //varying variables, so.. v_... but no
+
+			uniform mat4 viewProjection; // uniform maybe need to mark with u_...
 		
 			void main(){
-				gl_Position = vec4(position,1.0);
+				gl_Position = viewProjection * vec4(position,1.0);
 				outPosition = position;
 				
 			}
@@ -108,8 +111,10 @@ namespace RealEngine {
 
 			layout(location = 0) in vec3 position;
 		
+			uniform mat4 viewProjection;
+		
 			void main(){
-				gl_Position = vec4(position,1.0);
+				gl_Position = viewProjection * vec4(position,1.0);
 			}
 		)";
 
@@ -141,14 +146,13 @@ namespace RealEngine {
 			RenderCommand::setClearColor({ .2f, .2f, .2f, 1.f });
 			RenderCommand::clear();
 
+			camera.setRotation(45.0f);
 
-			Renderer::beginScene();
+			Renderer::beginScene(camera);
 			
-			blueShader->bind();
-			Renderer::submit(squareVA);
+			Renderer::submit(blueShader, squareVA);
 
-			shader->bind();
-			Renderer::submit(vertexArray);
+			Renderer::submit(shader, vertexArray);
 
 			Renderer::endScene();
 
