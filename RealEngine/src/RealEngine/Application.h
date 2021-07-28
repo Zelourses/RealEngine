@@ -9,16 +9,8 @@
 
 #include "RealEngine/ImGUI/ImGUILayer.h"
 
-//FIXME: leaking abstraction. We don't really need to work with shader in main app, right?
-#include "RealEngine/Renderer/Shader.h"
-
-#include "RealEngine/Renderer/Buffer.h"
-#include "RealEngine/Renderer/VertexArray.h"
-
-#include "RealEngine/Renderer/OrthographicCamera.h"
-
 namespace RealEngine {
-	class RE_API Application {
+	class Application {
 	public:
 		void run();
 
@@ -43,15 +35,7 @@ namespace RealEngine {
 		LayerStack layerStack;
 
 		static Application* appInstance;
-		
-		std::shared_ptr<Shader> shader;
-		std::shared_ptr<Shader> blueShader;
-		
-		std::shared_ptr<VertexArray> vertexArray;
 
-		std::shared_ptr<VertexArray> squareVA;
-
-		OrthographicCamera camera;
 	};
 
 	//Client definition

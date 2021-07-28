@@ -3,7 +3,7 @@
 #include "Event.h"
 
 namespace RealEngine {
-	class RE_API KeyEvent : public Event {
+	class KeyEvent : public Event {
 	public:
 		inline int getKeyCode() const { return keyCode; }
 
@@ -15,7 +15,7 @@ namespace RealEngine {
 		
 	};
 
-	class RE_API KeyPressedEvent : public KeyEvent {
+	class KeyPressedEvent : public KeyEvent {
 	public:
 		KeyPressedEvent(int keyCode, int repeatCount)
 			: KeyEvent(keyCode), repeatCount(repeatCount) {}
@@ -35,7 +35,7 @@ namespace RealEngine {
 
 	};
 
-	class RE_API KeyReleasedEvent : public KeyEvent {
+	class KeyReleasedEvent : public KeyEvent {
 	public:
 		KeyReleasedEvent(int keyCode)
 			: KeyEvent(keyCode) {}
@@ -49,7 +49,7 @@ namespace RealEngine {
 		EVENT_CLASS_TYPE(KeyReleased)
 	};
 
-	class RE_API KeyTypedEvent : public KeyEvent {
+	class KeyTypedEvent : public KeyEvent {
 	public:
 		KeyTypedEvent(int keyCode)
 			: KeyEvent(keyCode) {}

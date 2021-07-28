@@ -6,7 +6,7 @@
 #include "RealEngine/Events/MouseEvent.h"
 
 namespace RealEngine {
-	class RE_API ImGUILayer : public Layer{
+	class ImGUILayer : public Layer{
 	public:
 		ImGUILayer();
 		~ImGUILayer();

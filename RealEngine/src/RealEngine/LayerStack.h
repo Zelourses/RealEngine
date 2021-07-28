@@ -2,7 +2,7 @@
 #include "repch.h"
 #include "Layer.h"
 namespace RealEngine {
-	class RE_API LayerStack{
+	class LayerStack{
 	public:
 		LayerStack();
 		~LayerStack();
