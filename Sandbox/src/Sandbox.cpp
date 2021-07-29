@@ -115,27 +115,27 @@ public:
 		blueShader.reset(new re::Shader(squareVertexSrc, squarePixelShader));
 	}
 
-	void onUpdate() override {
+	void onUpdate(re::Timestep timestep) override {
+
+		RE_TRACE("Delta time: {0} ({1})", timestep.getSeconds(), timestep.getMilliseconds());
 
 		if (re::Input::isKeyPressed(RE_KEY_LEFT)) {
-			cameraPosition.x -= cameraMoveSpeed;
+			cameraPosition.x -= cameraMoveSpeed * timestep;
 		}
 		else if (re::Input::isKeyPressed(RE_KEY_RIGHT)){
-			cameraPosition.x += cameraMoveSpeed;
+			cameraPosition.x += cameraMoveSpeed * timestep;
 		}
 		else if (re::Input::isKeyPressed(RE_KEY_UP)) {
-			cameraPosition.y += cameraMoveSpeed;
+			cameraPosition.y += cameraMoveSpeed * timestep;
 		}
 		else if (re::Input::isKeyPressed(RE_KEY_DOWN)) {
-			cameraPosition.y -= cameraMoveSpeed;
+			cameraPosition.y -= cameraMoveSpeed * timestep;
 		}
 
 		if (re::Input::isKeyPressed(RE_KEY_Q)) {
-			cameraRotation += cameraRotationSpeed;
-		}
-
-		if (re::Input::isKeyPressed(RE_KEY_E)) {
-			cameraRotation -= cameraRotationSpeed;
+			cameraRotation += cameraRotationSpeed * timestep;
+		} else if (re::Input::isKeyPressed(RE_KEY_E)) {
+			cameraRotation -= cameraRotationSpeed * timestep;
 		}
 		
 		

@@ -6,6 +6,7 @@
 #include "RealEngine/Renderer/Renderer.h"
 
 #include "Input.h"
+#include "GLFW/glfw3.h"
 
 namespace RealEngine {
 
@@ -38,9 +39,15 @@ namespace RealEngine {
 
 	void Application::run() {
 		while (windowRunning){
+
+			const float time = static_cast<float>(glfwGetTime()); //FIXME:Temp things.
+								//Need to change to something like: Platform::getTime();
+			
+			Timestep timestep = time - lastFrameTime;
+			lastFrameTime = time;
 			
 			for(Layer* layer: layerStack) {
-				layer->onUpdate();
+				layer->onUpdate(timestep);
 			}
 			imGUILayer->begin();
 			for (Layer* layer : layerStack) {

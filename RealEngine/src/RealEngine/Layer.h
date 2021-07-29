@@ -2,7 +2,8 @@
 #include "repch.h"
 
 #include "RealEngine/Core.h"
-#include "Events/Event.h"
+#include "RealEngine/Events/Event.h"
+#include "RealEngine/Core/Timestep.h"
 
 namespace RealEngine {
 	class Layer {
@@ -15,7 +16,7 @@ namespace RealEngine {
 
 		virtual void onImGUIRender() {}
 		
-		virtual void onUpdate() {}
+		virtual void onUpdate(Timestep timestep) {}
 		virtual void onEvent(Event& event) {}
 
 		inline const std::string& getName() const { return debugName; }//May be getDebugName?

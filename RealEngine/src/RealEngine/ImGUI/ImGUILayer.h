@@ -18,9 +18,6 @@ namespace RealEngine {
 
 		void begin();
 		void end();
-		
-	private:
-		float frameTime = 0.0f;
 	};
 }
 

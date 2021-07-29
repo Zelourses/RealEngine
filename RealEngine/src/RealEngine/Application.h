@@ -7,6 +7,8 @@
 #include "Events/Event.h"
 #include "RealEngine/Events/ApplicationEvent.h"
 
+#include "RealEngine/Core/Timestep.h"
+
 #include "RealEngine/ImGUI/ImGUILayer.h"
 
 namespace RealEngine {
@@ -28,14 +30,14 @@ namespace RealEngine {
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 		
+		bool windowRunning = true;
+		
 		std::unique_ptr<Window> window;
 		ImGUILayer* imGUILayer;
-		bool windowRunning = true;
-
 		LayerStack layerStack;
-
 		static Application* appInstance;
 
+		float lastFrameTime = 0.0f;
 	};
 
 	//Client definition

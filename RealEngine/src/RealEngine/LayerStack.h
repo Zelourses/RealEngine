@@ -18,7 +18,7 @@ namespace RealEngine {
 
 	private:
 		std::vector<Layer*> layers;
-		unsigned int layerInsertindex = 0;
+		unsigned int layerInsertIndex = 0;
 	};
 }
 

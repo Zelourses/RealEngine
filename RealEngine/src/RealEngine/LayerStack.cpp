@@ -11,8 +11,8 @@ namespace RealEngine{
 	}
 
 	void LayerStack::pushLayer(Layer* layer) {
-		layers.emplace(layers.begin()+layerInsertindex,layer );
-		++layerInsertindex;
+		layers.emplace(layers.begin()+layerInsertIndex,layer );
+		++layerInsertIndex;
 	}
 
 	void LayerStack::pushOverlay(Layer* overlay) {
@@ -23,7 +23,7 @@ namespace RealEngine{
 		auto it = std::find(layers.begin(), layers.end(), layer);
 		if (it != layers.end()) {
 			layers.erase(it);
-			--layerInsertindex;
+			--layerInsertIndex;
 		}
 	}
 
