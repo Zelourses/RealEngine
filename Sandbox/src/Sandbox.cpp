@@ -1,6 +1,8 @@
 #include <RealEngine.h>
 
 
+#include <glm/gtc/matrix_transform.hpp>
+
 //FIXME: still a little bit of leaking abstraction. Need to move shaders somewhere
 class ExampleLayer : public RealEngine::Layer {
 public:
@@ -35,10 +37,10 @@ public:
 		vertexArray->setIndexBuffer(indexBuffer);
 
 		float squareVertices[3 * 4] = {
-			-0.75f, -0.75f, 0.0f,
-			 0.75f, -0.75f, 0.0f,
-			 0.75f,  0.75f, 0.0f,
-			 -0.75f,  0.75f, 0.0f
+			-0.5f, -0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f,
+			 0.5f,  0.5f, 0.0f,
+			-0.5f,  0.5f, 0.0f
 		};
 
 
@@ -66,12 +68,13 @@ public:
 
 			layout(location = 0) in vec3 position;
 
-			out vec3 outPosition; //varying variables, so.. v_... but no
-
 			uniform mat4 viewProjection; // uniform maybe need to mark with u_...
+			uniform mat4 transform;
+		
+			out vec3 outPosition; //varying variables, so.. v_... but no
 		
 			void main(){
-				gl_Position = viewProjection * vec4(position,1.0);
+				gl_Position = viewProjection * transform *vec4(position,1.0);
 				outPosition = position;
 				
 			}
@@ -97,9 +100,10 @@ public:
 			layout(location = 0) in vec3 position;
 		
 			uniform mat4 viewProjection;
+			uniform mat4 transform;
 		
 			void main(){
-				gl_Position = viewProjection * vec4(position,1.0);
+				gl_Position = viewProjection * transform * vec4(position,1.0);
 			}
 		)";
 
@@ -125,7 +129,7 @@ public:
 		else if (re::Input::isKeyPressed(RE_KEY_RIGHT)){
 			cameraPosition.x += cameraMoveSpeed * timestep;
 		}
-		else if (re::Input::isKeyPressed(RE_KEY_UP)) {
+		if (re::Input::isKeyPressed(RE_KEY_UP)) {
 			cameraPosition.y += cameraMoveSpeed * timestep;
 		}
 		else if (re::Input::isKeyPressed(RE_KEY_DOWN)) {
@@ -137,8 +141,7 @@ public:
 		} else if (re::Input::isKeyPressed(RE_KEY_E)) {
 			cameraRotation -= cameraRotationSpeed * timestep;
 		}
-		
-		
+
 		re::RenderCommand::setClearColor({ .2f, .2f, .2f, 1.f });
 		re::RenderCommand::clear();
 
@@ -147,7 +150,15 @@ public:
 
 		re::Renderer::beginScene(camera);
 
-		re::Renderer::submit(blueShader, squareVA);
+		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+
+		for (int y = 0; y < 20; y++) {
+			for (int x = 0; x < 20; x++) {
+				glm::vec3 position(x * 0.11f, y * 0.11f, 0.0f);
+				glm::mat4 tranform = glm::translate(glm::mat4(1.0f), position) * scale;
+				re::Renderer::submit(blueShader, squareVA, tranform);
+			}
+		}
 
 		re::Renderer::submit(shader, vertexArray);
 
@@ -169,8 +180,8 @@ private:
 
 	re::OrthographicCamera camera;
 	glm::vec3 cameraPosition;
-	float cameraMoveSpeed = 0.1f;
-	float cameraRotationSpeed = 0.01f;
+	float cameraMoveSpeed = 1.0f;
+	float cameraRotationSpeed = 1.0f;
 	float cameraRotation = 0.0f;
 };
 
