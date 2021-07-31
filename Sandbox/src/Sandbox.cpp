@@ -111,12 +111,13 @@ public:
 			#version 330 core
 
 			layout(location = 0) out vec4 color;
+			uniform vec4 Color;
 		
 			void main(){
-				color = vec4(0.3,0.4,0.7,1.0);
+				color = Color;
 			}
 		)";
-		blueShader.reset(new re::Shader(squareVertexSrc, squarePixelShader));
+		squareShader.reset(new re::Shader(squareVertexSrc, squarePixelShader));
 	}
 
 	void onUpdate(re::Timestep timestep) override {
@@ -152,11 +153,28 @@ public:
 
 		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
+		glm::vec4 redColor(0.7f, 0.3f, 0.4f, 1.0f);
+		glm::vec4 blueColor(0.3f, 0.4f, 0.7f, 1.0f);
+
+		/*
+		 * Example of Material system API
+		 * ... squareMesh ...;
+		 * re::MaterialRef material = new re::Material(squareShader);
+		 * re::MaterialInstanceRef materialInstance = new re::MaterialInstance(material);
+		 * materialInstance.set("Color", redColor);
+		 *
+		 *
+		 * squareMesh->setMaterial(material);
+		*/
+		
 		for (int y = 0; y < 20; y++) {
 			for (int x = 0; x < 20; x++) {
 				glm::vec3 position(x * 0.11f, y * 0.11f, 0.0f);
 				glm::mat4 tranform = glm::translate(glm::mat4(1.0f), position) * scale;
-				re::Renderer::submit(blueShader, squareVA, tranform);
+				//it's not a very optimal way to do this.
+				if (x % 2 == 0) squareShader->uploadUniformFloat4("Color", redColor);
+				else			squareShader->uploadUniformFloat4("Color",blueColor);
+				re::Renderer::submit(squareShader, squareVA, tranform);
 			}
 		}
 
@@ -172,7 +190,7 @@ public:
 
 private:
 	std::shared_ptr<re::Shader> shader;
-	std::shared_ptr<re::Shader> blueShader;
+	std::shared_ptr<re::Shader> squareShader;
 
 	std::shared_ptr<re::VertexArray> vertexArray;
 

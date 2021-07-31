@@ -128,6 +128,11 @@ namespace RealEngine {
 		glUseProgram(0);
 	}
 
+	void Shader::uploadUniformFloat4(const std::string& name, const glm::vec4& vector) {
+		GLint location = glGetUniformLocation(rendererId, name.c_str());
+		glUniform4f(location,vector.x, vector.y, vector.z, vector.w);
+	}
+
 	void Shader::uploadUniformMat4(const std::string& name, const glm::mat4& matrix) {
 		//glUseProgram(rendererId);
 		GLint location = glGetUniformLocation(rendererId, name.c_str());
