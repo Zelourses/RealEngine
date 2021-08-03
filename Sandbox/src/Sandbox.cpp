@@ -2,6 +2,11 @@
 
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#include <imgui/imgui.h>
+
+#include "platform/OpenGL/OpenGLShader.h"
 
 //FIXME: still a little bit of leaking abstraction. Need to move shaders somewhere
 class ExampleLayer : public RealEngine::Layer {
@@ -91,7 +96,7 @@ public:
 			}
 		)";
 
-		shader.reset(new re::Shader(vertexSrc, pixelShader));
+		shader.reset(re::Shader::create(vertexSrc, pixelShader));
 
 
 		std::string squareVertexSrc = R"(
@@ -111,13 +116,13 @@ public:
 			#version 330 core
 
 			layout(location = 0) out vec4 color;
-			uniform vec4 Color;
+			uniform vec3 Color;
 		
 			void main(){
-				color = Color;
+				color = vec4(Color, 1.0f);
 			}
 		)";
-		squareShader.reset(new re::Shader(squareVertexSrc, squarePixelShader));
+		squareShader.reset(re::Shader::create(squareVertexSrc, squarePixelShader));
 	}
 
 	void onUpdate(re::Timestep timestep) override {
@@ -166,14 +171,13 @@ public:
 		 *
 		 * squareMesh->setMaterial(material);
 		*/
+		std::dynamic_pointer_cast<re::OpenGLShader>(squareShader)->bind();
+		std::dynamic_pointer_cast<re::OpenGLShader>(squareShader)->uploadUniformFloat3("Color",squareColor);
 		
 		for (int y = 0; y < 20; y++) {
 			for (int x = 0; x < 20; x++) {
 				glm::vec3 position(x * 0.11f, y * 0.11f, 0.0f);
 				glm::mat4 tranform = glm::translate(glm::mat4(1.0f), position) * scale;
-				//it's not a very optimal way to do this.
-				if (x % 2 == 0) squareShader->uploadUniformFloat4("Color", redColor);
-				else			squareShader->uploadUniformFloat4("Color",blueColor);
 				re::Renderer::submit(squareShader, squareVA, tranform);
 			}
 		}
@@ -183,9 +187,10 @@ public:
 		re::Renderer::endScene();
 	}
 
-	void onEvent(RealEngine::Event& event) override {
-		re::EventDispatcher dispatcher(event);
-		//dispatcher.dispatch<re::KeyPressedEvent>(RE_BIND_EVENT_FN(ExampleLayer::onKeyPressedEvent));
+	void onImGUIRender() override {
+		ImGui::Begin("square settings");
+		ImGui::ColorEdit3("Square color", glm::value_ptr(squareColor));
+		ImGui::End();
 	}
 
 private:
@@ -201,6 +206,8 @@ private:
 	float cameraMoveSpeed = 1.0f;
 	float cameraRotationSpeed = 1.0f;
 	float cameraRotation = 0.0f;
+
+	glm::vec3 squareColor = { 0.3f, 0.4f, 0.7f};
 };
 
 class Sandbox : public RealEngine::Application {

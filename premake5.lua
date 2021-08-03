@@ -110,6 +110,7 @@ project "Sandbox"
 	includedirs {
 		"RealEngine/vendor/spdlog/include",
 		"RealEngine/src",
+		"RealEngine/vendor",
 		"%{includeDir.glm}"
 	}
 
