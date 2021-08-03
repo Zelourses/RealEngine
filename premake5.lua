@@ -1,4 +1,4 @@
-workspace "RealEngine"
+workspace "Real"
 	architecture "x64"
 	startproject "Sandbox"
 
@@ -11,20 +11,20 @@ workspace "RealEngine"
 outputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 includeDir = {}
-includeDir["GLFW"] = "RealEngine/vendor/glfw/include"
-includeDir["Glad"] = "RealEngine/vendor/glad/include"
-includeDir["ImGUI"] = "RealEngine/vendor/imgui"
-includeDir["glm"] = "RealEngine/vendor/glm"
+includeDir["GLFW"] = "Real/vendor/glfw/include"
+includeDir["Glad"] = "Real/vendor/glad/include"
+includeDir["ImGUI"] = "Real/vendor/imgui"
+includeDir["glm"] = "Real/vendor/glm"
 
 group "Dependencies"
-	include "RealEngine/vendor/glfw"
-	include "RealEngine/vendor/glad"
-	include "RealEngine/vendor/imgui"
+	include "Real/vendor/glfw"
+	include "Real/vendor/glad"
+	include "Real/vendor/imgui"
 	
 group ""
 
-project "RealEngine"
-	location "RealEngine"
+project "Real"
+	location "Real"
 	kind "StaticLib"
 	language "C++"
 	cppdialect "C++17"
@@ -34,7 +34,7 @@ project "RealEngine"
 	objdir ("out/build/"..outputDir.. "/%{prj.name}")
 
 	pchheader "repch.h"
-	pchsource "RealEngine/src/repch.cpp"
+	pchsource "Real/src/repch.cpp"
 
 	files {
 		"%{prj.name}/src/**.h",
@@ -108,14 +108,14 @@ project "Sandbox"
 	}
 
 	includedirs {
-		"RealEngine/vendor/spdlog/include",
-		"RealEngine/src",
-		"RealEngine/vendor",
+		"Real/vendor/spdlog/include",
+		"Real/src",
+		"Real/vendor",
 		"%{includeDir.glm}"
 	}
 
 	links{
-		"RealEngine"
+		"Real"
 	}
 
 	filter "system:windows"

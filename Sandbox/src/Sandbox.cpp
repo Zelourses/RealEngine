@@ -1,4 +1,4 @@
-#include <RealEngine.h>
+#include <Real.h>
 
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -9,13 +9,13 @@
 #include "platform/OpenGL/OpenGLShader.h"
 
 //FIXME: still a little bit of leaking abstraction. Need to move shaders somewhere
-class ExampleLayer : public RealEngine::Layer {
+class ExampleLayer : public Real::Layer {
 public:
 	ExampleLayer()
 		: Layer("Example"), camera(-1.6f, 1.6f, -0.9f, 0.9f),
 		cameraPosition(0.0f, 0.0f, 0.0f) {
 
-		vertexArray.reset(re::VertexArray::create());
+		vertexArray.reset(Real::VertexArray::create());
 
 
 		float vertices[3 * 3] = {
@@ -23,12 +23,12 @@ public:
 			 0.5f, -0.5f, 0.0f,
 			 0.0f,  0.5f, 0.0f
 		};
-		std::shared_ptr<re::VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(re::VertexBuffer::create(vertices, sizeof(vertices)));
+		std::shared_ptr<Real::VertexBuffer> vertexBuffer;
+		vertexBuffer.reset(Real::VertexBuffer::create(vertices, sizeof(vertices)));
 
 
-		re::BufferLayout layout = {
-			{re::SDT::Float3, "position"}
+		Real::BufferLayout layout = {
+			{Real::SDT::Float3, "position"}
 		};
 
 		vertexBuffer->setLayout(layout);
@@ -36,8 +36,8 @@ public:
 		vertexArray->addVertexBuffer(vertexBuffer);
 
 		uint32_t indices[] = { 0, 1, 2 };
-		std::shared_ptr<re::IndexBuffer> indexBuffer;
-		indexBuffer.reset(re::IndexBuffer::create(indices, 3));
+		std::shared_ptr<Real::IndexBuffer> indexBuffer;
+		indexBuffer.reset(Real::IndexBuffer::create(indices, 3));
 
 		vertexArray->setIndexBuffer(indexBuffer);
 
@@ -50,20 +50,20 @@ public:
 
 
 
-		squareVA.reset(re::VertexArray::create());
+		squareVA.reset(Real::VertexArray::create());
 
-		std::shared_ptr<re::VertexBuffer> squareVB;
-		squareVB.reset(re::VertexBuffer::create(squareVertices, sizeof(squareVertices)));
+		std::shared_ptr<Real::VertexBuffer> squareVB;
+		squareVB.reset(Real::VertexBuffer::create(squareVertices, sizeof(squareVertices)));
 
 		squareVB->setLayout({
-			{re::SDT::Float3, "position"}
+			{Real::SDT::Float3, "position"}
 			});
 		squareVA->addVertexBuffer(squareVB);
 
 		uint32_t squareIndices[] = { 0, 1, 2, 2, 3, 0 };
 
-		std::shared_ptr<re::IndexBuffer> squareIB;
-		squareIB.reset(re::IndexBuffer::create(squareIndices, sizeof(squareIndices)));
+		std::shared_ptr<Real::IndexBuffer> squareIB;
+		squareIB.reset(Real::IndexBuffer::create(squareIndices, sizeof(squareIndices)));
 
 		squareVA->setIndexBuffer(squareIB);
 
@@ -96,7 +96,7 @@ public:
 			}
 		)";
 
-		shader.reset(re::Shader::create(vertexSrc, pixelShader));
+		shader.reset(Real::Shader::create(vertexSrc, pixelShader));
 
 
 		std::string squareVertexSrc = R"(
@@ -122,39 +122,39 @@ public:
 				color = vec4(Color, 1.0f);
 			}
 		)";
-		squareShader.reset(re::Shader::create(squareVertexSrc, squarePixelShader));
+		squareShader.reset(Real::Shader::create(squareVertexSrc, squarePixelShader));
 	}
 
-	void onUpdate(re::Timestep timestep) override {
+	void onUpdate(Real::Timestep timestep) override {
 
 		RE_TRACE("Delta time: {0} ({1})", timestep.getSeconds(), timestep.getMilliseconds());
 
-		if (re::Input::isKeyPressed(RE_KEY_LEFT)) {
+		if (Real::Input::isKeyPressed(RE_KEY_LEFT)) {
 			cameraPosition.x -= cameraMoveSpeed * timestep;
 		}
-		else if (re::Input::isKeyPressed(RE_KEY_RIGHT)){
+		else if (Real::Input::isKeyPressed(RE_KEY_RIGHT)){
 			cameraPosition.x += cameraMoveSpeed * timestep;
 		}
-		if (re::Input::isKeyPressed(RE_KEY_UP)) {
+		if (Real::Input::isKeyPressed(RE_KEY_UP)) {
 			cameraPosition.y += cameraMoveSpeed * timestep;
 		}
-		else if (re::Input::isKeyPressed(RE_KEY_DOWN)) {
+		else if (Real::Input::isKeyPressed(RE_KEY_DOWN)) {
 			cameraPosition.y -= cameraMoveSpeed * timestep;
 		}
 
-		if (re::Input::isKeyPressed(RE_KEY_Q)) {
+		if (Real::Input::isKeyPressed(RE_KEY_Q)) {
 			cameraRotation += cameraRotationSpeed * timestep;
-		} else if (re::Input::isKeyPressed(RE_KEY_E)) {
+		} else if (Real::Input::isKeyPressed(RE_KEY_E)) {
 			cameraRotation -= cameraRotationSpeed * timestep;
 		}
 
-		re::RenderCommand::setClearColor({ .2f, .2f, .2f, 1.f });
-		re::RenderCommand::clear();
+		Real::RenderCommand::setClearColor({ .2f, .2f, .2f, 1.f });
+		Real::RenderCommand::clear();
 
 		camera.setPosition(cameraPosition);
 		camera.setRotation(cameraRotation);
 
-		re::Renderer::beginScene(camera);
+		Real::Renderer::beginScene(camera);
 
 		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
@@ -164,27 +164,27 @@ public:
 		/*
 		 * Example of Material system API
 		 * ... squareMesh ...;
-		 * re::MaterialRef material = new re::Material(squareShader);
-		 * re::MaterialInstanceRef materialInstance = new re::MaterialInstance(material);
+		 * Real::MaterialRef material = new Real::Material(squareShader);
+		 * Real::MaterialInstanceRef materialInstance = new Real::MaterialInstance(material);
 		 * materialInstance.set("Color", redColor);
 		 *
 		 *
 		 * squareMesh->setMaterial(material);
 		*/
-		std::dynamic_pointer_cast<re::OpenGLShader>(squareShader)->bind();
-		std::dynamic_pointer_cast<re::OpenGLShader>(squareShader)->uploadUniformFloat3("Color",squareColor);
+		std::dynamic_pointer_cast<Real::OpenGLShader>(squareShader)->bind();
+		std::dynamic_pointer_cast<Real::OpenGLShader>(squareShader)->uploadUniformFloat3("Color",squareColor);
 		
 		for (int y = 0; y < 20; y++) {
 			for (int x = 0; x < 20; x++) {
 				glm::vec3 position(x * 0.11f, y * 0.11f, 0.0f);
 				glm::mat4 tranform = glm::translate(glm::mat4(1.0f), position) * scale;
-				re::Renderer::submit(squareShader, squareVA, tranform);
+				Real::Renderer::submit(squareShader, squareVA, tranform);
 			}
 		}
 
-		re::Renderer::submit(shader, vertexArray);
+		Real::Renderer::submit(shader, vertexArray);
 
-		re::Renderer::endScene();
+		Real::Renderer::endScene();
 	}
 
 	void onImGUIRender() override {
@@ -194,14 +194,14 @@ public:
 	}
 
 private:
-	std::shared_ptr<re::Shader> shader;
-	std::shared_ptr<re::Shader> squareShader;
+	std::shared_ptr<Real::Shader> shader;
+	std::shared_ptr<Real::Shader> squareShader;
 
-	std::shared_ptr<re::VertexArray> vertexArray;
+	std::shared_ptr<Real::VertexArray> vertexArray;
 
-	std::shared_ptr<re::VertexArray> squareVA;
+	std::shared_ptr<Real::VertexArray> squareVA;
 
-	re::OrthographicCamera camera;
+	Real::OrthographicCamera camera;
 	glm::vec3 cameraPosition;
 	float cameraMoveSpeed = 1.0f;
 	float cameraRotationSpeed = 1.0f;
@@ -210,7 +210,7 @@ private:
 	glm::vec3 squareColor = { 0.3f, 0.4f, 0.7f};
 };
 
-class Sandbox : public RealEngine::Application {
+class Sandbox : public Real::Application {
 public:
 	Sandbox() {
 		pushLayer(new ExampleLayer());
@@ -221,6 +221,6 @@ public:
 
 };
 
-RealEngine::Application* RealEngine::createApplication() {
+Real::Application* Real::createApplication() {
 	return new Sandbox();
 }

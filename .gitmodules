@@ -1,12 +1,12 @@
-[submodule "RealEngine/vendor/spdlog"]
-	path = RealEngine/vendor/spdlog
+[submodule "Real/vendor/spdlog"]
+	path = Real/vendor/spdlog
 	url = https://github.com/gabime/spdlog
-[submodule "RealEngine/vendor/glfw"]
-	path = RealEngine/vendor/glfw
+[submodule "Real/vendor/glfw"]
+	path = Real/vendor/glfw
 	url = https://github.com/Zelourses/glfw
-[submodule "RealEngine/vendor/imgui"]
-	path = RealEngine/vendor/imgui
-	url = https://github.com/Zelourses/imgui.git
-[submodule "RealEngine/vendor/glm"]
-	path = RealEngine/vendor/glm
+[submodule "Real/vendor/imgui"]
+	path = Real/vendor/imgui
+	url = https://github.com/Zelourses/imgui
+[submodule "Real/vendor/glm"]
+	path = Real/vendor/glm
 	url = https://github.com/g-truc/glm

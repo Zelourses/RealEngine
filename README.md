@@ -1,4 +1,4 @@
-# realEngine
+# Real
 Game engine that i realistically could create by myself(almost). I'll try to do that it will be capable of creating real-time 3D rendering applications.
 
 ## What this thing can do?
@@ -9,6 +9,7 @@ You can:
 + Look at demo window of imgui!
 + check what buttons you are pressing!
 + Resizing window!
++ Look at Cubes and ranbow triangle
 
 ## How to build it?
 Of course by using precious [PreMake](https://github.com/premake/premake-core)  
@@ -25,12 +26,12 @@ You can build it in 3 modes:
 
 ## Structure
 This project has 2 "modules" in it.  
-1) `RealEngine` - the engine himself, works like dynamic library
+1) `RealEngine` - the engine himself. Static library
 2) `Sandbox` - project that will use the engine, more like Editor
 
 ## Libraries
 For now this engine is using:
-+ [spdlog](https://github.com/gabime/spdlog)
++ [spdlog](https://github.com/gabime/spdlog) (great log library)
 + [GLFW](https://github.com/Zelourses/glfw) (my fork)
 + [Glad](https://glad.dav1d.de/) (great thing)
 + [ImGUI](https://github.com/Zelourses/imgui) (my fork)
