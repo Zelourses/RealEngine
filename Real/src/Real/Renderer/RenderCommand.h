@@ -14,7 +14,7 @@ namespace Real {
 			rendererAPI->clear();
 		}
 		
-		inline static void drawIndexed(const std::shared_ptr<VertexArray>& vertexArray) {
+		inline static void drawIndexed(const Ref<VertexArray>& vertexArray) {
 			rendererAPI->drawIndexed(vertexArray);
 		}
 	private:

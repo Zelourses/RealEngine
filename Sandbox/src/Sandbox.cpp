@@ -23,7 +23,7 @@ public:
 			 0.5f, -0.5f, 0.0f,
 			 0.0f,  0.5f, 0.0f
 		};
-		std::shared_ptr<Real::VertexBuffer> vertexBuffer;
+		Real::Ref<Real::VertexBuffer> vertexBuffer;
 		vertexBuffer.reset(Real::VertexBuffer::create(vertices, sizeof(vertices)));
 
 
@@ -36,7 +36,7 @@ public:
 		vertexArray->addVertexBuffer(vertexBuffer);
 
 		uint32_t indices[] = { 0, 1, 2 };
-		std::shared_ptr<Real::IndexBuffer> indexBuffer;
+		Real::Ref<Real::IndexBuffer> indexBuffer;
 		indexBuffer.reset(Real::IndexBuffer::create(indices, 3));
 
 		vertexArray->setIndexBuffer(indexBuffer);
@@ -52,7 +52,7 @@ public:
 
 		squareVA.reset(Real::VertexArray::create());
 
-		std::shared_ptr<Real::VertexBuffer> squareVB;
+		Real::Ref<Real::VertexBuffer> squareVB;
 		squareVB.reset(Real::VertexBuffer::create(squareVertices, sizeof(squareVertices)));
 
 		squareVB->setLayout({
@@ -62,7 +62,7 @@ public:
 
 		uint32_t squareIndices[] = { 0, 1, 2, 2, 3, 0 };
 
-		std::shared_ptr<Real::IndexBuffer> squareIB;
+		Real::Ref<Real::IndexBuffer> squareIB;
 		squareIB.reset(Real::IndexBuffer::create(squareIndices, sizeof(squareIndices)));
 
 		squareVA->setIndexBuffer(squareIB);
@@ -194,12 +194,10 @@ public:
 	}
 
 private:
-	std::shared_ptr<Real::Shader> shader;
-	std::shared_ptr<Real::Shader> squareShader;
-
-	std::shared_ptr<Real::VertexArray> vertexArray;
-
-	std::shared_ptr<Real::VertexArray> squareVA;
+	Real::Ref<Real::Shader> shader;
+	Real::Ref<Real::Shader> squareShader;
+	Real::Ref<Real::VertexArray> vertexArray;
+	Real::Ref<Real::VertexArray> squareVA;
 
 	Real::OrthographicCamera camera;
 	glm::vec3 cameraPosition;

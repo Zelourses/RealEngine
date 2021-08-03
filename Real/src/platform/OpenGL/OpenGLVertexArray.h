@@ -9,18 +9,18 @@ namespace Real{
 
 		void unbind() const override;
 
-		void addVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer) override;
-		void setIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) override;
+		void addVertexBuffer(const Ref<VertexBuffer>& vertexBuffer) override;
+		void setIndexBuffer(const Ref<IndexBuffer>& indexBuffer) override;
 
 		~OpenGLVertexArray();
 		OpenGLVertexArray();
 
-		inline const std::shared_ptr<IndexBuffer>& getIndexBuffer() const override { return indexBuffer; }
-		inline const std::vector<std::shared_ptr<VertexBuffer>>& getVertexBuffers() const override { return vertexBuffers; }
+		inline const Ref<IndexBuffer>& getIndexBuffer() const override { return indexBuffer; }
+		inline const std::vector<Ref<VertexBuffer>>& getVertexBuffers() const override { return vertexBuffers; }
 
 	private:
-		std::vector<std::shared_ptr<VertexBuffer>> vertexBuffers;
-		std::shared_ptr<IndexBuffer> indexBuffer;
+		std::vector<Ref<VertexBuffer>> vertexBuffers;
+		Ref<IndexBuffer> indexBuffer;
 		uint32_t rendererId;
 	};
 }

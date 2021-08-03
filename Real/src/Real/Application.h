@@ -32,7 +32,7 @@ namespace Real {
 		
 		bool windowRunning = true;
 		
-		std::unique_ptr<Window> window;
+		Real::Scope<Window> window;
 		ImGUILayer* imGUILayer;
 		LayerStack layerStack;
 		static Application* appInstance;
