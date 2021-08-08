@@ -39,7 +39,7 @@ namespace Real {
 		glBindVertexArray(rendererId);
 		vertexBuffer->bind();
 
-		uint32_t i = 0;
+		unsigned int i = 0;
 		const auto& layout = vertexBuffer->getLayout();
 		for (const auto& l : layout) {
 			glEnableVertexAttribArray(i);

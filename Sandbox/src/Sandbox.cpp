@@ -35,17 +35,17 @@ public:
 
 		vertexArray->addVertexBuffer(vertexBuffer);
 
-		uint32_t indices[] = { 0, 1, 2 };
+		unsigned int indices[] = { 0, 1, 2 };
 		Real::Ref<Real::IndexBuffer> indexBuffer;
 		indexBuffer.reset(Real::IndexBuffer::create(indices, 3));
 
 		vertexArray->setIndexBuffer(indexBuffer);
 
-		float squareVertices[3 * 4] = {
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.5f,  0.5f, 0.0f,
-			-0.5f,  0.5f, 0.0f
+		float squareVertices[] = {
+			-0.5f, -0.5f, 0.0f, /*texture coordinates*/	0.0f, 0.0f, //first point
+			 0.5f, -0.5f, 0.0f,							1.0f, 0.0f, //second point
+			 0.5f,  0.5f, 0.0f,							1.0f, 1.0f, //third point
+			-0.5f,  0.5f, 0.0f,							0.0f, 1.0f	//fourth point
 		};
 
 
@@ -56,11 +56,12 @@ public:
 		squareVB.reset(Real::VertexBuffer::create(squareVertices, sizeof(squareVertices)));
 
 		squareVB->setLayout({
-			{Real::SDT::Float3, "position"}
+			{Real::SDT::Float3, "position"},
+			{Real::SDT::Float2, "textCoordinates"}
 			});
 		squareVA->addVertexBuffer(squareVB);
 
-		uint32_t squareIndices[] = { 0, 1, 2, 2, 3, 0 };
+		unsigned int squareIndices[] = { 0, 1, 2, 2, 3, 0 };
 
 		Real::Ref<Real::IndexBuffer> squareIB;
 		squareIB.reset(Real::IndexBuffer::create(squareIndices, sizeof(squareIndices)));
@@ -123,11 +124,49 @@ public:
 			}
 		)";
 		squareShader.reset(Real::Shader::create(squareVertexSrc, squarePixelShader));
+
+
+
+
+		std::string textureVertexSrc = R"(
+			#version 330 core
+
+			layout(location = 0) in vec3 position;
+			layout(location = 1) in vec2 textCoordinates;
+		
+			uniform mat4 viewProjection;
+			uniform mat4 transform;
+
+			out vec2 outTexCoords;
+		
+			void main(){
+				outTexCoords = textCoordinates;
+				gl_Position = viewProjection * transform * vec4(position,1.0);
+			}
+		)";
+
+		std::string texturePixelShader = R"(
+			#version 330 core
+
+			layout(location = 0) out vec4 color;
+			uniform sampler2D Texture;
+		
+			in vec2 outTexCoords;
+		
+			void main(){
+				color = texture(Texture, outTexCoords);
+			}
+		)";
+		textureShader.reset(Real::Shader::create(textureVertexSrc, texturePixelShader));
+
+
+		std::dynamic_pointer_cast<Real::OpenGLShader>(textureShader)->bind();
+		std::dynamic_pointer_cast<Real::OpenGLShader>(textureShader)->uploadUniformInt("Texture", 0);
+		
+		texture = Real::Texture2D::create("assets/textures/Checkerboard.png");
 	}
 
 	void onUpdate(Real::Timestep timestep) override {
-
-		RE_TRACE("Delta time: {0} ({1})", timestep.getSeconds(), timestep.getMilliseconds());
 
 		if (Real::Input::isKeyPressed(RE_KEY_LEFT)) {
 			cameraPosition.x -= cameraMoveSpeed * timestep;
@@ -181,8 +220,8 @@ public:
 				Real::Renderer::submit(squareShader, squareVA, tranform);
 			}
 		}
-
-		Real::Renderer::submit(shader, vertexArray);
+		texture->bind();
+		Real::Renderer::submit(textureShader, squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		Real::Renderer::endScene();
 	}
@@ -195,9 +234,11 @@ public:
 
 private:
 	Real::Ref<Real::Shader> shader;
-	Real::Ref<Real::Shader> squareShader;
+	Real::Ref<Real::Shader> squareShader, textureShader;
 	Real::Ref<Real::VertexArray> vertexArray;
 	Real::Ref<Real::VertexArray> squareVA;
+
+	Real::Ref<Real::Texture2D> texture;
 
 	Real::OrthographicCamera camera;
 	glm::vec3 cameraPosition;

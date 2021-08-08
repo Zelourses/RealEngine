@@ -7,7 +7,7 @@
 
 namespace Real {
 
-	VertexBuffer* VertexBuffer::create(float* vertices, uint32_t size) {
+	VertexBuffer* VertexBuffer::create(float* vertices, unsigned int size) {
 		switch (Renderer::getRenderAPI()) {
 
 		case RendererAPI::API::None: 
@@ -19,7 +19,7 @@ namespace Real {
 		return nullptr;
 	}
 
-	IndexBuffer* IndexBuffer::create(uint32_t* indices, uint32_t size) {
+	IndexBuffer* IndexBuffer::create(unsigned int* indices, unsigned int size) {
 		switch (Renderer::getRenderAPI()) {
 
 		case RendererAPI::API::None:

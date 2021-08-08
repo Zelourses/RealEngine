@@ -20,7 +20,7 @@ namespace Real {
 
 	using SDT = ShaderDataType;
 
-	static uint32_t shaderDataTypeSize(ShaderDataType type) {
+	static unsigned int shaderDataTypeSize(ShaderDataType type) {
 		switch (type) {
 			case SDT::None: /*it's also an error*/break;
 			case SDT::Float:	return 4;
@@ -43,15 +43,15 @@ namespace Real {
 	struct BufferElement {
 		std::string name;
 		ShaderDataType	type;
-		uint32_t	size;
-		uint32_t	offset;
+		unsigned int	size;
+		unsigned int	offset;
 		bool normalized;
 
 		BufferElement(ShaderDataType type, const std::string& name, bool normalized = false )
 			:name(name), type(type),size(shaderDataTypeSize(type)), offset(0), normalized(normalized) {
 		}
 
-		uint32_t getComponentCount() const {
+		unsigned int getComponentCount() const {
 			switch (type) {
 				case SDT::None:		break;
 				case SDT::Float:	return 1;
@@ -83,7 +83,7 @@ namespace Real {
 		}
 		
 		inline const std::vector<BufferElement>& getElements() const { return elements; }
-		inline uint32_t getStride() const { return stride; }
+		inline unsigned int getStride() const { return stride; }
 
 		std::vector<BufferElement>::iterator begin() { return elements.begin(); }
 		std::vector<BufferElement>::iterator end() { return elements.end(); }
@@ -92,7 +92,7 @@ namespace Real {
 	private:
 
 		void calculateOffsetAndStride() {
-			uint32_t offset = 0;
+			unsigned int offset = 0;
 			stride = 0;
 			for (auto& el: elements) {
 				el.offset = offset;
@@ -101,7 +101,7 @@ namespace Real {
 			}
 		}
 		std::vector<BufferElement> elements;
-		uint32_t stride = 0;
+		unsigned int stride = 0;
 	};
 
 	class VertexBuffer {
@@ -112,7 +112,7 @@ namespace Real {
 		virtual void setLayout(const BufferLayout& layout) = 0;
 		virtual const BufferLayout& getLayout() const = 0;
 
-		static VertexBuffer* create(float* vertices, uint32_t size);
+		static VertexBuffer* create(float* vertices, unsigned int size);
 		
 		virtual ~VertexBuffer() {}
 	};
@@ -123,10 +123,10 @@ namespace Real {
 		virtual void unbind() const = 0;
 
 		//how many indices in buffer
-		virtual uint32_t getCount() const = 0;
+		virtual unsigned int getCount() const = 0;
 
 
-		static IndexBuffer* create(uint32_t* indices, uint32_t size);
+		static IndexBuffer* create(unsigned int* indices, unsigned int size);
 
 		virtual ~IndexBuffer() {}
 		

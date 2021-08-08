@@ -7,7 +7,7 @@ namespace Real {
 
 	////////////VertexBuffer////////////
 
-	OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size) {
+	OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, unsigned int size) {
 		glCreateBuffers(1, &rendererId);
 		glBindBuffer(GL_ARRAY_BUFFER, rendererId);
 		//a little bit bad hard-coding of draw in static mode
@@ -27,13 +27,13 @@ namespace Real {
 
 	////////////IndexBuffer////////////
 
-	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count)
+	OpenGLIndexBuffer::OpenGLIndexBuffer(unsigned int* indices, unsigned int count)
 		:count(count){
 		glCreateBuffers(1, &rendererId);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rendererId);
 		
 		//a little bit bad hard-coding of draw in static mode
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count*sizeof(uint32_t), indices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count*sizeof(unsigned int), indices, GL_STATIC_DRAW);
 	}
 	void OpenGLIndexBuffer::bind() const {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rendererId);

@@ -30,6 +30,9 @@
  */
 #define RE_BIND_EVENT_FN(x) std::bind(&x,this, std::placeholders::_1)
 
+//One static assert to rule the whole project
+static_assert(sizeof(unsigned int) == sizeof(uint32_t));
+
 namespace Real {
 
 	template<typename T>

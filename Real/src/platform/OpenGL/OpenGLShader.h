@@ -24,7 +24,7 @@ namespace Real{
 		void uploadUniformMat4(const std::string& name, const glm::mat4& matrix) const;
 	private:
 		//unique identifier of this object
-		uint32_t rendererId;
+		unsigned int rendererId;
 	};
 }
 

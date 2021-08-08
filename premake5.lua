@@ -15,6 +15,7 @@ includeDir["GLFW"] = "Real/vendor/glfw/include"
 includeDir["Glad"] = "Real/vendor/glad/include"
 includeDir["ImGUI"] = "Real/vendor/imgui"
 includeDir["glm"] = "Real/vendor/glm"
+includeDir["stb_image"] = "Real/vendor/stb_image"
 
 group "Dependencies"
 	include "Real/vendor/glfw"
@@ -38,7 +39,10 @@ project "Real"
 
 	files {
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+
+		"%{prj.name}/vendor/stb_image/**.cpp",
+		"%{prj.name}/vendor/stb_image/**.h"
 	}
 
 	includedirs {
@@ -47,7 +51,8 @@ project "Real"
 		"%{includeDir.GLFW}",
 		"%{includeDir.Glad}",
 		"%{includeDir.ImGUI}",
-		"%{includeDir.glm}"
+		"%{includeDir.glm}",
+		"%{includeDir.stb_image}"
 	}
 
 	links{

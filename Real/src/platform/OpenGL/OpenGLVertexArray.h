@@ -21,6 +21,6 @@ namespace Real{
 	private:
 		std::vector<Ref<VertexBuffer>> vertexBuffers;
 		Ref<IndexBuffer> indexBuffer;
-		uint32_t rendererId;
+		unsigned int rendererId;
 	};
 }

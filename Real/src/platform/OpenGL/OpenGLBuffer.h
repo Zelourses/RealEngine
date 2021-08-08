@@ -3,7 +3,7 @@
 namespace Real {
 	class OpenGLVertexBuffer : public VertexBuffer{
 	public:
-		OpenGLVertexBuffer(float* vertices, uint32_t size);
+		OpenGLVertexBuffer(float* vertices, unsigned int size);
 		void bind() const override;
 		void unbind() const override;
 
@@ -13,24 +13,24 @@ namespace Real {
 		~OpenGLVertexBuffer() override;
 
 	private:
-		uint32_t rendererId;
+		unsigned int rendererId;
 		BufferLayout layout;
 	};
 
 
 	class OpenGLIndexBuffer : public IndexBuffer{
 	public:
-		OpenGLIndexBuffer(uint32_t* indices, uint32_t size);
+		OpenGLIndexBuffer(unsigned int* indices, unsigned int size);
 		void bind() const override;
 		void unbind() const override;
 
-		uint32_t getCount() const override { return count; }
+		unsigned int getCount() const override { return count; }
 
 		~OpenGLIndexBuffer() override;
 
 	private:
-		uint32_t rendererId;
-		uint32_t count;
+		unsigned int rendererId;
+		unsigned int count;
 
 	};
 }
