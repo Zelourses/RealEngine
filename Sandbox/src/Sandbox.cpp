@@ -164,6 +164,7 @@ public:
 		std::dynamic_pointer_cast<Real::OpenGLShader>(textureShader)->uploadUniformInt("Texture", 0);
 		
 		texture = Real::Texture2D::create("assets/textures/Checkerboard.png");
+		cppLogo = Real::Texture2D::create("assets/textures/cpp_logo.png");
 	}
 
 	void onUpdate(Real::Timestep timestep) override {
@@ -222,6 +223,9 @@ public:
 		}
 		texture->bind();
 		Real::Renderer::submit(textureShader, squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		cppLogo->bind();
+		Real::Renderer::submit(textureShader, squareVA, 
+			glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		Real::Renderer::endScene();
 	}
@@ -238,7 +242,7 @@ private:
 	Real::Ref<Real::VertexArray> vertexArray;
 	Real::Ref<Real::VertexArray> squareVA;
 
-	Real::Ref<Real::Texture2D> texture;
+	Real::Ref<Real::Texture2D> texture, cppLogo;
 
 	Real::OrthographicCamera camera;
 	glm::vec3 cameraPosition;

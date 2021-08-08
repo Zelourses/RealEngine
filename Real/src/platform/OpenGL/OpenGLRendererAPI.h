@@ -6,6 +6,8 @@ namespace Real {
 
 	class OpenGLRendererAPI : public RendererAPI{
 	public:
+		virtual void init() override;
+		
 		void setClearColor(const glm::vec4& color) override;
 		void clear() override;
 		

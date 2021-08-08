@@ -20,6 +20,9 @@ namespace Real {
 		
 		window = std::unique_ptr<Window>(Window::create());
 		window->setEventCallback(RE_BIND_EVENT_FN(Application::onEvent));
+
+		Renderer::init();
+		
 		imGUILayer = new ImGUILayer;
 		pushOverlay(imGUILayer);
 
