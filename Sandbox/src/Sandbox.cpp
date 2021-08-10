@@ -126,38 +126,7 @@ public:
 		squareShader.reset(Real::Shader::create(squareVertexSrc, squarePixelShader));
 
 
-
-
-		std::string textureVertexSrc = R"(
-			#version 330 core
-
-			layout(location = 0) in vec3 position;
-			layout(location = 1) in vec2 textCoordinates;
-		
-			uniform mat4 viewProjection;
-			uniform mat4 transform;
-
-			out vec2 outTexCoords;
-		
-			void main(){
-				outTexCoords = textCoordinates;
-				gl_Position = viewProjection * transform * vec4(position,1.0);
-			}
-		)";
-
-		std::string texturePixelShader = R"(
-			#version 330 core
-
-			layout(location = 0) out vec4 color;
-			uniform sampler2D Texture;
-		
-			in vec2 outTexCoords;
-		
-			void main(){
-				color = texture(Texture, outTexCoords);
-			}
-		)";
-		textureShader.reset(Real::Shader::create(textureVertexSrc, texturePixelShader));
+		textureShader.reset(Real::Shader::create("assets/shaders/Texture.glsl"));
 
 
 		std::dynamic_pointer_cast<Real::OpenGLShader>(textureShader)->bind();
