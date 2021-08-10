@@ -97,7 +97,7 @@ public:
 			}
 		)";
 
-		shader.reset(Real::Shader::create(vertexSrc, pixelShader));
+		shader = Real::Shader::create("triangleShader", vertexSrc, pixelShader);
 
 
 		std::string squareVertexSrc = R"(
@@ -123,10 +123,10 @@ public:
 				color = vec4(Color, 1.0f);
 			}
 		)";
-		squareShader.reset(Real::Shader::create(squareVertexSrc, squarePixelShader));
+		squareShader = Real::Shader::create("squareShader", squareVertexSrc, squarePixelShader);
 
 
-		textureShader.reset(Real::Shader::create("assets/shaders/Texture.glsl"));
+		auto textureShader = shaderLibrary.load("assets/shaders/Texture.glsl");
 
 
 		std::dynamic_pointer_cast<Real::OpenGLShader>(textureShader)->bind();
@@ -190,6 +190,7 @@ public:
 				Real::Renderer::submit(squareShader, squareVA, tranform);
 			}
 		}
+		auto textureShader = shaderLibrary.get("Texture");
 		texture->bind();
 		Real::Renderer::submit(textureShader, squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 		cppLogo->bind();
@@ -207,7 +208,8 @@ public:
 
 private:
 	Real::Ref<Real::Shader> shader;
-	Real::Ref<Real::Shader> squareShader, textureShader;
+	Real::ShaderLibrary shaderLibrary;
+	Real::Ref<Real::Shader> squareShader;
 	Real::Ref<Real::VertexArray> vertexArray;
 	Real::Ref<Real::VertexArray> squareVA;
 

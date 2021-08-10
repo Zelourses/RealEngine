@@ -11,12 +11,15 @@ namespace Real{
 	{
 	public:
 		OpenGLShader(const std::string& filePath);
-		OpenGLShader(const std::string& vertexSrc, const std::string& pixelSrc);
+		OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& pixelSrc);
 		~OpenGLShader() override;
 
 
 		void bind() const override;
 		void unbind() const override;
+
+
+		const std::string& getName() const override { return name; }
 
 		void uploadUniformInt(const std::string& name, int value) const;
 		
@@ -33,9 +36,12 @@ namespace Real{
 		std::unordered_map<GLenum, std::string> preProcess(const std::string& shaderSrc);
 		
 		void compile(const std::unordered_map<GLenum, std::string> shaderSrc);
-		
-		//unique identifier of this object
+	private:
+		//unique identifier of this object (in OpenGL)
 		unsigned int rendererId;
+
+		//unique identifier (for humans)
+		std::string name;
 	};
 }
 

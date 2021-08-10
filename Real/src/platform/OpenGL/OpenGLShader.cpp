@@ -7,6 +7,8 @@
 #include <fstream>
 
 #include <glm/gtc/type_ptr.hpp>
+#include <filesystem>
+#include <utility>
 
 namespace Real {
 
@@ -16,16 +18,27 @@ namespace Real {
 
 		auto shaders = preProcess(shaderSrc);
 		compile(shaders);
+
+		std::filesystem::path path(filePath);
+		name = path.stem().string();
 	}
 	
 
 	//pixelSrc is in OpenGL terms fragmentSrc. Yep, fragment shader.
-	OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& pixelSrc) {
+	OpenGLShader::OpenGLShader(
+		const std::string& name, 
+	    const std::string& vertexSrc, 
+		const std::string& pixelSrc)
+		        : rendererId(-1), name(name) { // -1 in rendererId is a sign of an error
 		std::unordered_map<GLenum, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertexSrc;
 		sources[GL_FRAGMENT_SHADER] = pixelSrc;
 
 		compile(sources);
+		RE_CORE_ASSERT(rendererId != static_cast<unsigned int>(-1), "Error while initializing shader")
+
+		//For OpenGL debugging programs
+		glObjectLabel(GL_SHADER, rendererId, static_cast<GLsizei>(name.length()), name.c_str());
 	}
 
 	OpenGLShader::~OpenGLShader() {
@@ -37,8 +50,7 @@ namespace Real {
 
 		std::string result;
 
-		std::ifstream input(filePath, std::ios::in, std::ios::binary);
-		if (input) {
+		if (std::ifstream input(filePath, std::ios::in | std::ios::binary); input) {
 			input.seekg(0, std::ios::end);
 			result.resize(input.tellg());
 
@@ -92,7 +104,10 @@ namespace Real {
 
 		auto program = glCreateProgram();
 
-		std::vector<GLenum> glShaderIds(shaderSrc.size());
+		RE_CORE_ASSERT(shaderSrc.size() <= 2, "Amount of possible shaders in file is 2")
+		std::array<GLenum, 2> glShaderIds;
+
+		int glShaderIdIndex = 0;
 		
 		for (auto[shaderType, shaderString] : shaderSrc) {
 			
@@ -125,7 +140,7 @@ namespace Real {
 				break;
 			}
 			glAttachShader(program, shader);
-			glShaderIds.push_back(shader);
+			glShaderIds[glShaderIdIndex++] = shader;
 		}
 
 		// Link our program
@@ -207,6 +222,7 @@ namespace Real {
 	void OpenGLShader::uploadUniformMat4(const std::string& name, const glm::mat4& matrix) const {
 		//glUseProgram(rendererId);
 		GLint location = glGetUniformLocation(rendererId, name.c_str());
+		RE_CORE_ASSERT(location >= 0, "Something is wrong in initialization of uniform");
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 }
