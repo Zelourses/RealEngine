@@ -12,8 +12,7 @@
 class ExampleLayer : public Real::Layer {
 public:
 	ExampleLayer()
-		: Layer("Example"), camera(-1.6f, 1.6f, -0.9f, 0.9f),
-		cameraPosition(0.0f, 0.0f, 0.0f) {
+		: Layer("Example"), cameraController(1280.f / 720.f){
 
 		vertexArray.reset(Real::VertexArray::create());
 
@@ -138,32 +137,12 @@ public:
 
 	void onUpdate(Real::Timestep timestep) override {
 
-		if (Real::Input::isKeyPressed(RE_KEY_LEFT)) {
-			cameraPosition.x -= cameraMoveSpeed * timestep;
-		}
-		else if (Real::Input::isKeyPressed(RE_KEY_RIGHT)){
-			cameraPosition.x += cameraMoveSpeed * timestep;
-		}
-		if (Real::Input::isKeyPressed(RE_KEY_UP)) {
-			cameraPosition.y += cameraMoveSpeed * timestep;
-		}
-		else if (Real::Input::isKeyPressed(RE_KEY_DOWN)) {
-			cameraPosition.y -= cameraMoveSpeed * timestep;
-		}
-
-		if (Real::Input::isKeyPressed(RE_KEY_Q)) {
-			cameraRotation += cameraRotationSpeed * timestep;
-		} else if (Real::Input::isKeyPressed(RE_KEY_E)) {
-			cameraRotation -= cameraRotationSpeed * timestep;
-		}
+		cameraController.onUpdate(timestep);
 
 		Real::RenderCommand::setClearColor({ .2f, .2f, .2f, 1.f });
 		Real::RenderCommand::clear();
 
-		camera.setPosition(cameraPosition);
-		camera.setRotation(cameraRotation);
-
-		Real::Renderer::beginScene(camera);
+		Real::Renderer::beginScene(cameraController.getCamera());
 
 		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
@@ -206,6 +185,10 @@ public:
 		ImGui::End();
 	}
 
+	void onEvent(Real::Event& event) override {
+		cameraController.onEvent(event);
+	}
+
 private:
 	Real::Ref<Real::Shader> shader;
 	Real::ShaderLibrary shaderLibrary;
@@ -215,11 +198,7 @@ private:
 
 	Real::Ref<Real::Texture2D> texture, cppLogo;
 
-	Real::OrthographicCamera camera;
-	glm::vec3 cameraPosition;
-	float cameraMoveSpeed = 1.0f;
-	float cameraRotationSpeed = 1.0f;
-	float cameraRotation = 0.0f;
+	Real::OrthographicCameraController cameraController;
 
 	glm::vec3 squareColor = { 0.3f, 0.4f, 0.7f};
 };

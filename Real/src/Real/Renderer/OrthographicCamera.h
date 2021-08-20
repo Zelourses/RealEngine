@@ -6,6 +6,7 @@ namespace Real{
 	class OrthographicCamera {
 	public:
 		OrthographicCamera(float left, float right, float bottom, float top);
+		void setProjection(float left, float right, float bottom, float top);
 
 		void setPosition(const glm::vec3& Position) { position = Position; recalculateViewMatrix(); }
 		const glm::vec3& getPosition() const { return position; }
@@ -13,14 +14,15 @@ namespace Real{
 		
 		/**
 		 * \brief sets the rotation of Orthographic camera
-		 * \param Rotation rotation angle in radians
+		 * \param camRotation rotation angle in radians
 		 */
-		void setRotation(const float Rotation) { rotation = Rotation; recalculateViewMatrix();}
+		void setRotation(const float camRotation) { rotation = camRotation; recalculateViewMatrix();}
 		
 		/**
 		 * \return returns rotation angle in radians
 		 */
 		float getRotation() const { return rotation; }
+
 
 		const glm::mat4& getProjectionMatrix() const { return projectionMatrix; }
 		const glm::mat4& getViewMatrix() const { return viewMatrix; }
