@@ -14,8 +14,11 @@ namespace Real {
 		void onUpdate(Timestep ts);
 		void onEvent(Event& e);
 
-		OrthographicCamera& getCamera() { return camera; }
+			  OrthographicCamera& getCamera()		{ return camera; }
 		const OrthographicCamera& getCamera() const { return camera; }
+
+		void setZoomLevel(float level) { zoomLevel = level; }
+		float getZoomLevel() const { return zoomLevel; }
 
 	private:
 		bool onMouseScrolled(MouseScrolledEvent& e);

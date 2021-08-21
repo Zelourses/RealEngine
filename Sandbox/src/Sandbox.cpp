@@ -1,6 +1,5 @@
 #include <Real.h>
 
-
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -184,7 +183,6 @@ public:
 		ImGui::ColorEdit3("Square color", glm::value_ptr(squareColor));
 		ImGui::End();
 	}
-
 	void onEvent(Real::Event& event) override {
 		cameraController.onEvent(event);
 	}
@@ -201,6 +199,8 @@ private:
 	Real::OrthographicCameraController cameraController;
 
 	glm::vec3 squareColor = { 0.3f, 0.4f, 0.7f};
+
+
 };
 
 class Sandbox : public Real::Application {

@@ -31,7 +31,8 @@ namespace Real {
 
 	void Application::onEvent(Event& e) {
 		EventDispatcher dispatcher(e);
-		dispatcher.dispatch<WindowCloseEvent>(RE_BIND_EVENT_FN(Application::OnWindowClose));
+		dispatcher.dispatch<WindowCloseEvent>(RE_BIND_EVENT_FN(Application::onWindowClose));
+		dispatcher.dispatch<WindowResizeEvent>(RE_BIND_EVENT_FN(Application::onWindowResize));
 
 		for (auto it = layerStack.end(); it != layerStack.begin();) {
 			(*--it)->onEvent(e);
@@ -48,14 +49,18 @@ namespace Real {
 			
 			Timestep timestep = time - lastFrameTime;
 			lastFrameTime = time;
-			
-			for(Layer* layer: layerStack) {
-				layer->onUpdate(timestep);
+
+			if (!windowIsResized) {
+				for (Layer* layer : layerStack) {
+					layer->onUpdate(timestep);
+				}
 			}
+			
 			imGUILayer->begin();
 			for (Layer* layer : layerStack) {
 				layer->onImGUIRender();
 			}
+
 			imGUILayer->end();
 			window->onUpdate();
 		}
@@ -75,10 +80,22 @@ namespace Real {
 	{
 	}
 
-	bool Application::OnWindowClose(WindowCloseEvent& e) {
+	bool Application::onWindowClose(WindowCloseEvent& e) {
 		windowRunning = false;
 		return true;
 	}
 
-	
+	bool Application::onWindowResize(WindowResizeEvent& e) {
+
+		if (e.getWidth() == 0 || e.getHeight() == 0) {
+			windowIsResized = true;
+			return false;
+		}
+
+		Renderer::onWindowResize(e.getWidth(), e.getHeight());
+
+		return false;
+	}
+
+
 }

@@ -10,6 +10,10 @@ namespace Real {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
+	void OpenGLRendererAPI::setViewPort(unsigned x, unsigned y, unsigned width, unsigned height) {
+		glViewport(x, y, width, height);
+	}
+
 	void OpenGLRendererAPI::setClearColor(const glm::vec4& color) {
 		glClearColor(color.r, color.g, color.b, color.a);
 	}

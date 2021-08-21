@@ -28,9 +28,11 @@ namespace Real {
 		Application();
 		virtual ~Application();
 	private:
-		bool OnWindowClose(WindowCloseEvent& e);
+		bool onWindowClose(WindowCloseEvent& e);
+		bool onWindowResize(WindowResizeEvent& e);
 		
 		bool windowRunning = true;
+		bool windowIsResized = false;
 		
 		Real::Scope<Window> window;
 		ImGUILayer* imGUILayer;

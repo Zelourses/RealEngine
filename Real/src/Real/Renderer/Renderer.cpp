@@ -12,6 +12,10 @@ namespace Real {
 		RenderCommand::init();
 	}
 
+	void Renderer::onWindowResize(unsigned width, unsigned height) {
+		RenderCommand::setViewPort(0,0,width, height);
+	}
+
 	void Renderer::beginScene(OrthographicCamera& camera) {
 		sceneData->viewProjectionMatrix = camera.getViewProjectionMatrix();
 	}
