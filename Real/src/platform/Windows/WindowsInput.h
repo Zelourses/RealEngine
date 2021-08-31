@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Real/Input.h"
+#include "Real/Core/Input.h"
 
 namespace Real {
 	class WindowsInput : public Input {

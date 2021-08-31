@@ -1,9 +1,9 @@
 #include "repch.h"
 
 #include "OrthographicCameraController.h"
-#include "Real/Input.h"
+#include "Real/Core/Input.h"
 
-#include "Real/KeyCodes.h"
+#include "Real/Core/KeyCodes.h"
 
 namespace Real {
 
