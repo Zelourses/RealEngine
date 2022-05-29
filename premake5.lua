@@ -20,8 +20,7 @@ includeDir["stb_image"] = "Real/vendor/stb_image"
 group "Dependencies"
 	include "Real/vendor/glfw"
 	include "Real/vendor/glad"
-	include "Real/vendor/imgui"
-	
+	include "Real/vendor/imgui"	
 group ""
 
 project "Real"
@@ -78,6 +77,7 @@ project "Real"
 	filter "configurations:Debug"
 		defines {
 			"RE_DEBUG",
+			"RE_PROFILE"
 		}
 		runtime "Debug"
 		symbols "on"
