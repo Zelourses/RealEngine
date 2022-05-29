@@ -2,31 +2,29 @@
 //OUTER INTERFACE
 //Only for RealEngine applications
 
-#include "Real/Core/Application.h"
+#include "real/core/Application.h"
 
 
-#include "Real/Core/Layer.h"
-#include "Real/Core/Log.h"
+#include "real/core/Layer.h"
+#include "real/core/debug/Log.h"
 
-#include "Real/Core/Timestep.h"
+#include "real/core/Timestep.h"
 
-#include "Real/Core/Input.h"
-#include "Real/Core/KeyCodes.h"
-#include "Real/Core/MouseButtonCodes.h"
+#include "real/core/Input.h"
+#include "real/core/KeyCodes.h"
+#include "real/core/MouseButtonCodes.h"
 
-#include "Real/ImGUI/ImGUILayer.h"
-#include "Real/Renderer/OrthographicCameraController.h"
+#include "real/imGUI/ImGUILayer.h"
+#include "real/renderer/OrthographicCameraController.h"
 
 // --- Renderer ------------------------------
-#include "Real/Renderer/Renderer.h"
-#include "Real/Renderer/RenderCommand.h"
+#include "real/renderer/Renderer.h"
+#include "real/renderer/Renderer2D.h"
+#include "real/renderer/RenderCommand.h"
 
-#include "Real/Renderer/Buffer.h"
-#include "Real/Renderer/Shader.h"
-#include "Real/Renderer/Texture.h"
-#include "Real/Renderer/VertexArray.h"
+#include "real/renderer/Buffer.h"
+#include "real/renderer/Shader.h"
+#include "real/renderer/Texture.h"
+#include "real/renderer/VertexArray.h"
 
-#include "Real/Renderer/OrthographicCamera.h"
-
-// --- Engine entry point ------------------------------
-#include "Real/Core/EntryPoint.h"
+#include "real/renderer/OrthographicCamera.h"

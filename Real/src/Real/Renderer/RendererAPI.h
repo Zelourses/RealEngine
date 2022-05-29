@@ -19,6 +19,7 @@ namespace Real {
 		virtual void clear() = 0;
 
 		virtual void drawIndexed(const Ref<VertexArray>& vertexArray) = 0;
+		virtual void drawIndexed(const Ref<VertexArray>& vertexArray, unsigned indexCount) = 0;
 
 		inline static API getAPI() { return currentAPI; }
 	private:

@@ -23,6 +23,9 @@ namespace Real {
 		inline static void drawIndexed(const Ref<VertexArray>& vertexArray) {
 			rendererAPI->drawIndexed(vertexArray);
 		}
+		inline static void drawIndexed(const Ref<VertexArray>& vertexArray, unsigned indexCount) {
+			rendererAPI->drawIndexed(vertexArray, indexCount);
+		}
 	private:
 		static RendererAPI* rendererAPI;
 	};

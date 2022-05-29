@@ -4,12 +4,12 @@
 
 #include "Window.h"
 #include "LayerStack.h"
-#include "Real/Events/Event.h"
-#include "Real/Events/ApplicationEvent.h"
+#include "real/Events/Event.h"
+#include "real/Events/ApplicationEvent.h"
 
-#include "Real/Core/Timestep.h"
+#include "real/Core/Timestep.h"
 
-#include "Real/ImGUI/ImGUILayer.h"
+#include "real/ImGUI/ImGUILayer.h"
 
 namespace Real {
 	class Application {
@@ -32,7 +32,7 @@ namespace Real {
 		bool onWindowResize(WindowResizeEvent& e);
 		
 		bool windowRunning = true;
-		bool windowIsResized = false;
+		bool windowIsMinimized = false;
 		
 		Real::Scope<Window> window;
 		ImGUILayer* imGUILayer;

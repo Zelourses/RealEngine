@@ -13,7 +13,7 @@ namespace Real {
 		unsigned int width;
 		unsigned int height;
 
-		WindowProps(const std::string& title = "Real Engine",
+		WindowProps(const std::string& title = "VKR",
 			unsigned int width = 1280,
 			unsigned int height = 720)
 			:title(title), width(width), height(height) {}

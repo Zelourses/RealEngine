@@ -13,7 +13,7 @@ namespace Real {
 		case RendererAPI::API::OpenGL: return std::make_shared<OpenGLShader>(filePath);
 		}
 
-		RE_CORE_ASSERT(false, "Unknown/Ubsupported Renderer API");
+		RE_CORE_ASSERT(false, "Unknown/Unsupported Renderer API");
 		return nullptr;
 	}
 
@@ -26,7 +26,7 @@ namespace Real {
 		case RendererAPI::API::OpenGL: return std::make_shared<OpenGLShader>(name, vertexSrc, pixelSrc);
 		}
 
-		RE_CORE_ASSERT(false, "Unknown/Ubsupported Renderer API");
+		RE_CORE_ASSERT(false, "Unknown/Unsupported Renderer API");
 		return nullptr;
 	}
 

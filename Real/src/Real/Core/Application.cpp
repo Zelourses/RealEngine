@@ -1,9 +1,9 @@
 #include "repch.h"
 
 #include "Application.h"
-#include "Real/Core/Log.h"
+#include "real/core/debug/Log.h"
 
-#include "Real/Renderer/Renderer.h"
+#include "real/renderer/Renderer.h"
 
 #include "Input.h"
 #include "GLFW/glfw3.h"
@@ -42,7 +42,7 @@ namespace Real {
 	}
 
 	void Application::run() {
-		while (windowRunning){
+ 		while (windowRunning){
 
 			const float time = static_cast<float>(glfwGetTime()); //FIXME:Temp things.
 								//Need to change to something like: Platform::getTime();
@@ -50,12 +50,14 @@ namespace Real {
 			Timestep timestep = time - lastFrameTime;
 			lastFrameTime = time;
 
-			if (!windowIsResized) {
+			if (!windowIsMinimized) {
 				for (Layer* layer : layerStack) {
 					layer->onUpdate(timestep);
 				}
 			}
 			
+			// ImGUI layers is here because they can use docking space and while main window is minimized, they will still work
+			// If this will be inside upper if they will stop respodning
 			imGUILayer->begin();
 			for (Layer* layer : layerStack) {
 				layer->onImGUIRender();
@@ -88,11 +90,14 @@ namespace Real {
 	bool Application::onWindowResize(WindowResizeEvent& e) {
 
 		if (e.getWidth() == 0 || e.getHeight() == 0) {
-			windowIsResized = true;
-			return false;
+			windowIsMinimized = true;
 		}
+		else {
+			windowIsMinimized = false;
 
-		Renderer::onWindowResize(e.getWidth(), e.getHeight());
+			Renderer::onWindowResize(e.getWidth(), e.getHeight());
+		}
+		
 
 		return false;
 	}

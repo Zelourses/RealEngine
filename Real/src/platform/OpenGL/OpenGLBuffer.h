@@ -3,9 +3,13 @@
 namespace Real {
 	class OpenGLVertexBuffer : public VertexBuffer{
 	public:
-		OpenGLVertexBuffer(float* vertices, unsigned int size);
+		OpenGLVertexBuffer(unsigned size);
+		OpenGLVertexBuffer(float* vertices, unsigned size);
+
 		void bind() const override;
 		void unbind() const override;
+
+		void setData(const void* data, unsigned size) override;
 
 		void setLayout(const BufferLayout& layout_) override { layout = layout_; }
 		const BufferLayout& getLayout() const override { return layout; }

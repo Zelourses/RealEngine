@@ -21,8 +21,16 @@ namespace Real{
 
 		const std::string& getName() const override { return name; }
 
-		void uploadUniformInt(const std::string& name, int value) const;
 		
+		void setInt(const std::string& name, int value) override;
+		void setIntArray(const std::string& name, int* values, unsigned count) override;
+		void setFloat3(const std::string& name, const glm::vec3& value) override;
+		void setFloat4(const std::string& name, const glm::vec4& value) override;
+		void setMat4(const std::string& name, const glm::mat4& value) override;
+		
+
+		void uploadUniformInt(const std::string& name, int value) const;
+		void uploadUniformIntArray(const std::string& name, int* values, unsigned count) const;
 		void uploadUniformFloat(const std::string& name, float value) const;
 		void uploadUniformFloat2(const std::string& name, const glm::vec2& vector) const;
 		void uploadUniformFloat3(const std::string& name, const glm::vec3& vector) const;

@@ -6,6 +6,13 @@
 namespace Real {
 
 	////////////VertexBuffer////////////
+	OpenGLVertexBuffer::OpenGLVertexBuffer(unsigned size) { 
+		RE_PROFILE_FUNCTION();
+
+		glCreateBuffers(1, &rendererId);
+        glBindBuffer(GL_ARRAY_BUFFER, rendererId);
+        glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+	}
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, unsigned int size) {
 		glCreateBuffers(1, &rendererId);
@@ -18,6 +25,12 @@ namespace Real {
 	}
 	void OpenGLVertexBuffer::unbind() const {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	//FIXME: For now this function does not request the offset in data
+	void OpenGLVertexBuffer::setData(const void* data, unsigned size) {
+	    glBindBuffer(GL_ARRAY_BUFFER, rendererId);
+		glBufferSubData(GL_ARRAY_BUFFER, 0,size,data);
 	}
 
 	OpenGLVertexBuffer::~OpenGLVertexBuffer() {

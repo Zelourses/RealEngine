@@ -14,6 +14,7 @@ namespace Real {
 		void clear() override;
 		
 		void drawIndexed(const Ref<VertexArray>& vertexArray) override;
+		void drawIndexed(const Ref<VertexArray>& vertexArray, unsigned indexCount) override;
 
 	};
 	

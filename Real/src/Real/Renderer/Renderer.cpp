@@ -1,5 +1,6 @@
 #include "repch.h"
 #include "Renderer.h"
+#include "Renderer2D.h"
 
 #include "RenderCommand.h"
 #include "platform/OpenGL/OpenGLShader.h"
@@ -10,6 +11,7 @@ namespace Real {
 
 	void Renderer::init() {
 		RenderCommand::init();
+		Renderer2D::init();
 	}
 
 	void Renderer::onWindowResize(unsigned width, unsigned height) {
@@ -28,8 +30,8 @@ namespace Real {
 
 		// TEMP THINGS v2
 		shader->bind();
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->uploadUniformMat4("viewProjection", sceneData->viewProjectionMatrix);
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->uploadUniformMat4("transform", transform);
+		shader->setMat4("viewProjection", sceneData->viewProjectionMatrix);
+		shader->setMat4("transform", transform);
 		
 		vertexArray->bind();
 		RenderCommand::drawIndexed(vertexArray);

@@ -14,8 +14,6 @@ namespace Real {
 		void onAttach() override;
 		void onDetach() override;
 
-		void onImGUIRender() override;
-
 		void begin();
 		void end();
 	};

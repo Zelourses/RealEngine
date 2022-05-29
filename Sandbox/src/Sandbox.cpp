@@ -6,6 +6,10 @@
 #include <imgui/imgui.h>
 
 #include "platform/OpenGL/OpenGLShader.h"
+#include "Sandbox2D.h"
+
+// --- Engine entry point --------
+#include "Real/Core/EntryPoint.h"
 
 //FIXME: still a little bit of leaking abstraction. Need to move shaders somewhere
 class ExampleLayer : public Real::Layer {
@@ -13,7 +17,7 @@ public:
 	ExampleLayer()
 		: Layer("Example"), cameraController(1280.f / 720.f){
 
-		vertexArray.reset(Real::VertexArray::create());
+		vertexArray = (Real::VertexArray::create());
 
 
 		float vertices[3 * 3] = {
@@ -22,7 +26,7 @@ public:
 			 0.0f,  0.5f, 0.0f
 		};
 		Real::Ref<Real::VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(Real::VertexBuffer::create(vertices, sizeof(vertices)));
+		vertexBuffer = (Real::VertexBuffer::create(vertices, sizeof(vertices)));
 
 
 		Real::BufferLayout layout = {
@@ -35,7 +39,7 @@ public:
 
 		unsigned int indices[] = { 0, 1, 2 };
 		Real::Ref<Real::IndexBuffer> indexBuffer;
-		indexBuffer.reset(Real::IndexBuffer::create(indices, 3));
+		indexBuffer = (Real::IndexBuffer::create(indices, 3));
 
 		vertexArray->setIndexBuffer(indexBuffer);
 
@@ -48,10 +52,10 @@ public:
 
 
 
-		squareVA.reset(Real::VertexArray::create());
+		squareVA = (Real::VertexArray::create());
 
 		Real::Ref<Real::VertexBuffer> squareVB;
-		squareVB.reset(Real::VertexBuffer::create(squareVertices, sizeof(squareVertices)));
+		squareVB = (Real::VertexBuffer::create(squareVertices, sizeof(squareVertices)));
 
 		squareVB->setLayout({
 			{Real::SDT::Float3, "position"},
@@ -62,7 +66,7 @@ public:
 		unsigned int squareIndices[] = { 0, 1, 2, 2, 3, 0 };
 
 		Real::Ref<Real::IndexBuffer> squareIB;
-		squareIB.reset(Real::IndexBuffer::create(squareIndices, sizeof(squareIndices)));
+		squareIB = (Real::IndexBuffer::create(squareIndices, sizeof(squareIndices)));
 
 		squareVA->setIndexBuffer(squareIB);
 
@@ -206,7 +210,7 @@ private:
 class Sandbox : public Real::Application {
 public:
 	Sandbox() {
-		pushLayer(new ExampleLayer());
+		pushLayer(new Sandbox2D());
 	}
 	~Sandbox() {
 

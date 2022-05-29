@@ -8,6 +8,8 @@ namespace Real {
 	void OpenGLRendererAPI::init() {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	void OpenGLRendererAPI::setViewPort(unsigned x, unsigned y, unsigned width, unsigned height) {
@@ -22,5 +24,10 @@ namespace Real {
 	}
 	void OpenGLRendererAPI::drawIndexed(const Ref<VertexArray>& vertexArray) {
 		glDrawElements(GL_TRIANGLES, vertexArray->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, nullptr);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	void OpenGLRendererAPI::drawIndexed(const Ref<VertexArray>& vertexArray, unsigned indexCount) {
+		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }

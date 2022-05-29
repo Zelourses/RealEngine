@@ -14,6 +14,7 @@ namespace Real {
 
 
 	OpenGLShader::OpenGLShader(const std::string& filePath) {
+		RE_PROFILE_FUNCTION();
 		auto shaderSrc = readFile(filePath);
 
 		auto shaders = preProcess(shaderSrc);
@@ -30,6 +31,7 @@ namespace Real {
 	    const std::string& vertexSrc, 
 		const std::string& pixelSrc)
 		        : rendererId(-1), name(name) { // -1 in rendererId is a sign of an error
+		RE_PROFILE_FUNCTION();
 		std::unordered_map<GLenum, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertexSrc;
 		sources[GL_FRAGMENT_SHADER] = pixelSrc;
@@ -47,6 +49,7 @@ namespace Real {
 
 
 	std::string OpenGLShader::readFile(const std::string& filePath) {
+		RE_PROFILE_FUNCTION();
 
 		std::string result;
 
@@ -66,6 +69,7 @@ namespace Real {
 	}
 
 	static GLenum shaderTypeFromString(const std::string& type) {
+		RE_PROFILE_FUNCTION();
 		if (type == "vertex") return GL_VERTEX_SHADER;
 		if (type == "pixel") return GL_FRAGMENT_SHADER;
 
@@ -74,6 +78,7 @@ namespace Real {
 	}
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::preProcess(const std::string& shaderSrc) {
+		RE_PROFILE_FUNCTION();
 		std::unordered_map<GLenum, std::string> shaderSources;
 
 		const char* typeToken = "#type";
@@ -101,6 +106,7 @@ namespace Real {
 	}
 	//modified version from official OpenGL wiki: https://www.khronos.org/opengl/wiki/Shader_Compilation#Example
 	void OpenGLShader::compile(const std::unordered_map<GLenum, std::string> shaderSrc) {
+		RE_PROFILE_FUNCTION();
 
 		auto program = glCreateProgram();
 
@@ -179,6 +185,31 @@ namespace Real {
 		rendererId = program;
 	}
 
+	void OpenGLShader::setInt(const std::string& name, int value) {
+		RE_PROFILE_FUNCTION();
+		uploadUniformInt(name, value);
+	}
+
+	void OpenGLShader::setIntArray(const std::string& name, int* values, unsigned count) {
+		RE_PROFILE_FUNCTION();
+		uploadUniformIntArray(name,values,count);
+	}
+
+	void OpenGLShader::setFloat3(const std::string& name, const glm::vec3& value) {
+		RE_PROFILE_FUNCTION();
+		uploadUniformFloat3(name, value);
+	}
+
+	void OpenGLShader::setFloat4(const std::string& name, const glm::vec4& value) {
+		RE_PROFILE_FUNCTION();
+		uploadUniformFloat4(name, value);
+	}
+
+	void OpenGLShader::setMat4(const std::string& name, const glm::mat4& value) {
+		RE_PROFILE_FUNCTION();
+		uploadUniformMat4(name, value);
+	}
+
 	void OpenGLShader::bind() const {
 		glUseProgram(rendererId);
 	}
@@ -189,6 +220,11 @@ namespace Real {
 	void OpenGLShader::uploadUniformInt(const std::string& name, int value) const {
 		GLint location = glGetUniformLocation(rendererId, name.c_str());
 		glUniform1i(location, value);
+	}
+
+	void OpenGLShader::uploadUniformIntArray(const std::string& name, int* values, unsigned count) const {
+		GLint location = glGetUniformLocation(rendererId, name.c_str());
+		glUniform1iv(location, count, values);
 	}
 
 	

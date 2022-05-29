@@ -82,9 +82,4 @@ namespace Real {
 		ImGui::DestroyContext();
 	}
 
-	void ImGUILayer::onImGUIRender() {
-		static bool show = true;
-		ImGui::ShowDemoWindow(&show);
-	}
-
 }
