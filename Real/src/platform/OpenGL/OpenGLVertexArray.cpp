@@ -42,13 +42,21 @@ namespace Real {
 		unsigned int i = 0;
 		const auto& layout = vertexBuffer->getLayout();
 		for (const auto& l : layout) {
+			/*
+			* This line existence is determined by compiler warning that it's wrong
+			*  to cast unsigned int to unsigned int* \/
+			*  (conversion from 'const unsigned int' to 'const unsigned int *' of greater size)
+			*  to get rid of this error I need to do something not so pretty
+			*/
+			const void* offset = reinterpret_cast<uint8_t*>(0) + (l.offset);
+			
 			glEnableVertexAttribArray(i);
 			glVertexAttribPointer(i,
 				l.getComponentCount(),
 				shaderDataTypeToOpenGLBaseType(l.type),
 				l.normalized ? GL_TRUE : GL_FALSE,
 				layout.getStride(),
-				reinterpret_cast<const void*>(l.offset));
+				offset);
 			i++;
 		}
 		

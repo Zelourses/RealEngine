@@ -4,23 +4,35 @@
 #ifdef RE_PLATFORM_WINDOWS
 #else
 	#error Engine supports only Windows on that moment
-#endif 
+#endif
 
 #ifdef RE_DEBUG
 	#define RE_ENABLE_ASSERTS
 #endif
 
 #ifdef RE_ENABLE_ASSERTS
-	#define RE_ASSERT(x, ...) {if (!(x)){RE_ERROR("Assertion failed: {0}",__VA_ARGS__); __debugbreak();}}
-	#define RE_CORE_ASSERT(x, ...) {if (!(x)){RE_CORE_ERROR("Assertion failed: {0}", __VA_ARGS__); __debugbreak();}}
+	#define RE_ASSERT(x, ...)                                   \
+		{                                                       \
+			if (!(x)) {                                         \
+				RE_ERROR("Assertion failed: {0}", __VA_ARGS__); \
+				__debugbreak();                                 \
+			}                                                   \
+		}
+	#define RE_CORE_ASSERT(x, ...)                                   \
+		{                                                            \
+			if (!(x)) {                                              \
+				RE_CORE_ERROR("Assertion failed: {0}", __VA_ARGS__); \
+				__debugbreak();                                      \
+			}                                                        \
+		}
 #else
 	#define RE_ASSERT(x, ...)
 	#define RE_CORE_ASSERT(x, ...)
 #endif
 
-#define BIT_SHIFT(x) (1<<x)
+#define BIT_SHIFT(x) (1 << x)
 
-//maybe I need to rewrite it in lambda thing
+// maybe I need to rewrite it in lambda thing
 /*
  * RE_BIND_EVENT_FN(Application::onEvent) ->
  * [this](auto&& PH1) { onEvent(std::forward<decltype(PH1)>(PH1)); }
@@ -28,16 +40,27 @@
  * ^ is an example of transforming into lambda
  * But [this] ... I am not sure if it's ok
  */
-#define RE_BIND_EVENT_FN(x) std::bind(&x,this, std::placeholders::_1)
+#define RE_BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
 
-//One static assert to rule the whole project
+// One static assert to rule the whole project
 static_assert(sizeof(unsigned int) == sizeof(uint32_t));
 
 namespace Real {
 
-	template<typename T>
+	template <typename T>
 	using Scope = std::unique_ptr<T>;
-	
-	template<typename T>
+
+	template <typename T>
 	using Ref = std::shared_ptr<T>;
+
+	template <typename T, typename... Args>
+	constexpr Scope<T> createScope(Args&&... args) {
+		return std::make_unique<T>(std::forward<Args>(args)...);
+	}
+
+	template <typename T, typename... Args>
+	constexpr Ref<T> createRef(Args&&... args) {
+		return std::make_shared<T>(std::forward<Args>(args)...);
+	}
+
 }

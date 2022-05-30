@@ -10,6 +10,7 @@
 
 namespace Real {
 
+#pragma pack(1)
 	struct QuadVertex {
 		glm::vec3 position;
 		glm::vec2 textureCoords;
@@ -17,6 +18,7 @@ namespace Real {
 		float     textureindex;
 		float     tilingFactor;
 	};
+#pragma pack(pop)
 
 	struct Renderer2DData {
 		static const unsigned maxQuadsCount   = 10'000;
@@ -40,6 +42,14 @@ namespace Real {
 		unsigned                                    textureSlotIndex = 1;// 0 is white texture
 
 		glm::vec4 quadVertexPos[4];
+
+		std::array<glm::vec2, 4> defaultTexCoords ={
+			//This is actually a hint to compiler
+		    glm::vec2{0.0f, 0.0f}, 
+			{1.0f, 0.0f}, 
+			{1.0f, 1.0f}, 
+			{0.0f, 1.0f}
+			};
 
 		Renderer2D::Statistics stats;
 	};
@@ -101,6 +111,11 @@ namespace Real {
 		data.quadVertexPos[2] = {0.5f, 0.5f, 0.0f, 1.0f};
 		data.quadVertexPos[3] = {-0.5f, 0.5f, 0.0f, 1.0f};
 
+		/*data.defaultTexCoords[0] = {0.0f, 0.0f};
+		data.defaultTexCoords[1] = {1.0f, 0.0f};
+		data.defaultTexCoords[2] = {1.0f, 1.0f};
+		data.defaultTexCoords[3] = {0.0f, 1.0f};*/
+
 		// Actually it's very dangerous to do something like that, because we are not 100% sure that
 		//  OpenGL function is actually read all lines here
 		delete[] quadIndices;
@@ -137,9 +152,12 @@ namespace Real {
 		++data.stats.drawCalls;
 	}
 
-	inline void Renderer2D::fillQuad(const glm::mat4& transform, const glm::vec4& color, float textureIndex, float tilingFactor) {
-
-		//Does this thing belongs here?
+	inline void Renderer2D::fillQuad(const glm::mat4&                transform,
+	                                 const glm::vec4&                color,
+	                                 float                           textureIndex,
+	                                 float                           tilingFactor,
+	                                 const std::array<glm::vec2, 4>& textureCoords) {
+		// Does this thing belongs here?
 		if (Renderer2DData::maxIndices <= data.quadIndexCount) {
 			Renderer2D::endScene();
 			Renderer2D::reset();
@@ -150,7 +168,7 @@ namespace Real {
 		// lef down
 		data.quadVertexPointer->position      = transform * data.quadVertexPos[0];
 		data.quadVertexPointer->color         = color;
-		data.quadVertexPointer->textureCoords = {0.0f, 0.0f};
+		data.quadVertexPointer->textureCoords = textureCoords[0];
 		data.quadVertexPointer->textureindex  = textureIndex;
 		data.quadVertexPointer->tilingFactor  = tilingFactor;
 		data.quadVertexPointer++;
@@ -158,7 +176,7 @@ namespace Real {
 		// right down
 		data.quadVertexPointer->position      = transform * data.quadVertexPos[1];
 		data.quadVertexPointer->color         = color;
-		data.quadVertexPointer->textureCoords = {1.0f, 0.0f};
+		data.quadVertexPointer->textureCoords = textureCoords[1];
 		data.quadVertexPointer->textureindex  = textureIndex;
 		data.quadVertexPointer->tilingFactor  = tilingFactor;
 		data.quadVertexPointer++;
@@ -166,7 +184,7 @@ namespace Real {
 		// right up
 		data.quadVertexPointer->position      = transform * data.quadVertexPos[2];
 		data.quadVertexPointer->color         = color;
-		data.quadVertexPointer->textureCoords = {1.0f, 1.0f};
+		data.quadVertexPointer->textureCoords = textureCoords[2];
 		data.quadVertexPointer->textureindex  = textureIndex;
 		data.quadVertexPointer->tilingFactor  = tilingFactor;
 		data.quadVertexPointer++;
@@ -174,7 +192,7 @@ namespace Real {
 		// left up
 		data.quadVertexPointer->position      = transform * data.quadVertexPos[3];
 		data.quadVertexPointer->color         = color;
-		data.quadVertexPointer->textureCoords = {0.0f, 1.0f};
+		data.quadVertexPointer->textureCoords = textureCoords[3];
 		data.quadVertexPointer->textureindex  = textureIndex;
 		data.quadVertexPointer->tilingFactor  = tilingFactor;
 		data.quadVertexPointer++;
@@ -205,12 +223,12 @@ namespace Real {
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
 
-		fillQuad(transform, color, 0, 1);
+		fillQuad(transform, color, 0, 1, data.defaultTexCoords);
 
 		++data.stats.quadCount;
 	}
 
-	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor) {
+	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor /* = 1.0f*/) {
 		RE_PROFILE_FUNCTION();
 
 		constexpr glm::vec4 color = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -219,7 +237,21 @@ namespace Real {
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
 
-		fillQuad(transform, color, textureIndex, tilingFactor);
+		fillQuad(transform, color, textureIndex, tilingFactor, data.defaultTexCoords);
+
+		++data.stats.quadCount;
+	}
+
+	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<SubTexture2D>& subTexture, float tilingFactor /* = 1.0f*/) {
+		RE_PROFILE_FUNCTION();
+
+		constexpr glm::vec4 color = {1.0f, 1.0f, 1.0f, 1.0f};
+
+		float textureIndex = getTextureIndex(subTexture->getTexture());
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
+
+		fillQuad(transform, color, textureIndex, tilingFactor, subTexture->getTexCoords());
 
 		++data.stats.quadCount;
 	}
@@ -229,7 +261,7 @@ namespace Real {
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f}) * glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
 
-		fillQuad(transform, color, 0, 1);
+		fillQuad(transform, color, 0, 1, data.defaultTexCoords);
 
 		++data.stats.quadCount;
 	}
@@ -243,7 +275,21 @@ namespace Real {
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f}) * glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
 
-		fillQuad(transform, color, textureIndex, 1);
+		fillQuad(transform, color, textureIndex, 1, data.defaultTexCoords);
+
+		++data.stats.quadCount;
+	}
+
+	void Renderer2D::drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<SubTexture2D>& subTexture) {
+		RE_PROFILE_FUNCTION();
+
+		auto color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+
+		float textureIndex = getTextureIndex(subTexture->getTexture());
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f}) * glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
+
+		fillQuad(transform, color, textureIndex, 1, subTexture->getTexCoords());
 
 		++data.stats.quadCount;
 	}
