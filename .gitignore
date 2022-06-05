@@ -9,8 +9,11 @@ out/
 *.sln
 *.vcxproj*
 
-#Buld config
+# Buld config
 *.bat
 
-#ImGUI configuration file
+# ImGUI configuration file
 *.ini
+
+# Profiling results
+*.json

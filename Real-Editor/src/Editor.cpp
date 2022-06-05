@@ -14,11 +14,11 @@
 namespace Real {
 	class RealEditor : public Application {
 	public:
-		RealEditor() {
+		RealEditor()
+		    : Application({"Real Editor"}) {
 			pushLayer(new EditorLayer());
 		}
-		~RealEditor() {
-		}
+		~RealEditor() = default;
 	};
 
 	Application* createApplication() {

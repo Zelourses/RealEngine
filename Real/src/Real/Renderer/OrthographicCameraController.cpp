@@ -40,7 +40,9 @@ namespace Real {
 
 		cameraTranslationSpeed = zoomLevel;
 
-		
+	void OrthographicCameraController::resize(const glm::vec2& windowSize) {
+		aspectRatio = windowSize.x / windowSize.y;
+		camera.setProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
 	}
 	void OrthographicCameraController::onEvent(Event& e) {
 		EventDispatcher dispatcher(e);
@@ -56,9 +58,8 @@ namespace Real {
 		return false;
 	}
 	bool OrthographicCameraController::onWindowResized(WindowResizeEvent& e) {
-		aspectRatio = static_cast<float>(e.getWidth()) / static_cast<float>(e.getHeight());
-		camera.setProjection(-aspectRatio * zoomLevel, aspectRatio * zoomLevel, -zoomLevel, zoomLevel);
-		
+		resize({e.getWidth(), e.getHeight()});
+
 		return false;
 	}
 }

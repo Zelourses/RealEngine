@@ -12,6 +12,8 @@ namespace Real {
 		void unbind() override;
 		unsigned getColorAttachmentID() override;
 
+		virtual void resize(const glm::vec2& newSize) override;
+
 		void invalidate();
 
 		~OpenGLFrameBuffer();

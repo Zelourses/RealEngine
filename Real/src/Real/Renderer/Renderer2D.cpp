@@ -10,7 +10,7 @@
 
 namespace Real {
 
-#pragma pack(1)
+#pragma pack(push, 1)
 	struct QuadVertex {
 		glm::vec3 position;
 		glm::vec2 textureCoords;

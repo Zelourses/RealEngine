@@ -1,4 +1,5 @@
 #pragma once
+#include <glm/glm.hpp>
 
 namespace Real {
 
@@ -10,10 +11,11 @@ namespace Real {
 	struct Framebuffer {
 		static Ref<Framebuffer> create(const FramebufferSpecification& spec);
 
-		virtual const FramebufferSpecification& getSpec() const        = 0;
-		virtual void                            bind()                 = 0;
-		virtual void                            unbind()               = 0;
-		virtual unsigned                        getColorAttachmentID() = 0;
+		virtual const FramebufferSpecification& getSpec() const                  = 0;
+		virtual void                            bind()                           = 0;
+		virtual void                            unbind()                         = 0;
+		virtual unsigned                        getColorAttachmentID()           = 0;
+		virtual void                            resize(const glm::vec2& newSize) = 0;
 
 		virtual ~Framebuffer() = default;
 	};

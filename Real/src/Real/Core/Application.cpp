@@ -12,21 +12,18 @@ namespace Real {
 
 	Application* Application::appInstance = nullptr;
 
-	
 
-	Application::Application() {
+	Application::Application(const WindowProps& props) {
 		RE_CORE_ASSERT(!appInstance, "Creating already existing application!");
 		appInstance = this;
-		
-		window = std::unique_ptr<Window>(Window::create());
+
+		window = std::unique_ptr<Window>(Window::create(props));
 		window->setEventCallback(RE_BIND_EVENT_FN(Application::onEvent));
 
 		Renderer::init();
-		
+
 		imGUILayer = new ImGUILayer;
 		pushOverlay(imGUILayer);
-
-		
 	}
 
 	void Application::onEvent(Event& e) {

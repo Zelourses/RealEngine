@@ -70,7 +70,6 @@ project "Real"
 
 		defines {
 			"RE_PLATFORM_WINDOWS",
-			"RE_BUILD_DLL",
 			"GLFW_INCLUDE_NONE"
 		}
 
@@ -131,7 +130,8 @@ project "Real-Editor"
 
 	filter "configurations:Debug"
 		defines {
-			"RE_DEBUG"
+			"RE_DEBUG",
+			"RE_PROFILE"
 		}
 		runtime "Debug"
 		symbols "on"
@@ -185,7 +185,8 @@ project "Sandbox"
 
 	filter "configurations:Debug"
 		defines {
-			"RE_DEBUG"
+			"RE_DEBUG",
+			"RE_PROFILE"
 		}
 		runtime "Debug"
 		symbols "on"

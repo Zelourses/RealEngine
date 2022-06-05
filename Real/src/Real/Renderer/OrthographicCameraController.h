@@ -15,6 +15,7 @@ namespace Real {
 		void onEvent(Event& e);
 
 			  OrthographicCamera& getCamera()		{ return camera; }
+		void resize(const glm::vec2& windowSize);
 		const OrthographicCamera& getCamera() const { return camera; }
 
 		void setZoomLevel(float level) { zoomLevel = level; }

@@ -12,6 +12,12 @@ namespace Real {
 		return spec;
 	}
 	void OpenGLFrameBuffer::invalidate() {
+		if (rendererId) {
+			glDeleteFramebuffers(1, &rendererId);
+			glDeleteTextures(1, &colorAttachment);
+			glDeleteTextures(1, &depthAttachment);
+		}
+
 		glCreateFramebuffers(1, &rendererId);
 		glBindFramebuffer(GL_FRAMEBUFFER,rendererId);
 
@@ -35,9 +41,18 @@ namespace Real {
 	}
 	OpenGLFrameBuffer::~OpenGLFrameBuffer() {
 		glDeleteFramebuffers(1, &rendererId);
+		glDeleteTextures(1, &colorAttachment);
+		glDeleteTextures(1, &depthAttachment);
+	}
+	void OpenGLFrameBuffer::resize(const glm::vec2& newSize) {
+		spec.width  = static_cast<int>(newSize.x);
+		spec.height = static_cast<int>(newSize.y);
+
+		invalidate();
 	}
 	void OpenGLFrameBuffer::bind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, rendererId);
+		glViewport(0, 0, spec.width, spec.height);
 	}
 	void OpenGLFrameBuffer::unbind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

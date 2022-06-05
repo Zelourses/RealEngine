@@ -24,8 +24,8 @@ namespace Real {
 		inline static Application& getApplication() { return *appInstance; }
 
 		inline Window& getWindow() const { return *window; }
-		
-		Application();
+
+		Application(const WindowProps& props = WindowProps());
 		virtual ~Application();
 	private:
 		bool onWindowClose(WindowCloseEvent& e);
