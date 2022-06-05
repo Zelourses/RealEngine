@@ -4,11 +4,6 @@
 namespace Real {
 
 	Layer::Layer(const std::string& name)
-		:debugName(name){}
-
-	Layer::~Layer() {
-		
-	}
-
+	    : debugName(name) {}
 
 }

@@ -14,29 +14,30 @@ namespace Real {
 		void onUpdate(Timestep ts);
 		void onEvent(Event& e);
 
-			  OrthographicCamera& getCamera()		{ return camera; }
 		void resize(const glm::vec2& windowSize);
+
+		OrthographicCamera&       getCamera() { return camera; }
 		const OrthographicCamera& getCamera() const { return camera; }
 
-		void setZoomLevel(float level) { zoomLevel = level; }
+		void  setZoomLevel(float level) { zoomLevel = level; }
 		float getZoomLevel() const { return zoomLevel; }
 
 	private:
 		bool onMouseScrolled(MouseScrolledEvent& e);
 		bool onWindowResized(WindowResizeEvent& e);
-		
-		float aspectRatio;
-		float zoomLevel = 1.0f;
+
+		float              aspectRatio;
+		float              zoomLevel = 1.0f;
 		OrthographicCamera camera;
 
 		bool rotation;
 
-		float  cameraRotation = 0.0f;
-		glm::vec3 cameraPosition = { 0.0f, 0.0f, 0.0f };
+		float     cameraRotation = 0.0f;
+		glm::vec3 cameraPosition = {0.0f, 0.0f, 0.0f};
 
 		float cameraTranslationSpeed = 1.0f;
-		float cameraRotationSpeed = 2.0f;
-		float cameraZoomMultiplier = 0.25f;
+		float cameraRotationSpeed    = 2.0f;
+		float cameraZoomMultiplier   = 0.25f;
 	};
 
 }

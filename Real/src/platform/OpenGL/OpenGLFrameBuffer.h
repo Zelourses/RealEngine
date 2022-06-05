@@ -19,9 +19,9 @@ namespace Real {
 		~OpenGLFrameBuffer();
 
 	private:
-		unsigned                 rendererId;
-		unsigned                 colorAttachment;
-		unsigned                 depthAttachment;
+		unsigned                 rendererId = 0;
+		unsigned                 colorAttachment = 0;
+		unsigned                 depthAttachment = 0;
 		FramebufferSpecification spec;
 	};
 }

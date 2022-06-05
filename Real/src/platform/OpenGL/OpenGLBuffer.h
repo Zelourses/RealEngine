@@ -1,7 +1,7 @@
 #pragma once
 #include <Real/Renderer/Buffer.h>
 namespace Real {
-	class OpenGLVertexBuffer : public VertexBuffer{
+	class OpenGLVertexBuffer : public VertexBuffer {
 	public:
 		OpenGLVertexBuffer(unsigned size);
 		OpenGLVertexBuffer(float* vertices, unsigned size);
@@ -11,7 +11,7 @@ namespace Real {
 
 		void setData(const void* data, unsigned size) override;
 
-		void setLayout(const BufferLayout& layout_) override { layout = layout_; }
+		void                setLayout(const BufferLayout& layout_) override { layout = layout_; }
 		const BufferLayout& getLayout() const override { return layout; }
 
 		~OpenGLVertexBuffer() override;
@@ -22,7 +22,7 @@ namespace Real {
 	};
 
 
-	class OpenGLIndexBuffer : public IndexBuffer{
+	class OpenGLIndexBuffer : public IndexBuffer {
 	public:
 		OpenGLIndexBuffer(unsigned int* indices, unsigned int size);
 		void bind() const override;
@@ -35,7 +35,5 @@ namespace Real {
 	private:
 		unsigned int rendererId;
 		unsigned int count;
-
 	};
 }
-

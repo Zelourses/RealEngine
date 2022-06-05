@@ -43,13 +43,12 @@ namespace Real {
 
 		glm::vec4 quadVertexPos[4];
 
-		std::array<glm::vec2, 4> defaultTexCoords ={
-			//This is actually a hint to compiler
-		    glm::vec2{0.0f, 0.0f}, 
-			{1.0f, 0.0f}, 
-			{1.0f, 1.0f}, 
-			{0.0f, 1.0f}
-			};
+		std::array<glm::vec2, 4> defaultTexCoords = {
+		    // This is actually a hint to compiler
+		    glm::vec2{0.0f, 0.0f},
+		    {1.0f, 0.0f},
+		    {1.0f, 1.0f},
+		    {0.0f, 1.0f}};
 
 		Renderer2D::Statistics stats;
 	};

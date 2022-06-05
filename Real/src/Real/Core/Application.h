@@ -12,6 +12,7 @@
 #include "real/ImGUI/ImGUILayer.h"
 
 namespace Real {
+
 	class Application {
 	public:
 		void run();
@@ -27,21 +28,22 @@ namespace Real {
 
 		Application(const WindowProps& props = WindowProps());
 		virtual ~Application();
+
 	private:
 		bool onWindowClose(WindowCloseEvent& e);
 		bool onWindowResize(WindowResizeEvent& e);
-		
-		bool windowRunning = true;
+
+		bool windowRunning     = true;
 		bool windowIsMinimized = false;
-		
+
 		Real::Scope<Window> window;
-		ImGUILayer* imGUILayer;
-		LayerStack layerStack;
+		ImGUILayer*         imGUILayer;
+		LayerStack          layerStack;
 		static Application* appInstance;
 
 		float lastFrameTime = 0.0f;
 	};
 
-	//Client definition
+	// Client definition
 	Application* createApplication();
 }
