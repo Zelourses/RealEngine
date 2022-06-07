@@ -10,3 +10,6 @@
 [submodule "Real/vendor/glm"]
 	path = Real/vendor/glm
 	url = https://github.com/g-truc/glm
+[submodule "Real/vendor/entt"]
+	path = Real/vendor/entt
+	url = https://github.com/skypjack/entt

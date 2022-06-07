@@ -28,7 +28,8 @@ namespace Real {
 		Ref<SubTexture2D> barrelSprite;
 		Ref<Framebuffer>  framebuffer;
 
-		glm::vec4 squareColor = {0.2f, 0.3f, 0.4f, 1.0f};
+		Ref<Scene> activeScene;
+		Entity squareEntity;
 
 		glm::vec2 viewportSize = {0.0f, 0.0f};
 	};

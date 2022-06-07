@@ -1,6 +1,6 @@
 workspace "Real"
 	architecture "x64"
-	startproject "Real-Editor"
+	startproject "RealEditor"
 
 	configurations {
 		"Debug",
@@ -16,6 +16,7 @@ includeDir["Glad"] = "Real/vendor/glad/include"
 includeDir["ImGUI"] = "Real/vendor/imgui"
 includeDir["glm"] = "Real/vendor/glm"
 includeDir["stb_image"] = "Real/vendor/stb_image"
+includeDir["entt"] = "Real/vendor/entt"
 
 group "Dependencies"
 	include "Real/vendor/glfw"
@@ -51,7 +52,8 @@ project "Real"
 		"%{includeDir.Glad}",
 		"%{includeDir.ImGUI}",
 		"%{includeDir.glm}",
-		"%{includeDir.stb_image}"
+		"%{includeDir.stb_image}",
+		"%{includeDir.entt}/single_include",
 	}
 
 	links{
@@ -95,8 +97,8 @@ project "Real"
 		runtime "Release"
 		optimize "on"
 
-project "Real-Editor"
-	location "Real-Editor"
+project "RealEditor"
+	location "RealEditor"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++latest"
@@ -114,7 +116,8 @@ project "Real-Editor"
 		"Real/vendor/spdlog/include",
 		"Real/src",
 		"Real/vendor",
-		"%{includeDir.glm}"
+		"%{includeDir.glm}",
+		"Real/vendor/entt/single_include",
 	}
 
 	links{
@@ -169,7 +172,8 @@ project "Sandbox"
 		"Real/vendor/spdlog/include",
 		"Real/src",
 		"Real/vendor",
-		"%{includeDir.glm}"
+		"%{includeDir.glm}",
+		"Real/vendor/entt/single_include",
 	}
 
 	links{

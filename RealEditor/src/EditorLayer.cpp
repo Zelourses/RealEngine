@@ -21,12 +21,24 @@ namespace Real {
 		    .width  = 1280,
 		    .height = 720};
 		framebuffer = Framebuffer::create(spec);
+		activeScene = createRef<Scene>();
+
+		squareEntity = activeScene->createEntity("square");
+		squareEntity.add<SpriteRendererComponent>(glm::vec4{0.5f, 0.5f, 0.1f, 1.0f});
 	}
 
 	void EditorLayer::onDetach() {}
 
 	void EditorLayer::onUpdate(Real::Timestep ts) {
 		RE_PROFILE_FUNCTION();
+
+		if (auto spec = framebuffer->getSpec();
+			spec.width != viewportSize.x ||
+			spec.height != viewportSize.y){
+
+			framebuffer->resize(viewportSize);
+			controller.resize(viewportSize);
+		}
 
 		Renderer2D::resetStats();
 
@@ -39,6 +51,7 @@ namespace Real {
 
 		Renderer2D::beginScene(controller.getCamera());
 		Renderer2D::drawQuad({0.0, 0.0, 0.0}, {0.5, 0.5}, barrelSprite);
+		activeScene->onUpdate(ts);
 		Renderer2D::endScene();
 
 		Renderer2D::beginScene(controller.getCamera());
@@ -65,19 +78,19 @@ namespace Real {
 		ImGui::Text("Quads: %d", stats.quadCount);
 		ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.getTotalIndexCount());
-		ImGui::ColorEdit4("label", glm::value_ptr(squareColor));
+		ImGui::Separator();
+		auto&& color = squareEntity.get<SpriteRendererComponent>().color;
+		ImGui::ColorEdit4(squareEntity.get<TagComponent>().tag.c_str(), glm::value_ptr(color));
+		ImGui::Separator();
 		ImGui::End();
 
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
 		ImGui::Begin("Viewport");
 		auto res = ImGui::GetContentRegionAvail();
-		if (viewportSize != *(glm::vec2*)&res) {// oops...
+		viewportSize    = {res.x, res.y};
 
-			viewportSize = {res.x, res.y};
-			framebuffer->resize(viewportSize);
-			controller.resize(viewportSize);
-		}
 		auto  textureId = framebuffer->getColorAttachmentID();
 		void* texId     = static_cast<uint8_t*>(0) + textureId;
 		ImGui::Image(texId, {viewportSize.x, viewportSize.y}, {0, 1}, {1, 0});

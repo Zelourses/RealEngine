@@ -17,6 +17,10 @@
 #include "real/imGUI/ImGUILayer.h"
 #include "real/renderer/OrthographicCameraController.h"
 
+#include "real/scene/Scene.h"
+#include "real/scene/Entity.h"
+#include "real/scene/Components.h"
+
 // --- Renderer ------------------------------
 #include "real/renderer/Renderer.h"
 #include "real/renderer/Renderer2D.h"
