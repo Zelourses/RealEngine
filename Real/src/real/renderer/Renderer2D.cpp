@@ -125,6 +125,18 @@ namespace Real {
 		reset();
 	}
 
+	void Renderer2D::beginScene(const Camera& camera, const glm::mat4& transform) {
+		RE_PROFILE_FUNCTION();
+
+		auto&& viewProjection = camera.projection() * glm::inverse(transform);
+
+		data.textureShader->bind();
+		data.textureShader->setMat4("viewProjection", viewProjection);
+
+		reset();
+
+	}
+
 	void Renderer2D::endScene() {
 		RE_PROFILE_FUNCTION();
 

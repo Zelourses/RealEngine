@@ -29,7 +29,9 @@ namespace Real {
 		Ref<Framebuffer>  framebuffer;
 
 		Ref<Scene> activeScene;
+		
 		Entity squareEntity;
+		Entity cameraEntity;
 
 		glm::vec2 viewportSize = {0.0f, 0.0f};
 	};

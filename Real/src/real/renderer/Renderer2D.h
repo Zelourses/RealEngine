@@ -1,6 +1,7 @@
 #pragma once
 
 #include "OrthographicCamera.h"
+#include "Camera.h"
 #include "Texture.h"
 #include "SubTexture2D.h"
 
@@ -11,7 +12,8 @@ namespace Real {
 		static void shutdown();
 
 
-		static void beginScene(const OrthographicCamera& camera);
+		static void beginScene(const OrthographicCamera& camera); // TODO:remove
+		static void beginScene(const Camera& camera, const glm::mat4& transform);
 		static void endScene();
 
 		static void flush();

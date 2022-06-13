@@ -25,6 +25,41 @@ namespace Real {
 
 		squareEntity = activeScene->createEntity("square");
 		squareEntity.add<SpriteRendererComponent>(glm::vec4{0.5f, 0.5f, 0.1f, 1.0f});
+
+		cameraEntity = activeScene->createEntity("Camera");
+		cameraEntity.add<CameraComponent>();
+
+		struct CameraController final : ScriptableEntity {
+
+			void onCreate() {
+
+			}
+
+
+			void onUpdate(Timestep ts) {
+				auto&& transform = get<TransformComponent>().transform;
+				float speed = 5.0f;
+
+				if (Input::isKeyPressed(KeyCodes::A))
+					transform[3][0] -=speed * ts;
+				if (Input::isKeyPressed(KeyCodes::D))
+					transform[3][0] +=speed * ts;
+				if (Input::isKeyPressed(KeyCodes::S))
+					transform[3][1] -=speed * ts;
+				if (Input::isKeyPressed(KeyCodes::W))
+					transform[3][1] +=speed * ts;
+
+			}
+
+			void onDestroy() {
+
+			}
+
+
+		};
+
+		cameraEntity.add<NativeScriptComponent>().bind<CameraController>();
+
 	}
 
 	void EditorLayer::onDetach() {}
@@ -33,11 +68,12 @@ namespace Real {
 		RE_PROFILE_FUNCTION();
 
 		if (auto spec = framebuffer->getSpec();
-			spec.width != viewportSize.x ||
-			spec.height != viewportSize.y){
-
+		    spec.width != viewportSize.x ||
+		    spec.height != viewportSize.y) {
 			framebuffer->resize(viewportSize);
 			controller.resize(viewportSize);
+
+			activeScene->onViewportResize(viewportSize);
 		}
 
 		Renderer2D::resetStats();
@@ -49,10 +85,8 @@ namespace Real {
 		RenderCommand::setClearColor({0.1, 0.1, 0.1, 1.0});
 		RenderCommand::clear();
 
-		Renderer2D::beginScene(controller.getCamera());
-		Renderer2D::drawQuad({0.0, 0.0, 0.0}, {0.5, 0.5}, barrelSprite);
+		// Renderer2D::drawQuad({0.0, 0.0, 0.0}, {0.5, 0.5}, barrelSprite);
 		activeScene->onUpdate(ts);
-		Renderer2D::endScene();
 
 		Renderer2D::beginScene(controller.getCamera());
 		for (float y = -5.0f; y < 5.0f; y += 0.5f) {
@@ -88,8 +122,8 @@ namespace Real {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
 		ImGui::Begin("Viewport");
-		auto res = ImGui::GetContentRegionAvail();
-		viewportSize    = {res.x, res.y};
+		auto res     = ImGui::GetContentRegionAvail();
+		viewportSize = {res.x, res.y};
 
 		auto  textureId = framebuffer->getColorAttachmentID();
 		void* texId     = static_cast<uint8_t*>(0) + textureId;

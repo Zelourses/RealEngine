@@ -12,13 +12,14 @@
 
 #include "real/core/Input.h"
 #include "real/core/KeyCodes.h"
-#include "real/core/MouseButtonCodes.h"
+#include "real/core/MouseCodes.h"
 
 #include "real/imGUI/ImGUILayer.h"
 #include "real/renderer/OrthographicCameraController.h"
 
 #include "real/scene/Scene.h"
 #include "real/scene/Entity.h"
+#include "real/scene/ScriptableEntity.h"
 #include "real/scene/Components.h"
 
 // --- Renderer ------------------------------

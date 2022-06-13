@@ -12,23 +12,23 @@ namespace Real {
 	      rotation(camRotation) {
 	}
 	void OrthographicCameraController::onUpdate(Timestep ts) {
-		if (Input::isKeyPressed(RE_KEY_A)) {
+		if (Input::isKeyPressed(KeyCodes::A)) {
 			cameraPosition.x -= cameraTranslationSpeed * ts;
-		} else if (Input::isKeyPressed(RE_KEY_D)) {
+		} else if (Input::isKeyPressed(KeyCodes::D)) {
 			cameraPosition.x += cameraTranslationSpeed * ts;
 		}
-		if (Input::isKeyPressed(RE_KEY_W)) {
+		if (Input::isKeyPressed(KeyCodes::W)) {
 			cameraPosition.y += cameraTranslationSpeed * ts;
-		} else if (Input::isKeyPressed(RE_KEY_S)) {
+		} else if (Input::isKeyPressed(KeyCodes::S)) {
 			cameraPosition.y -= cameraTranslationSpeed * ts;
 		}
 
 		camera.setPosition(cameraPosition);
 
 		if (rotation) {
-			if (Input::isKeyPressed(RE_KEY_Q)) {
+			if (Input::isKeyPressed(KeyCodes::Q)) {
 				cameraRotation += cameraRotationSpeed * ts;
-			} else if (Input::isKeyPressed(RE_KEY_E)) {
+			} else if (Input::isKeyPressed(KeyCodes::E)) {
 				cameraRotation -= cameraRotationSpeed * ts;
 			}
 			camera.setRotation(cameraRotation);

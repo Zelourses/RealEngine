@@ -72,7 +72,10 @@ project "Real"
 
 		defines {
 			"RE_PLATFORM_WINDOWS",
-			"GLFW_INCLUDE_NONE"
+			"GLFW_INCLUDE_NONE",
+			-- turn off all non-essential windows things for faster pch compiling
+			"WIN32_LEAN_AND_MEAN",
+			"VC_EXTRALEAN"
 		}
 
 	filter "configurations:Debug"

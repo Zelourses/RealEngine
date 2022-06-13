@@ -7,15 +7,15 @@
 namespace Real {
 
 
-	bool Input::isKeyPressed(int keyCode) {
+	bool Input::isKeyPressed(KeyCodes keyCode) {
 		auto* const window = static_cast<GLFWwindow*>(Application::getApplication().getWindow().getNativeWindow());
-		const auto  state  = glfwGetKey(window, keyCode);
+		const auto  state  = glfwGetKey(window, static_cast<int>(keyCode));
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool Input::isMouseButtonPressed(int button) {
+	bool Input::isMouseButtonPressed(MouseCodes button) {
 		auto* const window = static_cast<GLFWwindow*>(Application::getApplication().getWindow().getNativeWindow());
-		auto        state  = glfwGetMouseButton(window, button);
+		auto        state  = glfwGetMouseButton(window, static_cast<int>(button));
 		return state == GLFW_PRESS;
 	}
 

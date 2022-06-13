@@ -6,7 +6,7 @@ AlignConsecutiveMacros: 'true'
 AlignConsecutiveAssignments: 'true'
 AlignConsecutiveDeclarations: 'true'
 AlignEscapedNewlines: Left
-AlignOperands: 'true'
+AlignOperands: AlignAfterOperator
 AlignTrailingComments: 'true'
 AllowAllArgumentsOnNextLine: 'false'
 AllowAllConstructorInitializersOnNextLine: 'false'
@@ -22,7 +22,7 @@ AlwaysBreakBeforeMultilineStrings: 'false'
 AlwaysBreakTemplateDeclarations: 'Yes'
 BinPackArguments: 'false'
 BinPackParameters: 'false'
-BreakBeforeBinaryOperators: None
+BreakBeforeBinaryOperators: All
 BreakBeforeBraces: Custom
 BreakBeforeTernaryOperators: 'true'
 BreakConstructorInitializers: BeforeColon
@@ -38,12 +38,13 @@ IncludeBlocks: Regroup
 IndentCaseLabels: 'true'
 IndentPPDirectives: BeforeHash
 IndentWidth: '4'
+IndentWrappedFunctionNames: 'false'
 KeepEmptyLinesAtTheStartOfBlocks: 'false'
 MaxEmptyLinesToKeep: '2'
 NamespaceIndentation: All
 ObjCSpaceBeforeProtocolList: 'false'
 PointerAlignment: Left
-ReflowComments: 'true'
+ReflowComments: 'false'
 SortIncludes: 'false'
 SortUsingDeclarations: 'true'
 SpaceAfterCStyleCast: 'false'
@@ -56,13 +57,13 @@ SpaceBeforeInheritanceColon: 'true'
 SpaceBeforeParens: ControlStatements
 SpaceBeforeRangeBasedForLoopColon: 'false'
 SpaceInEmptyParentheses: 'false'
-SpacesBeforeTrailingComments: '0'
+SpacesBeforeTrailingComments: '1'
 SpacesInAngles: 'false'
 SpacesInContainerLiterals: 'false'
 SpacesInParentheses: 'false'
 SpacesInSquareBrackets: 'false'
 Standard: Cpp11
 TabWidth: '4'
-UseTab: ForIndentation
+UseTab: Always
 
 ...

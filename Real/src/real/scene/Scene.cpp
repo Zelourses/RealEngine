@@ -13,17 +13,56 @@ namespace Real {
 	Scene::~Scene() {
 	}
 	Entity Scene::createEntity(const std::string& name /*="unnamed"*/) {
-		Entity entity = { registry.create(), this };
+		Entity entity = {registry.create(), this};
 		entity.add<TransformComponent>();
 		entity.add<TagComponent>(name);
 		return entity;
 	}
 	void Scene::onUpdate(Timestep ts) {
-		auto&& group = registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-		for (auto&& entity : group) {
-			auto&& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
-			Renderer2D::drawQuad(transform,sprite);
+		//Update Scripts
+		{
+			registry.view<NativeScriptComponent>().each([ts, this](auto&& entity, auto&& nsc) {
+				if (!nsc.instance) {
+					nsc.instantiateFunc();
+					nsc.instance->entity = Entity{entity, this};
+					nsc.onCreateFunc(nsc.instance);
+				}
+				nsc.onUpdateFunc(nsc.instance, ts);
+				});
+		}
+
+		auto cameraView = registry.view<TransformComponent, CameraComponent>();
+
+		auto&& cam = std::ranges::find_if(cameraView, [&cameraView](auto&& val) {
+			auto&& [transform, camera] = cameraView.get<TransformComponent, CameraComponent>(val);
+			return camera.primary;
+		});
+
+		if (cam != cameraView.end()) {
+			auto&& [transform, camera] = cameraView.get<TransformComponent, CameraComponent>(*cam);
+
+			Renderer2D::beginScene(camera.camera, transform.transform);
+
+
+			auto&& group = registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+			for (auto&& entity: group) {
+				auto&& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+
+				Renderer2D::drawQuad(transform, sprite);
+			}
+
+			Renderer2D::endScene();
+		}
+	}
+	void Scene::onViewportResize(glm::vec2 size) {
+		
+		auto&& view = registry.view<CameraComponent>();
+		for (auto&& entity: view) {
+			CameraComponent& camera = view.get<CameraComponent>(entity);
+			if (!camera.fixedAspectRatio) {
+				camera.camera.setViewPortSize(size);
+			}
 		}
 	}
 }
