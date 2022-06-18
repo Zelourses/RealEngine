@@ -30,21 +30,16 @@ namespace Real {
 	struct NativeScriptComponent {
 		ScriptableEntity* instance = nullptr;
 
-		std::function<void()> instantiateFunc;
-		std::function<void()> destroyInstanceFunc;
+		using instantiateScriptType = std::add_pointer<ScriptableEntity*()>::type;
+		using destroyScriptType		= std::add_pointer<void(NativeScriptComponent*)>::type;
 
-		std::function<void(ScriptableEntity*)> onCreateFunc;
-		std::function<void(ScriptableEntity*, Timestep)> onUpdateFunc;
-		std::function<void(ScriptableEntity*)> onDestroyFunc;
+		instantiateScriptType instantiateScript;
+		destroyScriptType	  destroyScript;
 
 		template <typename EntityType>
 		void bind() {
-			instantiateFunc		= [this]() { instance = new EntityType(); };
-			destroyInstanceFunc = [this]() { delete static_cast<EntityType*>(instance);  /*for debug*/instance = nullptr; };
-
-			onCreateFunc  = [](ScriptableEntity* instance) { (static_cast<EntityType*>(instance))->onCreate(); };
-			onUpdateFunc  = [](ScriptableEntity* instance, Timestep ts) { (static_cast<EntityType*>(instance))->onUpdate(ts); };
-			onDestroyFunc = [](ScriptableEntity* instance) { (static_cast<EntityType*>(instance))->onDestroy(); };
+			instantiateScript = []() -> ScriptableEntity* { return new EntityType(); };
+			destroyScript	  = [](NativeScriptComponent* component) { delete component->instance;  /*for debug*/component->instance = nullptr; };
 		}
 	};
 

@@ -23,12 +23,16 @@ namespace Real {
 		//Update Scripts
 		{
 			registry.view<NativeScriptComponent>().each([ts, this](auto&& entity, auto&& nsc) {
+
+				//TODO: move to something like Scene::onScenePlay()
 				if (!nsc.instance) {
-					nsc.instantiateFunc();
+					nsc.instance		 = nsc.instantiateScript();
 					nsc.instance->entity = Entity{entity, this};
-					nsc.onCreateFunc(nsc.instance);
+					nsc.instance->onCreate();
 				}
-				nsc.onUpdateFunc(nsc.instance, ts);
+				
+				nsc.instance->onUpdate(ts);
+				//TODO: call onDestroy in something like Scene::onSceneStop();
 				});
 		}
 

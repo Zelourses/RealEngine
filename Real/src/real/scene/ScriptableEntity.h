@@ -11,6 +11,14 @@ namespace Real {
 			return entity.get<ComponentType>();
 		}
 
+		virtual ~ScriptableEntity() = default;
+
+	protected:
+		virtual void onCreate() {}
+		virtual void onUpdate(Timestep ts) {}
+		virtual void onDestroy() {}
+
+
 	private:
 		Entity entity;
 		friend class Scene;
