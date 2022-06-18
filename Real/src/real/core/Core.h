@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include "debug/Log.h"
 
 #ifdef RE_PLATFORM_WINDOWS
 #else

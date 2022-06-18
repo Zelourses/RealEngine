@@ -41,6 +41,10 @@ namespace Real {
 
 		unsigned int i      = 0;
 		const auto&  layout = vertexBuffer->getLayout();
+
+		// There may be problems with that way of work, maybe need to fix it like
+		// https://github.com/TheCherno/Hazel/pull/307/files
+		// But I don't currently understand where there is a problem of "incorrect cases in BufferElement::GetComponentCount"
 		for (const auto& l: layout) {
 			/*
 			 * This line existence is determined by compiler warning that it's wrong
