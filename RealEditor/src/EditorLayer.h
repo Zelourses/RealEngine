@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Real.h"
+#include "panels/SceneHierarchyPanel.h"
 
 namespace Real {
 	class EditorLayer : public Layer {
@@ -34,5 +35,7 @@ namespace Real {
 		Entity cameraEntity;
 
 		glm::vec2 viewportSize = {0.0f, 0.0f};
+
+		SceneHierarchyPanel panel;
 	};
 }

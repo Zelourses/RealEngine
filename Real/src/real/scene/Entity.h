@@ -32,6 +32,10 @@ namespace Real {
 			return scene->registry.remove<ComponentType>(handle);
 		}
 
+		//FIXME: temporary things, change to inner uuid
+		unsigned id() const { return static_cast<unsigned>(handle); }
+		bool	 operator==(const Entity& rhs) const { return handle == rhs.handle && scene == rhs.scene; }
+
 	private:
 		entt::entity handle = entt::null;
 

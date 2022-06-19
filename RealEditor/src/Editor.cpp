@@ -15,7 +15,7 @@ namespace Real {
 	class RealEditor : public Application {
 	public:
 		RealEditor()
-		    : Application({"Real Editor"}) {
+			: Application({"Real Editor"}) {
 			pushLayer(new EditorLayer());
 		}
 		~RealEditor() = default;

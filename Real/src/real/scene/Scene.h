@@ -24,5 +24,6 @@ namespace Real {
 		entt::registry registry;
 
 		friend class Entity;
+		friend class SceneHierarchyPanel;
 	};
 }
