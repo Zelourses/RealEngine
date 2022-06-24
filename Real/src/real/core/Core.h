@@ -1,47 +1,25 @@
 #pragma once
 #include <memory>
-#include "debug/Log.h"
-
-#ifdef RE_PLATFORM_WINDOWS
-#else
-	#error Engine supports only Windows on that moment
-#endif
 
 #ifdef RE_DEBUG
 	#define RE_ENABLE_ASSERTS
-#endif
 
-#ifdef RE_ENABLE_ASSERTS
-	#define RE_ASSERT(x, ...)                                   \
-		{                                                       \
-			if (!(x)) {                                         \
-				RE_ERROR("Assertion failed: {0}", __VA_ARGS__); \
-				__debugbreak();                                 \
-			}                                                   \
-		}
-	#define RE_CORE_ASSERT(x, ...)                                   \
-		{                                                            \
-			if (!(x)) {                                              \
-				RE_CORE_ERROR("Assertion failed: {0}", __VA_ARGS__); \
-				__debugbreak();                                      \
-			}                                                        \
-		}
-#else
-	#define RE_ASSERT(x, ...)
-	#define RE_CORE_ASSERT(x, ...)
+	#if defined(RE_PLATFORM_WINDOWS)
+		#define RE_DEBUGBREAK() __debugbreak()
+	#elif defined(RE_PLATFORM_LINUX)
+		#include <signal.h>
+		#define RE_DEBUGBREAK() raise(SIGTRAP)
+	#else
+		#error "Platform doesn't suppoted"
+	#endif
 #endif
 
 #define BIT_SHIFT(x) (1 << x)
 
-// maybe I need to rewrite it in lambda thing
-/*
- * RE_BIND_EVENT_FN(Application::onEvent) ->
- * [this](auto&& PH1) { onEvent(std::forward<decltype(PH1)>(PH1)); }
- *
- * ^ is an example of transforming into lambda
- * But [this] ... I am not sure if it's ok
- */
-#define RE_BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
+
+#define RE_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
+#define RE_EXPAND_MACRO(x)	 x
+#define RE_STRINGIFY(x)		 #x
 
 // One static assert to rule the whole project
 static_assert(sizeof(unsigned int) == sizeof(uint32_t));
@@ -65,3 +43,5 @@ namespace Real {
 	}
 
 }
+
+#include "debug/Assert.h"

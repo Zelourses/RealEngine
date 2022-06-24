@@ -61,7 +61,7 @@ namespace Real {
 		    : event(event) {}
 		template <typename T>
 		bool dispatch(EventFun<T> func) {
-			if (event.getEventType() == T::getStaticType()) {
+			if (event.handled == false && event.getEventType() == T::getStaticType()) {
 				event.handled = func(*static_cast<T*>(&event));
 				return true;
 			}

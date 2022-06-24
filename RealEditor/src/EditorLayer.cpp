@@ -37,17 +37,17 @@ namespace Real {
 
 
 			void onUpdate(Timestep ts) {
-				auto&& transform = get<TransformComponent>().transform;
-				float  speed	 = 5.0f;
+				auto&& translation = get<TransformComponent>().translation;
+				float  speed	   = 5.0f;
 
 				if (Input::isKeyPressed(KeyCodes::A))
-					transform[3][0] -= speed * ts;
+					translation.x -= speed * ts;
 				if (Input::isKeyPressed(KeyCodes::D))
-					transform[3][0] += speed * ts;
+					translation.x += speed * ts;
 				if (Input::isKeyPressed(KeyCodes::S))
-					transform[3][1] -= speed * ts;
+					translation.y -= speed * ts;
 				if (Input::isKeyPressed(KeyCodes::W))
-					transform[3][1] += speed * ts;
+					translation.y += speed * ts;
 			}
 
 			void onDestroy() {
@@ -96,24 +96,24 @@ namespace Real {
 
 	void EditorLayer::onImGUIRender() {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+		auto&& style		  = ImGui::GetStyle();
+		auto   minStyle		  = style.WindowMinSize.x;
+		style.WindowMinSize.x = 350.0f;
 		ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 		ImGui::PopStyleVar();
+		style.WindowMinSize.x = minStyle;
+
 
 		auto stats = Real::Renderer2D::getStats();
-		ImGui::Begin("Settings");
+		ImGui::Begin("Render statistics");
 		ImGui::Text("Renderer2D stats:");
 		ImGui::Text("Draw calls: %d", stats.drawCalls);
 		ImGui::Text("Quads: %d", stats.quadCount);
 		ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.getTotalIndexCount());
-		ImGui::Separator();
-		auto&& color = squareEntity.get<SpriteRendererComponent>().color;
-		ImGui::ColorEdit4(squareEntity.get<TagComponent>().tag.c_str(), glm::value_ptr(color));
-		ImGui::Separator();
 		ImGui::End();
 
 		panel.onImGUIRender();
-
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 

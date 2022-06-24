@@ -15,6 +15,7 @@
 #include "real/core/MouseCodes.h"
 
 #include "real/core/debug/Log.h"
+#include "real/core/debug/Assert.h"
 #include "real/core/debug/Instrumentator.h"
 
 #include "real/imGUI/ImGUILayer.h"

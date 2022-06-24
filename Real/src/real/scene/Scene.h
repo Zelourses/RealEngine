@@ -19,9 +19,13 @@ namespace Real {
 
 		void onUpdate(Timestep ts);
 		void onViewportResize(glm::vec2 size);
+		void destoryEntity(Entity entity);
 
 	private:
+		void onCameraComponentAdd(entt::registry& registry, entt::entity entity);
+
 		entt::registry registry;
+		glm::vec2 viewportSize;
 
 		friend class Entity;
 		friend class SceneHierarchyPanel;

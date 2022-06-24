@@ -36,6 +36,10 @@ namespace Real {
 		unsigned id() const { return static_cast<unsigned>(handle); }
 		bool	 operator==(const Entity& rhs) const { return handle == rhs.handle && scene == rhs.scene; }
 
+		operator bool() {return handle != entt::null; }
+
+		operator entt::entity() const {return handle;};
+
 	private:
 		entt::entity handle = entt::null;
 

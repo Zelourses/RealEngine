@@ -14,7 +14,9 @@ namespace Real {
 		void onImGUIRender();
 
 	private:
-		void	   drawEntityNode(Entity entity);
+		void drawEntityNode(Entity entity);
+		void drawComponents(Entity entity);
+
 		Entity	   selectedContext;
 		Ref<Scene> context;
 	};

@@ -16,6 +16,8 @@ namespace Real {
 
 		void begin();
 		void end();
+
+		void setDarkTheme();
 	};
 }
 

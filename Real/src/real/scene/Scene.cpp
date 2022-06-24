@@ -7,7 +7,9 @@
 #include "real/renderer/Renderer2D.h"
 
 namespace Real {
+
 	Scene::Scene() {
+		registry.on_construct<CameraComponent>().connect<&Scene::onCameraComponentAdd>(*this);
 	}
 
 	Scene::~Scene() {
@@ -44,22 +46,25 @@ namespace Real {
 		});
 
 		if (cam != cameraView.end()) {
-			auto&& [transform, camera] = cameraView.get<TransformComponent, CameraComponent>(*cam);
+			auto&& [transformComponent, camera] = cameraView.get<TransformComponent, CameraComponent>(*cam);
+			auto&& transform					= transformComponent.transform();
 
-			Renderer2D::beginScene(camera.camera, transform.transform);
+			Renderer2D::beginScene(camera.camera, transform);
 
 
 			auto&& group = registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto&& entity: group) {
-				auto&& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+				auto&& [entityTransformComponent, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
-				Renderer2D::drawQuad(transform, sprite);
+				Renderer2D::drawQuad(entityTransformComponent.transform(), sprite.color);
 			}
 
 			Renderer2D::endScene();
 		}
 	}
 	void Scene::onViewportResize(glm::vec2 size) {
+
+		viewportSize = size;
 		
 		auto&& view = registry.view<CameraComponent>();
 		for (auto&& entity: view) {
@@ -68,5 +73,11 @@ namespace Real {
 				camera.camera.setViewPortSize(size);
 			}
 		}
+	}
+	void Scene::destoryEntity(Entity entity) {
+		registry.destroy(entity);
+	}
+	void Scene::onCameraComponentAdd(entt::registry& registry, entt::entity entity) {
+		onViewportResize(viewportSize);
 	}
 }

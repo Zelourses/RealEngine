@@ -1,21 +1,26 @@
 #include "repch.h"
 #include "WindowsWindow.h"
 
-#include "Real/Events/ApplicationEvent.h"
-#include "Real/Events/MouseEvent.h"
-#include "Real/Events/KeyEvent.h"
+#include "real/events/ApplicationEvent.h"
+#include "real/events/MouseEvent.h"
+#include "real/events/KeyEvent.h"
 
-#include "platform/OpenGL/OpenGLContext.h"
+#include "platform/openGL/OpenGLContext.h"
+
+#include "real/renderer/Renderer.h"
 
 
-namespace Real{
+namespace Real {
+
+	//Allocating memory here
+	float Window::HighDPIWindowScaleFactor = 1.0f;
 
 	static bool isGLFWInitialized = false;
 
 	static void GLFWErrorCallback(int error, const char* description) {
 		RE_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
 	}
-	
+
 	Window* Window::create(const WindowProps& props) {
 		return new WindowsWindow(props);
 	}
@@ -29,14 +34,13 @@ namespace Real{
 	}
 
 	void WindowsWindow::init(const WindowProps& prop) {
-		windowData.title = prop.title;
-		windowData.width = prop.width;
+		windowData.title  = prop.title;
+		windowData.width  = prop.width;
 		windowData.height = prop.height;
 
 		RE_CORE_INFO("Initializing window: {0} {1} {2}", prop.title, prop.width, prop.height);
 
 		if (!isGLFWInitialized) {
-
 			//TODO: glfwTerminate();
 			const int result = glfwInit();
 			RE_CORE_ASSERT(result, "GLFW initialization failed");
@@ -44,34 +48,52 @@ namespace Real{
 			isGLFWInitialized = true;
 		}
 
-		window = glfwCreateWindow(static_cast<int>(prop.width), 
-				static_cast<int>(prop.height), prop.title.c_str(), nullptr,nullptr);
+		auto&& monitor = glfwGetPrimaryMonitor();
+		float xScale, yScale;
+		glfwGetMonitorContentScale(monitor,&xScale, &yScale);
+
+		if (xScale > 1.0f || yScale > 1.0f) {
+			Window::HighDPIWindowScaleFactor = xScale;
+			glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
+		}
+
+#if defined(RE_DEBUG)
+		if (Renderer::getRenderAPI() == RendererAPI::API::OpenGL) {
+			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+		}
+#endif
+
+		window = glfwCreateWindow(static_cast<int>(prop.width),
+								  static_cast<int>(prop.height),
+								  prop.title.c_str(),
+								  nullptr,
+								  nullptr);
 
 		// setting up context
-		
+
 		context = new OpenGLContext(window);
 		context->init();
-		
-		
+
+
 		glfwSetWindowUserPointer(window, &windowData);
 		setVsync(true);
-		
+
 		//
 		//Set GLFW callbacks
 		//
-		
+
 		glfwSetWindowSizeCallback(window, [](GLFWwindow* _window, int width, int height) {
 			WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(_window));
 
-			data.width = width;
+			data.width	= width;
 			data.height = height;
-			
+
 			WindowResizeEvent event(width, height);
 			data.eventCallback(event);
 		});
 
 		glfwSetWindowCloseCallback(window, [](GLFWwindow* _window) {
-			WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(_window));
+			WindowData&		 data = *static_cast<WindowData*>(glfwGetWindowUserPointer(_window));
 			WindowCloseEvent event;
 			data.eventCallback(event);
 		});
@@ -99,7 +121,7 @@ namespace Real{
 		});
 
 
-		glfwSetCharCallback(window,[](GLFWwindow* _window, unsigned int keyCode) {
+		glfwSetCharCallback(window, [](GLFWwindow* _window, unsigned int keyCode) {
 			WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(_window));
 
 			KeyTypedEvent event(static_cast<int>(keyCode));
@@ -153,7 +175,7 @@ namespace Real{
 			glfwSwapInterval(1);
 		else
 			glfwSwapInterval(0);
-		
+
 		windowData.Vsync = enabled;
 	}
 
@@ -168,9 +190,6 @@ namespace Real{
 	unsigned int WindowsWindow::getHeight() const {
 		return windowData.height;
 	}
-
-
-
 
 
 }

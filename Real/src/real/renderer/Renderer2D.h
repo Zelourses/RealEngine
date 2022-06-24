@@ -21,7 +21,7 @@ namespace Real {
 		static void drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
 		static void drawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor = 1.0f);
 		static void drawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<SubTexture2D>& subTexture, float tilingFactor = 1.0f);
-		
+
 		static void drawQuad(const glm::mat4& transform, const glm::vec4& color);
 		static void drawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor = 1.0f);
 
@@ -34,12 +34,12 @@ namespace Real {
 			unsigned drawCalls = 0;
 			unsigned quadCount = 0;
 
-			unsigned getTotalVertexCount() { return quadCount * 4; }
-			unsigned getTotalIndexCount() { return quadCount * 6; }
+			unsigned getTotalVertexCount() const { return quadCount * 4; }
+			unsigned getTotalIndexCount() const { return quadCount * 6; }
 		};
 
 		static Statistics getStats();
-		static void       resetStats();
+		static void		  resetStats();
 
 	private:
 		static inline void reset();

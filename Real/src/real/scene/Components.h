@@ -1,30 +1,40 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "SceneCamera.h"
 #include "ScriptableEntity.h"
 
 namespace Real {
 
 	struct TransformComponent {
-		glm::mat4 transform = glm::mat4(1.0f);
-				  operator glm::mat4&() { return transform; }
+		glm::vec3 translation = glm::vec3(0.0f);
+		glm::vec3 rotaion	  = glm::vec3(0.0f);
+		glm::vec3 scale		  = glm::vec3(1.0f);
+
+		glm::mat4 transform() const {
+			glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), rotaion.x, {1, 0, 0})
+							 * glm::rotate(glm::mat4(1.0f), rotaion.y, {0, 1, 0})
+							 * glm::rotate(glm::mat4(1.0f), rotaion.z, {0, 0, 1});
+
+			return glm::translate(glm::mat4(1.0f), translation)
+				 * rotate
+				 * glm::scale(glm::mat4(1.0f), scale);
+		}
 	};
 
 	struct SpriteRendererComponent {
 		glm::vec4 color = glm::vec4(1.0f);
-				  operator glm::vec4&() { return color; }
 	};
 	struct TagComponent {
 		std::string tag;
-					operator std::string&() { return tag; }
 	};
 
 	struct CameraComponent {
 		SceneCamera camera;
 		bool		primary			 = true;
 		bool		fixedAspectRatio = false;
-					operator Camera&() { return camera; }
 	};
 
 	struct NativeScriptComponent {
