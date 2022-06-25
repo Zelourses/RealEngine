@@ -102,18 +102,18 @@ namespace Real {
 			WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(_window));
 			switch (action) {
 				case GLFW_PRESS: {
-					KeyPressedEvent event(key, 0);
+					KeyPressedEvent event(static_cast<KeyCode>(key), 0);
 					data.eventCallback(event);
 					break;
 				}
 				case GLFW_RELEASE: {
-					KeyReleasedEvent event(key);
+					KeyReleasedEvent event(static_cast<KeyCode>(key));
 					data.eventCallback(event);
 					break;
 				}
 
 				case GLFW_REPEAT: {
-					KeyPressedEvent event(key, 1);
+					KeyPressedEvent event(static_cast<KeyCode>(key), 1);
 					data.eventCallback(event);
 					break;
 				}
@@ -124,7 +124,7 @@ namespace Real {
 		glfwSetCharCallback(window, [](GLFWwindow* _window, unsigned int keyCode) {
 			WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(_window));
 
-			KeyTypedEvent event(static_cast<int>(keyCode));
+			KeyTypedEvent event(static_cast<KeyCode>(keyCode));
 			data.eventCallback(event);
 		});
 

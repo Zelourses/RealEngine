@@ -1,30 +1,31 @@
 #pragma once
 
 #include "Event.h"
+#include "real/core/KeyCode.h"
 
 namespace Real {
 	class KeyEvent : public Event {
 	public:
-		inline int getKeyCode() const { return keyCode; }
+		inline KeyCode getKeyCode() const { return keyCode; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
 
 	protected:
-		int keyCode;
-		KeyEvent(int keyCode) : keyCode(keyCode) { }
+		KeyCode keyCode;
+		KeyEvent(KeyCode keyCode) : keyCode(keyCode) { }
 		
 	};
 
 	class KeyPressedEvent : public KeyEvent {
 	public:
-		KeyPressedEvent(int keyCode, int repeatCount)
+		KeyPressedEvent(KeyCode keyCode, int repeatCount)
 			: KeyEvent(keyCode), repeatCount(repeatCount) {}
 
 		inline int getRepeatCount() const { return repeatCount; }
 
 		std::string toString() const override {
 			std::stringstream stream;
-			stream << "KeyPressedEvent: " << keyCode << " (" << repeatCount << " repeats)";
+			stream << "KeyPressedEvent: " << static_cast<uint16_t>(keyCode) << " (" << repeatCount << " repeats)";
 			return stream.str();
 		}
 
@@ -37,12 +38,12 @@ namespace Real {
 
 	class KeyReleasedEvent : public KeyEvent {
 	public:
-		KeyReleasedEvent(int keyCode)
+		KeyReleasedEvent(KeyCode keyCode)
 			: KeyEvent(keyCode) {}
 
 		std::string toString() const override {
 			std::stringstream stream;
-			stream << "KeyReleasedEvent: " << keyCode;
+			stream << "KeyReleasedEvent: " << static_cast<uint16_t>(keyCode);
 			return stream.str();
 		}
 
@@ -51,12 +52,12 @@ namespace Real {
 
 	class KeyTypedEvent : public KeyEvent {
 	public:
-		KeyTypedEvent(int keyCode)
+		KeyTypedEvent(KeyCode keyCode)
 			: KeyEvent(keyCode) {}
 
 		std::string toString() const override {
 			std::stringstream stream;
-			stream << "KeyTypedEvent: " << keyCode;
+			stream << "KeyTypedEvent: " << static_cast<uint16_t>(keyCode);
 			return stream.str();
 		}
 

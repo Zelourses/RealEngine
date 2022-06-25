@@ -2,11 +2,14 @@
 
 #include <imgui/imgui.h>
 
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include <platform/OpenGL/OpenGLShader.h>
 #include <entt/entt.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "real/scene/SceneSerializer.h"
+#include "platform/OpenGL/OpenGLShader.h"
+
+#include "real/utils/PlatformUtils.h"
 
 namespace Real {
 
@@ -23,7 +26,7 @@ namespace Real {
 			.height = 720};
 		framebuffer = Framebuffer::create(spec);
 		activeScene = createRef<Scene>();
-		panel.setContext(activeScene);
+		sceneHierarchyPanel.setContext(activeScene);
 
 		squareEntity = activeScene->createEntity("square");
 		squareEntity.add<SpriteRendererComponent>(glm::vec4{0.5f, 0.5f, 0.1f, 1.0f});
@@ -40,13 +43,13 @@ namespace Real {
 				auto&& translation = get<TransformComponent>().translation;
 				float  speed	   = 5.0f;
 
-				if (Input::isKeyPressed(KeyCodes::A))
+				if (Input::isKeyPressed(KeyCode::A))
 					translation.x -= speed * ts;
-				if (Input::isKeyPressed(KeyCodes::D))
+				if (Input::isKeyPressed(KeyCode::D))
 					translation.x += speed * ts;
-				if (Input::isKeyPressed(KeyCodes::S))
+				if (Input::isKeyPressed(KeyCode::S))
 					translation.y -= speed * ts;
-				if (Input::isKeyPressed(KeyCodes::W))
+				if (Input::isKeyPressed(KeyCode::W))
 					translation.y += speed * ts;
 			}
 
@@ -95,40 +98,136 @@ namespace Real {
 	}
 
 	void EditorLayer::onImGUIRender() {
+		RE_PROFILE_FUNCTION();
+
+		auto   windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+		auto&& viewport	   = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(viewport->Pos);
+		ImGui::SetNextWindowSize(viewport->Size);
+		ImGui::SetNextWindowViewport(viewport->ID);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		windowFlags |= ImGuiWindowFlags_NoTitleBar
+					 | ImGuiWindowFlags_NoCollapse
+					 | ImGuiWindowFlags_NoResize
+					 | ImGuiWindowFlags_NoMove
+					 | ImGuiWindowFlags_NoBringToFrontOnFocus
+					 | ImGuiWindowFlags_NoNavFocus;
+
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+		ImGui::Begin("Dockspace", static_cast<bool*>(0), windowFlags);
+		ImGui::PopStyleVar(); // ImGuiStyleVar_WindowPadding
+
+		ImGui::PopStyleVar(2); //ImGuiStyleVar_WindowRounding and ImGuiStyleVar_WindowBorderSize
+
 		auto&& style		  = ImGui::GetStyle();
 		auto   minStyle		  = style.WindowMinSize.x;
-		style.WindowMinSize.x = 350.0f;
-		ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-		ImGui::PopStyleVar();
+		style.WindowMinSize.x = 200.0f;
+
+		auto dockspaceID = ImGui::GetID("MyDockSpace");
+		ImGui::DockSpace(dockspaceID);
+
 		style.WindowMinSize.x = minStyle;
+
+		if (ImGui::BeginMenuBar()) {
+			if (ImGui::BeginMenu("File")) {
+				if (ImGui::MenuItem("New")) {
+					newScene();
+				}
+				if (ImGui::MenuItem("Open...", "Ctrl+O")) {
+					openScene();
+				}
+				if (ImGui::MenuItem("Save As...", "Ctrl+S")) {
+					saveSceneAs();
+				}
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenuBar();
+		}
 
 
 		auto stats = Real::Renderer2D::getStats();
 		ImGui::Begin("Render statistics");
-		ImGui::Text("Renderer2D stats:");
-		ImGui::Text("Draw calls: %d", stats.drawCalls);
-		ImGui::Text("Quads: %d", stats.quadCount);
-		ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
-		ImGui::Text("Indices: %d", stats.getTotalIndexCount());
-		ImGui::End();
+		{
+			ImGui::Text("Renderer2D stats:");
+			ImGui::Text("Draw calls: %d", stats.drawCalls);
+			ImGui::Text("Quads: %d", stats.quadCount);
+			ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
+			ImGui::Text("Indices: %d", stats.getTotalIndexCount());
+		}
+		ImGui::End(); //Render statistics
 
-		panel.onImGUIRender();
+		sceneHierarchyPanel.onImGUIRender();
 
+
+		//Main window renders here
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-
 		ImGui::Begin("Viewport");
-		auto res	 = ImGui::GetContentRegionAvail();
-		viewportSize = {res.x, res.y};
+		{
+			auto res	 = ImGui::GetContentRegionAvail();
+			viewportSize = {res.x, res.y};
 
-		auto  textureId = framebuffer->getColorAttachmentID();
-		void* texId		= static_cast<uint8_t*>(0) + textureId;
-		ImGui::Image(texId, {viewportSize.x, viewportSize.y}, {0, 1}, {1, 0});
-		ImGui::End();
-		ImGui::PopStyleVar();
+			auto  textureId = framebuffer->getColorAttachmentID();
+			void* texId		= static_cast<uint8_t*>(0) + textureId;
+			ImGui::Image(texId, {viewportSize.x, viewportSize.y}, {0, 1}, {1, 0});
+		}
+		ImGui::End();		  // Viewport
+		ImGui::PopStyleVar(); //ImGuiStyleVar_WindowPadding
+
+
+		ImGui::End(); //Dockspace
 	}
 
 	void EditorLayer::onEvent(Real::Event& e) {
 		controller.onEvent(e);
+		EventDispatcher dispatcher(e);
+		dispatcher.dispatch<KeyPressedEvent>(RE_BIND_EVENT_FN(EditorLayer::onKeyPressed));
+	}
+	bool EditorLayer::onKeyPressed(KeyPressedEvent e) {
+		if (e.getRepeatCount() > 0) {
+			return false;
+		}
+		bool controlPressed = Input::isKeyPressed(KeyCode::LEFT_CONTROL)
+						   || Input::isKeyPressed(KeyCode::RIGHT_CONTROL);
+		bool shiftPressed = Input::isKeyPressed(KeyCode::LEFT_SHIFT)
+						 || Input::isKeyPressed(KeyCode::RIGHT_SHIFT);
+		switch (e.getKeyCode()) {
+			case KeyCode::S: {
+				if (controlPressed) {
+					saveSceneAs();
+				}
+				break;
+			}
+			case KeyCode::O: {
+				if (controlPressed) {
+					openScene();
+				}
+			}
+		}
+		return true;
+	}
+	void EditorLayer::newScene() {
+		activeScene = createRef<Scene>();
+		activeScene->onViewportResize(viewportSize);
+		sceneHierarchyPanel.setContext(activeScene);
+	}
+	void EditorLayer::openScene() {
+		auto filepath = FileDialogs::openFile("Real Engine serialized scene (*.ress)\0*.ress\0");
+		if (filepath) {
+			activeScene = createRef<Scene>();
+			activeScene->onViewportResize(viewportSize);
+			sceneHierarchyPanel.setContext(activeScene);
+
+			SceneSerializer serializer(activeScene);
+			serializer.deserialize(*filepath);
+		}
+	}
+	void EditorLayer::saveSceneAs() {
+		auto filepath = FileDialogs::saveFile("Real Engine Serialized Scene (*.ress)\0*.ress\0");
+
+		if (filepath) {
+			SceneSerializer serializer(activeScene);
+			serializer.serialize(*filepath);
+		}
 	}
 }

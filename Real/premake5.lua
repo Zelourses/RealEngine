@@ -30,18 +30,22 @@ project "Real"
 		"%{includeDir.glm}",
 		"%{includeDir.stb_image}",
 		"%{includeDir.entt}",
+		"%{includeDir.yamlcpp}",
 	}
 
 	links{
 		"GLFW",
 		"Glad",
 		"ImGUI",
+		"yaml-cpp",
 		"opengl32.lib"
 	}
 
 	defines {
 		"_CRT_SECURE_NO_WARNINGS",
         "GLFW_INCLUDE_NONE",
+		--sadly I must add this, beacuse this library thinks by default that I want to use it by dll
+		"YAML_CPP_STATIC_DEFINE"
 	}
 
 	filter "system:windows"

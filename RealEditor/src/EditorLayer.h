@@ -19,6 +19,14 @@ namespace Real {
 		~EditorLayer() = default;
 
 	private:
+
+		bool onKeyPressed(KeyPressedEvent e);
+
+		void newScene();
+		void openScene();
+		void saveSceneAs();
+
+
 		OrthographicCameraController controller;
 
 		Ref<VertexArray> squareVA;
@@ -36,6 +44,6 @@ namespace Real {
 
 		glm::vec2 viewportSize = {0.0f, 0.0f};
 
-		SceneHierarchyPanel panel;
+		SceneHierarchyPanel sceneHierarchyPanel;
 	};
 }

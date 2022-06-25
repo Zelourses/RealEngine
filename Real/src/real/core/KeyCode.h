@@ -1,8 +1,8 @@
 #pragma once
 
 namespace Real {
-	// form glfw3.h
-	enum class KeyCodes : uint16_t {
+	// from glfw3.h
+	enum class KeyCode : unsigned {
 		SPACE	   = 32,
 		APOSTROPHE = 39, /* ' */
 		COMMA	   = 44, /* , */

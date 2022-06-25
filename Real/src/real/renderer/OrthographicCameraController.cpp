@@ -3,7 +3,7 @@
 #include "OrthographicCameraController.h"
 #include "Real/Core/Input.h"
 
-#include "Real/Core/KeyCodes.h"
+#include "Real/Core/KeyCode.h"
 
 namespace Real {
 
@@ -12,23 +12,23 @@ namespace Real {
 	      rotation(camRotation) {
 	}
 	void OrthographicCameraController::onUpdate(Timestep ts) {
-		if (Input::isKeyPressed(KeyCodes::A)) {
+		if (Input::isKeyPressed(KeyCode::A)) {
 			cameraPosition.x -= cameraTranslationSpeed * ts;
-		} else if (Input::isKeyPressed(KeyCodes::D)) {
+		} else if (Input::isKeyPressed(KeyCode::D)) {
 			cameraPosition.x += cameraTranslationSpeed * ts;
 		}
-		if (Input::isKeyPressed(KeyCodes::W)) {
+		if (Input::isKeyPressed(KeyCode::W)) {
 			cameraPosition.y += cameraTranslationSpeed * ts;
-		} else if (Input::isKeyPressed(KeyCodes::S)) {
+		} else if (Input::isKeyPressed(KeyCode::S)) {
 			cameraPosition.y -= cameraTranslationSpeed * ts;
 		}
 
 		camera.setPosition(cameraPosition);
 
 		if (rotation) {
-			if (Input::isKeyPressed(KeyCodes::Q)) {
+			if (Input::isKeyPressed(KeyCode::Q)) {
 				cameraRotation += cameraRotationSpeed * ts;
-			} else if (Input::isKeyPressed(KeyCodes::E)) {
+			} else if (Input::isKeyPressed(KeyCode::E)) {
 				cameraRotation -= cameraRotationSpeed * ts;
 			}
 			camera.setRotation(cameraRotation);

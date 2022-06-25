@@ -18,12 +18,14 @@ includeDir["glm"] = "%{wks.location}/Real/vendor/glm"
 includeDir["stb_image"] = "%{wks.location}/Real/vendor/stb_image"
 includeDir["entt"] = "%{wks.location}/Real/vendor/entt/single_include"
 includeDir["spdlog"] = "%{wks.location}/Real/vendor/spdlog/include"
+includeDir["yamlcpp"] = "%{wks.location}/Real/vendor/yaml-cpp/include"
 
 
 group "Dependencies"
 	include "Real/vendor/glfw"
 	include "Real/vendor/glad"
 	include "Real/vendor/imgui"	
+	include "Real/vendor/yaml-cpp"
 group ""
 
 include "Real"

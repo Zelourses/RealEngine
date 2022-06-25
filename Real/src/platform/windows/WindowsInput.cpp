@@ -7,7 +7,7 @@
 namespace Real {
 
 
-	bool Input::isKeyPressed(KeyCodes keyCode) {
+	bool Input::isKeyPressed(KeyCode keyCode) {
 		auto* const window = static_cast<GLFWwindow*>(Application::getApplication().getWindow().getNativeWindow());
 		const auto  state  = glfwGetKey(window, static_cast<int>(keyCode));
 		return state == GLFW_PRESS || state == GLFW_REPEAT;

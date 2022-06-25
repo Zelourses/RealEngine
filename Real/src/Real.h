@@ -11,7 +11,7 @@
 #include "real/core/Timestep.h"
 
 #include "real/core/Input.h"
-#include "real/core/KeyCodes.h"
+#include "real/core/KeyCode.h"
 #include "real/core/MouseCodes.h"
 
 #include "real/core/debug/Log.h"
