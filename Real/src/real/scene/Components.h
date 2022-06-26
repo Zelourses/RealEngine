@@ -2,6 +2,9 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
+#undef GLM_ENABLE_EXPERIMENTAL
 
 #include "SceneCamera.h"
 #include "ScriptableEntity.h"
@@ -10,13 +13,11 @@ namespace Real {
 
 	struct TransformComponent {
 		glm::vec3 translation = glm::vec3(0.0f);
-		glm::vec3 rotaion	  = glm::vec3(0.0f);
+		glm::vec3 rotation	  = glm::vec3(0.0f);
 		glm::vec3 scale		  = glm::vec3(1.0f);
 
 		glm::mat4 transform() const {
-			glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), rotaion.x, {1, 0, 0})
-							 * glm::rotate(glm::mat4(1.0f), rotaion.y, {0, 1, 0})
-							 * glm::rotate(glm::mat4(1.0f), rotaion.z, {0, 0, 1});
+			glm::mat4 rotate = glm::toMat4(glm::quat(rotation));
 
 			return glm::translate(glm::mat4(1.0f), translation)
 				 * rotate

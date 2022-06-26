@@ -26,6 +26,8 @@ namespace Real {
 
 		inline Window& getWindow() const { return *window; }
 
+		inline ImGUILayer& getImGuiLayer() { return *imGUILayer;}
+
 		Application(const WindowProps& props = WindowProps());
 		virtual ~Application();
 

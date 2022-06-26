@@ -2,14 +2,15 @@
 
 #include <imgui/imgui.h>
 
+#include <ImGuizmo.h>
 #include <entt/entt.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "real/scene/SceneSerializer.h"
 #include "platform/OpenGL/OpenGLShader.h"
-
 #include "real/utils/PlatformUtils.h"
+#include "real/math/Math.h"
 
 namespace Real {
 
@@ -122,7 +123,7 @@ namespace Real {
 
 		auto&& style		  = ImGui::GetStyle();
 		auto   minStyle		  = style.WindowMinSize.x;
-		style.WindowMinSize.x = 200.0f;
+		style.WindowMinSize.x = 300.0f;
 
 		auto dockspaceID = ImGui::GetID("MyDockSpace");
 		ImGui::DockSpace(dockspaceID);
@@ -164,12 +165,64 @@ namespace Real {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::Begin("Viewport");
 		{
-			auto res	 = ImGui::GetContentRegionAvail();
+			auto res			 = ImGui::GetContentRegionAvail();
+			auto viewPortFocused = ImGui::IsWindowFocused();
+			auto viewPortHovered = ImGui::IsWindowHovered();
+			Application::getApplication().getImGuiLayer().blockEvents(!viewPortFocused && !viewPortHovered);
 			viewportSize = {res.x, res.y};
 
 			auto  textureId = framebuffer->getColorAttachmentID();
 			void* texId		= static_cast<uint8_t*>(0) + textureId;
 			ImGui::Image(texId, {viewportSize.x, viewportSize.y}, {0, 1}, {1, 0});
+
+
+			//Gizmo stuff
+			auto selected = sceneHierarchyPanel.selectedEntity();
+			if (selected && gizmoType != -1) {
+				ImGuizmo::SetOrthographic(false);
+				ImGuizmo::SetDrawlist();
+				auto size		  = ImGui::GetWindowPos();
+				auto windowHeight = ImGui::GetWindowHeight();
+				auto windowWidth  = ImGui::GetWindowWidth();
+				ImGuizmo::SetRect(size.x, size.y, windowWidth, windowHeight);
+
+				//Camera
+				auto   cameraEntity	 = activeScene->getPrimaryCamera();
+				auto&& cam			 = cameraEntity.get<CameraComponent>().camera;
+				auto&& camProjection = cam.projection();
+				auto&& camView		 = glm::inverse(cameraEntity.get<TransformComponent>().transform());
+
+				// Entity transform
+				auto&& tc		 = selected.get<TransformComponent>();
+				auto   transform = tc.transform();
+
+				bool  isSnap  = Input::isKeyPressed(KeyCode::LEFT_CONTROL);
+				float snapVal = 0.5f;
+				if (gizmoType == ImGuizmo::OPERATION::ROTATE) {
+					snapVal = 45.0f;
+				}
+
+				float snapVals[3]{snapVal, snapVal, snapVal};
+
+				ImGuizmo::Manipulate(glm::value_ptr(camView),
+									 glm::value_ptr(camProjection),
+									 static_cast<ImGuizmo::OPERATION>(gizmoType),
+									 ImGuizmo::LOCAL,
+									 glm::value_ptr(transform),
+									 nullptr,
+									 isSnap ? snapVals : nullptr);
+
+				if (ImGuizmo::IsUsing()) {
+					glm::vec3 translation, rotation, scale;
+					if (Math::decomposeTransfrom(transform, translation, rotation, scale)) {
+						//To get rid of gimbal lock
+						auto deltaRotaion = rotation - tc.rotation;
+						tc.translation	  = translation;
+						tc.rotation += deltaRotaion;
+						tc.scale = scale;
+					}
+				}
+			}
 		}
 		ImGui::End();		  // Viewport
 		ImGui::PopStyleVar(); //ImGuiStyleVar_WindowPadding
@@ -202,6 +255,25 @@ namespace Real {
 				if (controlPressed) {
 					openScene();
 				}
+				break;
+			}
+
+			//Gizmos things
+			case KeyCode::Q: {
+				gizmoType = -1;
+				break;
+			}
+			case KeyCode::W: {
+				gizmoType = ImGuizmo::OPERATION::TRANSLATE;
+				break;
+			}
+			case KeyCode::E: {
+				gizmoType = ImGuizmo::OPERATION::ROTATE;
+				break;
+			}
+			case KeyCode::R: {
+				gizmoType = ImGuizmo::OPERATION::SCALE;
+				break;
 			}
 		}
 		return true;

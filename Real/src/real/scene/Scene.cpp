@@ -80,4 +80,14 @@ namespace Real {
 	void Scene::onCameraComponentAdd(entt::registry& registry, entt::entity entity) {
 		onViewportResize(viewportSize);
 	}
+
+	Entity Scene::getPrimaryCamera() {
+		auto view = registry.view<CameraComponent>();
+		for (auto&& v : view) {
+			auto&& cam = view.get<CameraComponent>(v);
+			if (cam.primary)
+				return {v, this};
+		}
+		return {};
+	}
 }

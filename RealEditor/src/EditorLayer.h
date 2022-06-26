@@ -44,6 +44,8 @@ namespace Real {
 
 		glm::vec2 viewportSize = {0.0f, 0.0f};
 
+		int gizmoType = -1;
+
 		SceneHierarchyPanel sceneHierarchyPanel;
 	};
 }

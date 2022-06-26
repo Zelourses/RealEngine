@@ -16,3 +16,6 @@
 [submodule "Real/vendor/yaml-cpp"]
 	path = Real/vendor/yaml-cpp
 	url = https://github.com/Zelourses/yaml-cpp
+[submodule "Real/vendor/ImGuizmo"]
+	path = Real/vendor/ImGuizmo
+	url = https://github.com/Zelourses/ImGuizmo

@@ -89,7 +89,7 @@ namespace /*anonymous*/ {
 			out << YAML::Key << "TransformComponent" << YAML::Value
 				<< YAML::BeginMap
 				<< YAML::Key << "Translation" << YAML::Value << tc.translation
-				<< YAML::Key << "Rotation" << YAML::Value << tc.rotaion
+				<< YAML::Key << "Rotation" << YAML::Value << tc.rotation
 				<< YAML::Key << "Scale" << YAML::Value << tc.scale
 				<< YAML::EndMap;
 		}
@@ -189,7 +189,7 @@ namespace Real {
 				auto&& tc = deserializedEntity.get<TransformComponent>();
 
 				tc.translation = transformComponent["Translation"].as<glm::vec3>();
-				tc.rotaion	   = transformComponent["Rotation"].as<glm::vec3>();
+				tc.rotation	   = transformComponent["Rotation"].as<glm::vec3>();
 				tc.scale	   = transformComponent["Scale"].as<glm::vec3>();
 			}
 

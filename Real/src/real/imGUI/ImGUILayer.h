@@ -17,7 +17,14 @@ namespace Real {
 		void begin();
 		void end();
 
+		void onEvent(Event& event) override;
+
+		void blockEvents(bool block);
+
 		void setDarkTheme();
+
+	private:
+		bool isBlockingEvents = true;
 	};
 }
 

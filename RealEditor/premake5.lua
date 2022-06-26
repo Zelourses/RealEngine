@@ -16,10 +16,9 @@ project "RealEditor"
 		"%{includeDir.spdlog}",
 		"%{RealDirs.src}",
 		"%{RealDirs.vendor}",
-		--"%{wks.location}/Real/src",
-		--"%{wks.location}/Real/vendor",
 		"%{includeDir.glm}",
 		"%{includeDir.entt}",
+		"%{includeDir.ImGuizmo}",
 	}
 
 	links{

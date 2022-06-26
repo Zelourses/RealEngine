@@ -237,9 +237,9 @@ namespace Real {
 
 		drawComponent<TransformComponent, false>("Transform", entity, [](auto&& tc) {
 			drawVec3Control("Position", tc.translation);
-			auto rotation = glm::degrees(tc.rotaion);
+			auto rotation = glm::degrees(tc.rotation);
 			drawVec3Control("Rotation", rotation);
-			tc.rotaion = glm::radians(rotation);
+			tc.rotation = glm::radians(rotation);
 			drawVec3Control("Scale", tc.scale, 1.0);
 		});
 
@@ -305,5 +305,8 @@ namespace Real {
 		drawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](auto&& component) {
 			ImGui::ColorEdit4("Color", glm::value_ptr(component.color));
 		});
+	}
+	Entity SceneHierarchyPanel::selectedEntity() const {
+		return selectedContext;
 	}
 }

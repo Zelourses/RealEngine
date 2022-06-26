@@ -15,10 +15,9 @@ project "Real"
 	pchsource "src/repch.cpp"
 
 	files {
-		"src/**.h",
 		"src/**.cpp",
-        "%{includeDir.stb_image}/**.hpp",
         "%{includeDir.stb_image}/**.cpp",
+		"%{RealDirs.vendor}/ImGuizmo/ImGuizmo.cpp",
 	}
 
 	includedirs {
@@ -31,6 +30,7 @@ project "Real"
 		"%{includeDir.stb_image}",
 		"%{includeDir.entt}",
 		"%{includeDir.yamlcpp}",
+		"%{includeDir.ImGuizmo}",
 	}
 
 	links{
@@ -47,6 +47,11 @@ project "Real"
 		--sadly I must add this, beacuse this library thinks by default that I want to use it by dll
 		"YAML_CPP_STATIC_DEFINE"
 	}
+
+	filter "files:vendor/ImGuizmo/**.cpp"
+		flags {
+			"NoPCH"
+		}
 
 	filter "system:windows"
 		systemversion "latest"

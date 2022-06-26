@@ -1,18 +1,18 @@
 #include "repch.h"
 #include "ImGUILayer.h"
 
-#include "imgui.h"
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_opengl3.h"
-
-
-#include "Real/Core/Application.h"
+#include <imgui.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
+#include <ImGuizmo.h>
 
 //TEMPORARY THINGS, IT'S A BIG DEPENDENCY PROBLEM
 //Nooo my architecture layers abstraction
 //TODO: fix this layer dependency
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
+
+#include "Real/Core/Application.h"
 
 namespace Real {
 
@@ -59,6 +59,7 @@ namespace Real {
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
 	}
 
 	void ImGUILayer::end() {
@@ -82,6 +83,18 @@ namespace Real {
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
+	}
+
+	void ImGUILayer::onEvent(Event& event) {
+		if (isBlockingEvents) {
+			ImGuiIO& io = ImGui::GetIO();
+			event.handled |= event.isInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+			event.handled |= event.isInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+		}
+	}
+
+	void ImGUILayer::blockEvents(bool block) {
+		isBlockingEvents = block;
 	}
 
 	void ImGUILayer::setDarkTheme() {

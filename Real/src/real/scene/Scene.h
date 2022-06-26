@@ -21,6 +21,8 @@ namespace Real {
 		void onViewportResize(glm::vec2 size);
 		void destoryEntity(Entity entity);
 
+		Entity getPrimaryCamera();
+
 	private:
 		void onCameraComponentAdd(entt::registry& registry, entt::entity entity);
 

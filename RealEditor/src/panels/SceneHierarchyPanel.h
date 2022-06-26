@@ -13,6 +13,8 @@ namespace Real {
 		void setContext(Ref<Scene>& sceneContext);
 		void onImGUIRender();
 
+		Entity selectedEntity() const;
+
 	private:
 		void drawEntityNode(Entity entity);
 		void drawComponents(Entity entity);
