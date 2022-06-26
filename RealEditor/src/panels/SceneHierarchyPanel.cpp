@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "SceneHierarchyPanel.h"
 
 #include <imgui/imgui.h>
@@ -81,6 +82,7 @@ namespace Real {
 	}
 	void SceneHierarchyPanel::setContext(Ref<Scene>& sceneContext) {
 		context = sceneContext;
+		selectedContext = {};
 	}
 	void SceneHierarchyPanel::onImGUIRender() {
 		ImGui::Begin("Scene hierarchy");
@@ -201,10 +203,11 @@ namespace Real {
 		if (entity.allOf<TagComponent>()) {
 			auto&& tc = entity.get<TagComponent>().tag;
 			//FIXME: wide chars will broke this 100%
-			//FIXME: (2)strcpy_s is windows only
 			char buffer[256];
 			memset(buffer, 0, sizeof(buffer));
-			strcpy_s(buffer, tc.c_str());
+
+			std::strncpy(buffer, tc.c_str(),sizeof(buffer));
+#undef _CRT_SECURE_NO_WARNINGS
 
 			if (ImGui::InputText("##Tag", buffer, sizeof(buffer) - 1 /*null-terminator*/)) {
 				tc = std::move(std::string(buffer));
@@ -219,11 +222,11 @@ namespace Real {
 		}
 
 		if (ImGui::BeginPopup("AddComponent")) {
-			if (ImGui::MenuItem("Camera")) {
+			if (ImGui::MenuItem("Camera") && !selectedContext.allOf<CameraComponent>()) {
 				selectedContext.add<CameraComponent>();
 				ImGui::CloseCurrentPopup();
 			}
-			if (ImGui::MenuItem("Sprite Renderer")) {
+			if (ImGui::MenuItem("Sprite Renderer") && !selectedContext.allOf<SpriteRendererComponent>()) {
 				selectedContext.add<SpriteRendererComponent>();
 				ImGui::CloseCurrentPopup();
 			}
