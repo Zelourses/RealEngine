@@ -15,7 +15,7 @@
 namespace Real {
 
 	EditorLayer::EditorLayer()
-		: Layer("Sandbox2D"), controller(1280.0f / 720.0f) {}
+		: Layer("Sandbox2D"), controller(1280.0f / 720.0f), camera(glm::radians(30.0f), 1.778f, 0.1f, 1000.0f) {}
 
 	void EditorLayer::onAttach() {
 		checkboardTexture = Texture2D::create("assets/textures/Checkerboard.png");
@@ -72,11 +72,13 @@ namespace Real {
 			controller.resize(viewportSize);
 
 			activeScene->onViewportResize(viewportSize);
+			camera.setViewPortSize(viewportSize);
 		}
 
 		Renderer2D::resetStats();
 
 		controller.onUpdate(ts);
+		camera.onUpdate(ts);
 
 		framebuffer->bind();
 
@@ -94,6 +96,7 @@ namespace Real {
 			}
 		}
 		Renderer2D::endScene();
+		activeScene->onUpdateEditor(ts, camera);
 
 		framebuffer->unbind();
 	}
@@ -186,11 +189,15 @@ namespace Real {
 				auto windowWidth  = ImGui::GetWindowWidth();
 				ImGuizmo::SetRect(size.x, size.y, windowWidth, windowHeight);
 
-				//Camera
-				auto   cameraEntity	 = activeScene->getPrimaryCamera();
-				auto&& cam			 = cameraEntity.get<CameraComponent>().camera;
-				auto&& camProjection = cam.projection();
-				auto&& camView		 = glm::inverse(cameraEntity.get<TransformComponent>().transform());
+				//dynamic Camera
+				//auto   cameraEntity	 = activeScene->getPrimaryCamera();
+				//auto&& cam			 = cameraEntity.get<CameraComponent>().camera;
+				//auto&& camProjection = cam.projection();
+				//auto&& camView		 = glm::inverse(cameraEntity.get<TransformComponent>().transform());
+
+				//Editor camera
+				auto&& camProjection = camera.projection();
+				auto&& camView		 = camera.view();
 
 				// Entity transform
 				auto&& tc		 = selected.get<TransformComponent>();
@@ -233,6 +240,7 @@ namespace Real {
 
 	void EditorLayer::onEvent(Real::Event& e) {
 		controller.onEvent(e);
+		camera.onEvent(e);
 		EventDispatcher dispatcher(e);
 		dispatcher.dispatch<KeyPressedEvent>(RE_BIND_EVENT_FN(EditorLayer::onKeyPressed));
 	}

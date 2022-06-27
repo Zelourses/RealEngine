@@ -8,7 +8,8 @@
 
 namespace Real {
 
-	Scene::Scene() {
+	Scene::Scene() 
+	: viewportSize(1.0f,1.0f) {
 		registry.on_construct<CameraComponent>().connect<&Scene::onCameraComponentAdd>(*this);
 	}
 
@@ -20,22 +21,32 @@ namespace Real {
 		entity.add<TagComponent>(name);
 		return entity;
 	}
-	void Scene::onUpdate(Timestep ts) {
+	void Scene::onUpdateEditor(Timestep ts, EditorCamera& cam) {
+		Renderer2D::beginScene(cam);
 
+		auto&& group = registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+		for (auto&& entity: group) {
+			auto&& [entityTransformComponent, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+
+			Renderer2D::drawQuad(entityTransformComponent.transform(), sprite.color);
+		}
+
+		Renderer2D::endScene();
+	}
+	void Scene::onUpdateRuntime(Timestep ts) {
 		//Update Scripts
 		{
 			registry.view<NativeScriptComponent>().each([ts, this](auto&& entity, auto&& nsc) {
-
 				//TODO: move to something like Scene::onScenePlay()
 				if (!nsc.instance) {
 					nsc.instance		 = nsc.instantiateScript();
 					nsc.instance->entity = Entity{entity, this};
 					nsc.instance->onCreate();
 				}
-				
+
 				nsc.instance->onUpdate(ts);
 				//TODO: call onDestroy in something like Scene::onSceneStop();
-				});
+			});
 		}
 
 		auto cameraView = registry.view<TransformComponent, CameraComponent>();
@@ -63,9 +74,8 @@ namespace Real {
 		}
 	}
 	void Scene::onViewportResize(glm::vec2 size) {
-
 		viewportSize = size;
-		
+
 		auto&& view = registry.view<CameraComponent>();
 		for (auto&& entity: view) {
 			CameraComponent& camera = view.get<CameraComponent>(entity);
@@ -83,7 +93,7 @@ namespace Real {
 
 	Entity Scene::getPrimaryCamera() {
 		auto view = registry.view<CameraComponent>();
-		for (auto&& v : view) {
+		for (auto&& v: view) {
 			auto&& cam = view.get<CameraComponent>(v);
 			if (cam.primary)
 				return {v, this};

@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 
 #include "real/core/Timestep.h"
+#include "real/renderer/EditorCamera.h"
 
 
 namespace Real {
@@ -17,7 +18,8 @@ namespace Real {
 
 		Entity createEntity(const std::string& name = "unnamed");
 
-		void onUpdate(Timestep ts);
+		void onUpdateEditor(Timestep ts, EditorCamera& cam);
+		void onUpdateRuntime(Timestep ts);
 		void onViewportResize(glm::vec2 size);
 		void destoryEntity(Entity entity);
 

@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "Texture.h"
 #include "SubTexture2D.h"
+#include "EditorCamera.h"
 
 namespace Real {
 	class Renderer2D {
@@ -13,6 +14,7 @@ namespace Real {
 
 
 		static void beginScene(const OrthographicCamera& camera); // TODO:remove
+		static void beginScene(const EditorCamera& camera);
 		static void beginScene(const Camera& camera, const glm::mat4& transform);
 		static void endScene();
 

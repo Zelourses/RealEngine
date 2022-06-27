@@ -19,7 +19,6 @@ namespace Real {
 		~EditorLayer() = default;
 
 	private:
-
 		bool onKeyPressed(KeyPressedEvent e);
 
 		void newScene();
@@ -35,14 +34,16 @@ namespace Real {
 
 		Ref<Texture2D>    spriteSheet;
 		Ref<SubTexture2D> barrelSprite;
-		Ref<Framebuffer>  framebuffer;
+		Ref<Framebuffer> framebuffer;
 
 		Ref<Scene> activeScene;
 		
 		Entity squareEntity;
 		Entity cameraEntity;
 
-		glm::vec2 viewportSize = {0.0f, 0.0f};
+		EditorCamera camera;
+
+		glm::vec2 viewportSize = {1.0f, 1.0f};
 
 		int gizmoType = -1;
 
