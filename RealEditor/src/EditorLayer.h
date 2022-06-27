@@ -25,21 +25,11 @@ namespace Real {
 		void openScene();
 		void saveSceneAs();
 
-
-		OrthographicCameraController controller;
-
 		Ref<VertexArray> squareVA;
-		Ref<Shader>      flatColorShader;
-		Ref<Texture2D>   checkboardTexture;
 
-		Ref<Texture2D>    spriteSheet;
-		Ref<SubTexture2D> barrelSprite;
 		Ref<Framebuffer> framebuffer;
 
 		Ref<Scene> activeScene;
-		
-		Entity squareEntity;
-		Entity cameraEntity;
 
 		EditorCamera camera;
 

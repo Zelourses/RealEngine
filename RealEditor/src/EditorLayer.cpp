@@ -15,50 +15,15 @@
 namespace Real {
 
 	EditorLayer::EditorLayer()
-		: Layer("Sandbox2D"), controller(1280.0f / 720.0f), camera(glm::radians(30.0f), 1.778f, 0.1f, 1000.0f) {}
+		: Layer("Sandbox2D"), camera(glm::radians(30.0f), 1.778f, 0.1f, 1000.0f) {}
 
 	void EditorLayer::onAttach() {
-		checkboardTexture = Texture2D::create("assets/textures/Checkerboard.png");
-		spriteSheet		  = Texture2D::create("assets/textures/RPGpack_sheet_2X.png");
-		barrelSprite	  = SubTexture2D::createFromCoods(spriteSheet, {8, 2}, {128, 128});
-
 		FramebufferSpecification spec = {
 			.width	= 1280,
 			.height = 720};
 		framebuffer = Framebuffer::create(spec);
 		activeScene = createRef<Scene>();
 		sceneHierarchyPanel.setContext(activeScene);
-
-		squareEntity = activeScene->createEntity("square");
-		squareEntity.add<SpriteRendererComponent>(glm::vec4{0.5f, 0.5f, 0.1f, 1.0f});
-
-		cameraEntity = activeScene->createEntity("Camera");
-		cameraEntity.add<CameraComponent>();
-
-		struct CameraController final : ScriptableEntity {
-			void onCreate() {
-			}
-
-
-			void onUpdate(Timestep ts) {
-				auto&& translation = get<TransformComponent>().translation;
-				float  speed	   = 5.0f;
-
-				if (Input::isKeyPressed(KeyCode::A))
-					translation.x -= speed * ts;
-				if (Input::isKeyPressed(KeyCode::D))
-					translation.x += speed * ts;
-				if (Input::isKeyPressed(KeyCode::S))
-					translation.y -= speed * ts;
-				if (Input::isKeyPressed(KeyCode::W))
-					translation.y += speed * ts;
-			}
-
-			void onDestroy() {
-			}
-		};
-
-		cameraEntity.add<NativeScriptComponent>().bind<CameraController>();
 	}
 
 	void EditorLayer::onDetach() {}
@@ -69,15 +34,11 @@ namespace Real {
 		if (auto spec = framebuffer->getSpec();
 			spec.width != viewportSize.x || spec.height != viewportSize.y) {
 			framebuffer->resize(viewportSize);
-			controller.resize(viewportSize);
-
-			activeScene->onViewportResize(viewportSize);
 			camera.setViewPortSize(viewportSize);
 		}
 
 		Renderer2D::resetStats();
 
-		controller.onUpdate(ts);
 		camera.onUpdate(ts);
 
 		framebuffer->bind();
@@ -85,17 +46,6 @@ namespace Real {
 		RenderCommand::setClearColor({0.1, 0.1, 0.1, 1.0});
 		RenderCommand::clear();
 
-		// Renderer2D::drawQuad({0.0, 0.0, 0.0}, {0.5, 0.5}, barrelSprite);
-		activeScene->onUpdate(ts);
-
-		Renderer2D::beginScene(controller.getCamera());
-		for (float y = -5.0f; y < 5.0f; y += 0.5f) {
-			for (float x = -5.0f; x < 5.0f; x += 0.5f) {
-				glm::vec4 color = {(x + 5.0f) / 10.0f, 0.4, (y + 5.0f) / 10.0f, 1.0};
-				Renderer2D::drawQuad({x, y, -0.1f}, {0.45f, 0.45f}, color);
-			}
-		}
-		Renderer2D::endScene();
 		activeScene->onUpdateEditor(ts, camera);
 
 		framebuffer->unbind();
@@ -239,7 +189,6 @@ namespace Real {
 	}
 
 	void EditorLayer::onEvent(Real::Event& e) {
-		controller.onEvent(e);
 		camera.onEvent(e);
 		EventDispatcher dispatcher(e);
 		dispatcher.dispatch<KeyPressedEvent>(RE_BIND_EVENT_FN(EditorLayer::onKeyPressed));
