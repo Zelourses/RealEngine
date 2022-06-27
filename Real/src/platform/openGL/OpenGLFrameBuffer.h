@@ -8,9 +8,9 @@ namespace Real {
 		OpenGLFrameBuffer(const FramebufferSpecification& spec);
 
 		const FramebufferSpecification& getSpec() const override;
-		void bind() override;
-		void unbind() override;
-		unsigned getColorAttachmentID() override;
+		void							bind() override;
+		void							unbind() override;
+		unsigned						getColorAttachmentID(unsigned index = 0) override;
 
 		virtual void resize(const glm::vec2& newSize) override;
 
@@ -19,9 +19,14 @@ namespace Real {
 		~OpenGLFrameBuffer();
 
 	private:
-		unsigned                 rendererId = 0;
-		unsigned                 colorAttachment = 0;
-		unsigned                 depthAttachment = 0;
+		unsigned				 rendererId = 0;
 		FramebufferSpecification spec;
+
+		std::vector<FramebufferTextureSpecification> colorAttachmentSpecifications;
+		//There is actuallly always one format
+		FramebufferTextureSpecification depthAttachemtSpecification = FramebufferTextureFormat::NONE;
+
+		std::vector<unsigned> colorAttachments;
+		unsigned			  depthAttachment = 0;
 	};
 }
