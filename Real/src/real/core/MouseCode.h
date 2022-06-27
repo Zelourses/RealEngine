@@ -2,7 +2,7 @@
 
 namespace Real {
 	//From glfw3.h
-	enum class MouseCodes : int16_t {
+	enum class MouseCode : int16_t {
 		BUTTON_0	    = 0,
 		BUTTON_1	    = 1,
 		BUTTON_2	    = 2,

@@ -12,7 +12,7 @@
 
 #include "real/core/Input.h"
 #include "real/core/KeyCode.h"
-#include "real/core/MouseCodes.h"
+#include "real/core/MouseCode.h"
 
 #include "real/core/debug/Log.h"
 #include "real/core/debug/Assert.h"
