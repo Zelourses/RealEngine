@@ -15,8 +15,11 @@ project "Real"
 	pchsource "src/repch.cpp"
 
 	files {
+		"src/**.h",
 		"src/**.cpp",
+        "%{includeDir.stb_image}/**.h",
         "%{includeDir.stb_image}/**.cpp",
+		"%{RealDirs.vendor}/ImGuizmo/ImGuizmo.h",
 		"%{RealDirs.vendor}/ImGuizmo/ImGuizmo.cpp",
 	}
 
