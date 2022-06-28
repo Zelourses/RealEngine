@@ -223,15 +223,21 @@ namespace Real {
 				break;
 			}
 			case KeyCode::W: {
-				gizmoType = ImGuizmo::OPERATION::TRANSLATE;
+				if (!ImGuizmo::IsUsing()) {
+					gizmoType = ImGuizmo::OPERATION::TRANSLATE;
+				}
 				break;
 			}
 			case KeyCode::E: {
-				gizmoType = ImGuizmo::OPERATION::ROTATE;
+				if (!ImGuizmo::IsUsing()) {
+					gizmoType = ImGuizmo::OPERATION::ROTATE;
+				}
 				break;
 			}
 			case KeyCode::R: {
-				gizmoType = ImGuizmo::OPERATION::SCALE;
+				if (!ImGuizmo::IsUsing()) {
+					gizmoType = ImGuizmo::OPERATION::SCALE;
+				}
 				break;
 			}
 		}

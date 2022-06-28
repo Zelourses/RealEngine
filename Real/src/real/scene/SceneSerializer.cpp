@@ -171,7 +171,7 @@ namespace Real {
 		}
 
 		auto sceneName = data["Scene"].as<std::string>();
-		RE_CORE_TRACE("Deserializing scene '{0}'", sceneName);
+		RE_CORE_INFO("Deserializing scene '{0}'", sceneName);
 
 		auto&& listOfEntities = data["Entities"];
 
