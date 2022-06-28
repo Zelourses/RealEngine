@@ -19,10 +19,9 @@ namespace Real {
 
 	void EditorLayer::onAttach() {
 		FramebufferSpecification spec = {
-			.width	= 1280,
-			.height = 720,
-			.attachments = {FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::DEPTH}
-		};
+			.width		 = 1280,
+			.height		 = 720,
+			.attachments = {FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::DEPTH}};
 		framebuffer = Framebuffer::create(spec);
 		activeScene = createRef<Scene>();
 		sceneHierarchyPanel.setContext(activeScene);

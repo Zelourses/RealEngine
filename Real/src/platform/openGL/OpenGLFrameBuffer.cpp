@@ -27,12 +27,12 @@ namespace Utils {
 		glBindTexture(textureTarget(multisampled), id);
 	}
 
-	static void attachColorTexture(unsigned id, unsigned samples, GLenum format, unsigned width, unsigned height, size_t index) {
+	static void attachColorTexture(unsigned id, unsigned samples, GLenum internalFormat, GLenum format, unsigned width, unsigned height, size_t index) {
 		bool isMultisampled = samples > 1;
 		if (isMultisampled) {
-			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width, height, GL_FALSE);
+			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, internalFormat, width, height, GL_FALSE);
 		} else {
-			glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+			glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -101,7 +101,11 @@ namespace Real {
 			Utils::bindTexture(multisample, colorAttachments[i]);
 			switch (colorAttachmentSpecifications[i].textureFormat) {
 				case FramebufferTextureFormat::RGBA8: {
-					Utils::attachColorTexture(colorAttachments[i], spec.samples, GL_RGBA8, spec.width, spec.height, i);
+					Utils::attachColorTexture(colorAttachments[i], spec.samples, GL_RGBA8,GL_RGBA, spec.width, spec.height, i);
+					break;
+				}
+				case FramebufferTextureFormat::RED_INTEGER: {
+					Utils::attachColorTexture(colorAttachments[i], spec.samples, GL_R32I, GL_RED_INTEGER, spec.width, spec.height, i);
 					break;
 				}
 				default: {
@@ -152,7 +156,7 @@ namespace Real {
 	void OpenGLFrameBuffer::unbind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
-	unsigned OpenGLFrameBuffer::getColorAttachmentID(unsigned index/*=0*/) {
+	unsigned OpenGLFrameBuffer::getColorAttachmentID(unsigned index /*=0*/) {
 		RE_CORE_ASSERT(index < colorAttachments.size());
 		return colorAttachments[index];
 	}
