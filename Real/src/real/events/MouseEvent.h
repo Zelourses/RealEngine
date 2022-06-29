@@ -2,6 +2,7 @@
 
 #include "Event.h"
 
+#include "real/core/MouseCode.h"
 
 namespace Real {
 	class MouseMovedEvent : public Event {
@@ -45,23 +46,23 @@ namespace Real {
 
 	class MouseButtonEvent : public Event {
 	public:
-		inline int getMouseButton() const { return mouseButton; }
+		inline MouseCode getMouseButton() const { return mouseButton; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryMouse)
 	protected:
-		MouseButtonEvent(int button)
+		MouseButtonEvent(MouseCode button)
 			:mouseButton(button) {}
-		int mouseButton;
+		MouseCode mouseButton;
 	};
 
 	class MouseButtonPressedEvent : public MouseButtonEvent {
 	public:
-		MouseButtonPressedEvent(int button)
+		MouseButtonPressedEvent(MouseCode button)
 			:MouseButtonEvent(button) {}
 		
 		std::string toString() const override {
 			std::stringstream stream;
-			stream << "MouseButtonPressedEvent: " << mouseButton;
+			stream << "MouseButtonPressedEvent: " << static_cast<int16_t>(mouseButton);
 			return stream.str();
 		}
 		EVENT_CLASS_TYPE(MouseButtonPressed)
@@ -69,12 +70,12 @@ namespace Real {
 
 	class MouseButtonReleasedEvent : public MouseButtonEvent {
 	public:
-		MouseButtonReleasedEvent(int button)
+		MouseButtonReleasedEvent(MouseCode button)
 			:MouseButtonEvent(button) {}
 
 		std::string toString() const override {
 			std::stringstream stream;
-			stream << "MouseButtonReleasedEvent: " << mouseButton;
+			stream << "MouseButtonReleasedEvent: " << static_cast<int16_t>(mouseButton);
 			return stream.str();
 		}
 		EVENT_CLASS_TYPE(MouseButtonReleased)
