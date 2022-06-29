@@ -7,10 +7,10 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "real/math/Math.h"
+#include "real/utils/PlatformUtils.h"
 #include "real/scene/SceneSerializer.h"
 #include "platform/OpenGL/OpenGLShader.h"
-#include "real/utils/PlatformUtils.h"
-#include "real/math/Math.h"
 
 namespace Real {
 
@@ -21,7 +21,7 @@ namespace Real {
 		FramebufferSpecification spec = {
 			.width		 = 1280,
 			.height		 = 720,
-			.attachments = {FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::DEPTH}};
+			.attachments = {FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::DEPTH}};
 		framebuffer = Framebuffer::create(spec);
 		activeScene = createRef<Scene>();
 		sceneHierarchyPanel.setContext(activeScene);
@@ -46,8 +46,23 @@ namespace Real {
 
 		RenderCommand::setClearColor({0.1, 0.1, 0.1, 1.0});
 		RenderCommand::clear();
+		framebuffer->clearAttachment(1, -1);
 
 		activeScene->onUpdateEditor(ts, camera);
+
+		auto&& [mx, my] = ImGui::GetMousePos();
+		mx -= viewportBounds[0].x;
+		my -= viewportBounds[0].y;
+		my = viewportSize.y - my;
+
+		auto viewportSize = viewportBounds[1] - viewportBounds[0];
+
+		if (mx >= 0.0 && my >= 0 && mx < viewportSize.x && my < viewportSize.y) {
+			auto mouseX	   = static_cast<int>(mx);
+			auto mouseY	   = static_cast<int>(my);
+			int	 pixelData = framebuffer->readPixel(1, mouseX, mouseY);
+			hoveredEntity  = pixelData == -1 ? Entity{} : Entity(static_cast<entt::entity>(pixelData), activeScene.get());
+		}
 
 		framebuffer->unbind();
 	}
@@ -119,11 +134,18 @@ namespace Real {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::Begin("Viewport");
 		{
-			auto res			 = ImGui::GetContentRegionAvail();
-			auto viewPortFocused = ImGui::IsWindowFocused();
-			auto viewPortHovered = ImGui::IsWindowHovered();
-			Application::getApplication().getImGuiLayer().blockEvents(!viewPortFocused && !viewPortHovered);
-			viewportSize = {res.x, res.y};
+			auto viewportMin	= ImGui::GetWindowContentRegionMin();
+			auto viewportMax	= ImGui::GetWindowContentRegionMax();
+			auto viewportOffset = ImGui::GetWindowPos();
+			viewportBounds[0]	= {viewportMin.x + viewportOffset.x, viewportMin.y + viewportOffset.y};
+			viewportBounds[1]	= {viewportMax.x + viewportOffset.x, viewportMax.y + viewportOffset.y};
+
+			viewportFocused = ImGui::IsWindowFocused();
+			viewportHovered = ImGui::IsWindowHovered();
+			Application::getApplication().getImGuiLayer().blockEvents(!viewportFocused && !viewportHovered);
+
+			auto avail	 = ImGui::GetContentRegionAvail();
+			viewportSize = {avail.x, avail.y};
 
 			auto  textureId = framebuffer->getColorAttachmentID();
 			void* texId		= static_cast<uint8_t*>(0) + textureId;
@@ -135,10 +157,12 @@ namespace Real {
 			if (selected && gizmoType != -1) {
 				ImGuizmo::SetOrthographic(false);
 				ImGuizmo::SetDrawlist();
-				auto size		  = ImGui::GetWindowPos();
-				auto windowHeight = ImGui::GetWindowHeight();
-				auto windowWidth  = ImGui::GetWindowWidth();
-				ImGuizmo::SetRect(size.x, size.y, windowWidth, windowHeight);
+
+
+				ImGuizmo::SetRect(viewportBounds[0].x,
+								  viewportBounds[0].y,
+								  viewportBounds[1].x - viewportBounds[0].x,
+								  viewportBounds[1].y - viewportBounds[0].y);
 
 				//dynamic Camera
 				//auto   cameraEntity	 = activeScene->getPrimaryCamera();
@@ -193,8 +217,10 @@ namespace Real {
 		camera.onEvent(e);
 		EventDispatcher dispatcher(e);
 		dispatcher.dispatch<KeyPressedEvent>(RE_BIND_EVENT_FN(EditorLayer::onKeyPressed));
+		dispatcher.dispatch<MouseButtonPressedEvent>(RE_BIND_EVENT_FN(EditorLayer::onMouseButtonPressed));
 	}
-	bool EditorLayer::onKeyPressed(KeyPressedEvent e) {
+
+	bool EditorLayer::onKeyPressed(KeyPressedEvent& e) {
 		if (e.getRepeatCount() > 0) {
 			return false;
 		}
@@ -242,11 +268,30 @@ namespace Real {
 		}
 		return true;
 	}
+	static bool isInsideViewport(bool isHovered) {
+		return !ImGuizmo::IsOver() && !Input::isKeyPressed(KeyCode::LEFT_ALT) && isHovered;
+	}
+
+	bool EditorLayer::onMouseButtonPressed(MouseButtonPressedEvent& e) {
+		if (!isInsideViewport(viewportHovered)) {
+			return false;
+		}
+		if (e.getMouseButton() == MouseCode::BUTTON_LEFT) {
+			if (hoveredEntity) {
+				RE_CORE_TRACE("Selected entity {0}", hoveredEntity.get<TagComponent>().tag);
+			}
+			sceneHierarchyPanel.setSelectedEntity(hoveredEntity);
+		}
+
+		return true;
+	}
+
 	void EditorLayer::newScene() {
 		activeScene = createRef<Scene>();
 		activeScene->onViewportResize(viewportSize);
 		sceneHierarchyPanel.setContext(activeScene);
 	}
+
 	void EditorLayer::openScene() {
 		auto filepath = FileDialogs::openFile("Real Engine serialized scene (*.ress)\0*.ress\0");
 		if (filepath) {
@@ -258,6 +303,7 @@ namespace Real {
 			serializer.deserialize(*filepath);
 		}
 	}
+
 	void EditorLayer::saveSceneAs() {
 		auto filepath = FileDialogs::saveFile("Real Engine Serialized Scene (*.ress)\0*.ress\0");
 

@@ -309,4 +309,7 @@ namespace Real {
 	Entity SceneHierarchyPanel::selectedEntity() const {
 		return selectedContext;
 	}
+	void SceneHierarchyPanel::setSelectedEntity(const Entity& e) {
+		selectedContext = e;
+	}
 }

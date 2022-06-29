@@ -19,7 +19,8 @@ namespace Real {
 		~EditorLayer() = default;
 
 	private:
-		bool onKeyPressed(KeyPressedEvent e);
+		bool onKeyPressed(KeyPressedEvent& e);
+		bool onMouseButtonPressed(MouseButtonPressedEvent& e);
 
 		void newScene();
 		void openScene();
@@ -38,5 +39,10 @@ namespace Real {
 		int gizmoType = -1;
 
 		SceneHierarchyPanel sceneHierarchyPanel;
+
+		Entity hoveredEntity;
+
+		glm::vec2 viewportBounds[2] = {};
+		bool viewportFocused = false, viewportHovered = false;
 	};
 }

@@ -9,16 +9,16 @@ namespace Real {
 		switch (type) {
 			case SDT::None: break;
 
-			case SDT::Float: // fallthrough
-			case SDT::Float2:// fallthrough
-			case SDT::Float3:// fallthrough
-			case SDT::Float4:// fallthrough
-			case SDT::Mat3:  // fallthrough
+			case SDT::Float:  // fallthrough
+			case SDT::Float2: // fallthrough
+			case SDT::Float3: // fallthrough
+			case SDT::Float4: // fallthrough
+			case SDT::Mat3:	  // fallthrough
 			case SDT::Mat4: return GL_FLOAT;
 
-			case SDT::Int: // fallthrough
-			case SDT::Int2:// fallthrough
-			case SDT::Int3:// fallthrough
+			case SDT::Int:	// fallthrough
+			case SDT::Int2: // fallthrough
+			case SDT::Int3: // fallthrough
 			case SDT::Int4: return GL_INT;
 
 			case SDT::Bool: return GL_BOOL;
@@ -39,28 +39,58 @@ namespace Real {
 		glBindVertexArray(rendererId);
 		vertexBuffer->bind();
 
-		unsigned int i      = 0;
-		const auto&  layout = vertexBuffer->getLayout();
+		unsigned int i		= 0;
+		const auto&	 layout = vertexBuffer->getLayout();
 
-		// There may be problems with that way of work, maybe need to fix it like
-		// https://github.com/TheCherno/Hazel/pull/307/files
-		// But I don't currently understand where there is a problem of "incorrect cases in BufferElement::GetComponentCount"
+		/*
+		* This line existence is determined by compiler warning that it's wrong
+		*  to cast unsigned int to unsigned int* \/
+		*  (conversion from 'const unsigned int' to 'const unsigned int *' of greater size)
+		*  to get rid of this error I need to do something not so pretty, so do not wonder why it is like that
+		*	
+		* const void* offset = reinterpret_cast<uint8_t*>(0) + (l.offset);
+		*/
+
 		for (const auto& l: layout) {
-			/*
-			 * This line existence is determined by compiler warning that it's wrong
-			 *  to cast unsigned int to unsigned int* \/
-			 *  (conversion from 'const unsigned int' to 'const unsigned int *' of greater size)
-			 *  to get rid of this error I need to do something not so pretty
-			 */
-			const void* offset = reinterpret_cast<uint8_t*>(0) + (l.offset);
+			switch (l.type) {
+				case ShaderDataType::Bool: /*fallthrough*/
+				case ShaderDataType::Int:  /*fallthrough*/
+				case ShaderDataType::Int2: /*fallthrough*/
+				case ShaderDataType::Int3: /*fallthrough*/
+				case ShaderDataType::Int4: {
+					const void* offset = reinterpret_cast<uint8_t*>(0) + (l.offset);
 
-			glEnableVertexAttribArray(i);
-			glVertexAttribPointer(i,
-			                      l.getComponentCount(),
-			                      shaderDataTypeToOpenGLBaseType(l.type),
-			                      l.normalized ? GL_TRUE : GL_FALSE,
-			                      layout.getStride(),
-			                      offset);
+					glEnableVertexAttribArray(i);
+					glVertexAttribIPointer(i,
+										  l.getComponentCount(),
+										  shaderDataTypeToOpenGLBaseType(l.type),
+										  layout.getStride(),
+										  offset);
+					break;
+				}
+				case ShaderDataType::Float:	 /*fallthrough*/
+				case ShaderDataType::Float2: /*fallthrough*/
+				case ShaderDataType::Float3: /*fallthrough*/
+				case ShaderDataType::Float4: /*fallthrough*/
+				case ShaderDataType::Mat3:	 /*fallthrough*/
+				case ShaderDataType::Mat4: {
+					const void* offset = reinterpret_cast<uint8_t*>(0) + (l.offset);
+
+					glEnableVertexAttribArray(i);
+					glVertexAttribPointer(i,
+										  l.getComponentCount(),
+										  shaderDataTypeToOpenGLBaseType(l.type),
+										  l.normalized ? GL_TRUE : GL_FALSE,
+										  layout.getStride(),
+										  offset);
+					break;
+				}
+				case ShaderDataType::None:
+				default:
+					RE_CORE_ASSERT(false, "unknown ShaderDataType");
+					break;
+			}
+
 			i++;
 		}
 

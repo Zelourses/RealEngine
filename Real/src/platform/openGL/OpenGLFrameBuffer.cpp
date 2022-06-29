@@ -60,6 +60,19 @@ namespace Utils {
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, textureTarget(isMultisampled), id, 0);
 	}
+
+	static GLenum realTextureFormatToGL(Real::FramebufferTextureFormat format) {
+		switch (format) {
+			case Real::FramebufferTextureFormat::RGBA8: return GL_RGBA8;
+			case Real::FramebufferTextureFormat::RED_INTEGER: return GL_RED_INTEGER;
+			default: {
+				RE_CORE_ASSERT(false, "unknown format");
+				return GL_FALSE;
+				break;
+			}
+		}
+	}
+
 }
 
 namespace Real {
@@ -146,6 +159,27 @@ namespace Real {
 		glDeleteTextures(static_cast<GLsizei>(colorAttachments.size()), colorAttachments.data());
 		glDeleteTextures(1, &depthAttachment);
 	}
+
+	int OpenGLFrameBuffer::readPixel(size_t index, int x, int y) {
+		RE_CORE_ASSERT(index < colorAttachments.size());
+
+		glReadBuffer(static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + index));
+		int pixelData;
+		glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
+		return pixelData;
+	}
+
+	void OpenGLFrameBuffer::clearAttachment(size_t index, int value) {
+		RE_CORE_ASSERT(index < colorAttachments.size());
+
+		auto&& spec = colorAttachmentSpecifications[index];
+		glClearTexImage(colorAttachments[index],
+						0,
+						Utils::realTextureFormatToGL(spec.textureFormat),
+						GL_INT,
+						&value);
+	}
+
 	void OpenGLFrameBuffer::resize(const glm::vec2& newSize) {
 		spec.width	= static_cast<int>(newSize.x);
 		spec.height = static_cast<int>(newSize.y);

@@ -50,6 +50,8 @@ namespace Real {
 		virtual void							unbind()								 = 0;
 		virtual unsigned						getColorAttachmentID(unsigned index = 0) = 0;
 		virtual void							resize(const glm::vec2& newSize)		 = 0;
+		virtual void							clearAttachment(size_t index, int value) = 0;
+		virtual int								readPixel(size_t index, int x, int y)	 = 0;
 
 		virtual ~Framebuffer() = default;
 	};

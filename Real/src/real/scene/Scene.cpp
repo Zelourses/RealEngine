@@ -26,9 +26,9 @@ namespace Real {
 
 		auto&& group = registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 		for (auto&& entity: group) {
-			auto&& [entityTransformComponent, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+			const auto&& [entityTransformComponent, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
-			Renderer2D::drawQuad(entityTransformComponent.transform(), sprite.color);
+			Renderer2D::drawSprite(entityTransformComponent.transform(), sprite, static_cast<int>(entity));
 		}
 
 		Renderer2D::endScene();

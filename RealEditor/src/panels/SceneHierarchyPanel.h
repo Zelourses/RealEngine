@@ -14,6 +14,7 @@ namespace Real {
 		void onImGUIRender();
 
 		Entity selectedEntity() const;
+		void setSelectedEntity(const Entity& e);
 
 	private:
 		void drawEntityNode(Entity entity);
