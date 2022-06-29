@@ -105,7 +105,7 @@ namespace Real {
 	class InstrumentorTimer final {
 	public:
 		InstrumentorTimer(const char* name)
-			: name(name), stopped(false), startTime(std::chrono::high_resolution_clock::now()) {
+			: name(name), startTime(std::chrono::high_resolution_clock::now()), stopped(false) {
 		}
 
 		~InstrumentorTimer() {

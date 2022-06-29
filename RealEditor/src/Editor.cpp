@@ -14,14 +14,14 @@
 namespace Real {
 	class RealEditor : public Application {
 	public:
-		RealEditor()
-			: Application({"Real Editor"}) {
+		RealEditor(Application::CommandLineArgs args)
+			: Application(args) {
 			pushLayer(new EditorLayer());
 		}
 		~RealEditor() = default;
 	};
 
-	Application* createApplication() {
-		return new RealEditor();
+	Application* createApplication(Application::CommandLineArgs args) {
+		return new RealEditor(args);
 	}
 }

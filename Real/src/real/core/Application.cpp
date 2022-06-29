@@ -12,8 +12,21 @@ namespace Real {
 
 	Application* Application::appInstance = nullptr;
 
+	Application::CommandLineArgs Application::createFromCmd(size_t amount, const char** args) {
+		{ // removing program name from args
+			--amount;
+			++args;
+		}
+		Application::CommandLineArgs result(amount);
+		for (auto i = 0ull; i < amount; ++i) {
+			result.emplace_back(args[i]);
+		}
 
-	Application::Application(const WindowProps& props) {
+		return result;
+	}
+
+	Application::Application(CommandLineArgs arguments, const WindowProps& props)
+		: args(std::move(arguments)) {
 		RE_CORE_ASSERT(!appInstance, "Creating already existing application!");
 		appInstance = this;
 
