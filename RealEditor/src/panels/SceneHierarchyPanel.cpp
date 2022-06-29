@@ -93,10 +93,10 @@ namespace Real {
 			drawEntityNode(ent);
 		});
 
-		/// If I want to desselect entities
-		/*if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered()) {
+		// If I want to desselect entities
+		if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered()) {
 			selectedContext = {};
-		}*/
+		}
 
 		//right-click on empty space
 		if (ImGui::BeginPopupContextWindow(0, 1, false)) {

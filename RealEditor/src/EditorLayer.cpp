@@ -15,7 +15,7 @@
 namespace Real {
 
 	EditorLayer::EditorLayer()
-		: Layer("Sandbox2D"), camera(glm::radians(30.0f), 1.778f, 0.1f, 1000.0f) {}
+		: Layer("RealEditor main layer"), camera(glm::radians(30.0f), 1.778f, 0.1f, 1000.0f) {}
 
 	void EditorLayer::onAttach() {
 		FramebufferSpecification spec = {

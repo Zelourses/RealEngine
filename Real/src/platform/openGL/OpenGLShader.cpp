@@ -1,14 +1,12 @@
 #include "repch.h"
 #include "OpenGLShader.h"
 
-#include "repch.h"
+#include <fstream>
+#include <utility>
+#include <filesystem>
 
 #include <glad/glad.h>
-#include <fstream>
-
 #include <glm/gtc/type_ptr.hpp>
-#include <filesystem>
-#include <utility>
 
 namespace Real {
 
@@ -130,12 +128,12 @@ namespace Real {
 			glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
 			if (isCompiled == GL_FALSE)
 			{
-				GLint maxLength = 0;
+				GLint maxLength;
 				glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
 
 				// The maxLength includes the NULL character
 				std::vector<GLchar> infoLog(maxLength);
-				glGetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]);
+				glGetShaderInfoLog(shader, maxLength, &maxLength, infoLog.data());
 
 				// We don't need the shader anymore.
 				glDeleteShader(shader);
@@ -162,7 +160,7 @@ namespace Real {
 
 			// The maxLength includes the NULL character
 			std::vector<GLchar> infoLog(maxLength);
-			glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
+			glGetProgramInfoLog(program, maxLength, &maxLength, infoLog.data());
 
 			// We don't need the program anymore.
 			glDeleteProgram(program);

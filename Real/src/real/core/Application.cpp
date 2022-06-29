@@ -40,11 +40,11 @@ namespace Real {
 
 	void Application::run() {
 		while (windowRunning) {
-			const float time = static_cast<float>(glfwGetTime());// FIXME:Temp things.
-			                                                     // Need to change to something like: Platform::getTime();
+			const float time = static_cast<float>(glfwGetTime()); // FIXME:Temp things.
+																  // Need to change to something like: Platform::getTime();
 
 			Timestep timestep = time - lastFrameTime;
-			lastFrameTime     = time;
+			lastFrameTime	  = time;
 
 			if (!windowIsMinimized) {
 				for (Layer* layer: layerStack) {

@@ -75,9 +75,11 @@ namespace Real {
 
 		invalidate();
 	}
+
 	const FramebufferSpecification& OpenGLFrameBuffer::getSpec() const {
 		return spec;
 	}
+
 	void OpenGLFrameBuffer::invalidate() {
 		if (rendererId) {
 			glDeleteFramebuffers(1, &rendererId);
@@ -101,7 +103,7 @@ namespace Real {
 			Utils::bindTexture(multisample, colorAttachments[i]);
 			switch (colorAttachmentSpecifications[i].textureFormat) {
 				case FramebufferTextureFormat::RGBA8: {
-					Utils::attachColorTexture(colorAttachments[i], spec.samples, GL_RGBA8,GL_RGBA, spec.width, spec.height, i);
+					Utils::attachColorTexture(colorAttachments[i], spec.samples, GL_RGBA8, GL_RGBA, spec.width, spec.height, i);
 					break;
 				}
 				case FramebufferTextureFormat::RED_INTEGER: {
@@ -138,6 +140,7 @@ namespace Real {
 
 		RE_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete");
 	}
+
 	OpenGLFrameBuffer::~OpenGLFrameBuffer() {
 		glDeleteFramebuffers(1, &rendererId);
 		glDeleteTextures(static_cast<GLsizei>(colorAttachments.size()), colorAttachments.data());
@@ -149,15 +152,19 @@ namespace Real {
 
 		invalidate();
 	}
+
 	void OpenGLFrameBuffer::bind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, rendererId);
 		glViewport(0, 0, spec.width, spec.height);
 	}
+
 	void OpenGLFrameBuffer::unbind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
+
 	unsigned OpenGLFrameBuffer::getColorAttachmentID(unsigned index /*=0*/) {
 		RE_CORE_ASSERT(index < colorAttachments.size());
 		return colorAttachments[index];
 	}
+
 }
