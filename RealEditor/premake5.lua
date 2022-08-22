@@ -29,7 +29,9 @@ project "RealEditor"
 		systemversion "latest"
 
 		defines {
-			"RE_PLATFORM_WINDOWS"
+			"RE_PLATFORM_WINDOWS",
+			-- because I love c++latest in cppdialec, I get this warning that ruins my compilation
+			"_SILENCE_CXX23_ALIGNED_STORAGE_DEPRECATION_WARNING",
 		}
 
 	filter "configurations:Debug"

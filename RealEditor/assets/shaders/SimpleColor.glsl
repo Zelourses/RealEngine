@@ -11,7 +11,7 @@ void main() {
 	gl_Position = viewProjection * transform * vec4(position, 1.0);
 }
 
-#type pixel
+#type fragment
 #version 330 core
 
 

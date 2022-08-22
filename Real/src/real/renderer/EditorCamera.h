@@ -31,7 +31,7 @@ namespace Real {
 		inline const glm::mat4& view() const {
 			return viewMatrix;
 		}
-		glm::mat4 viewPorjection() const;
+		glm::mat4 viewProjection() const;
 
 		glm::vec3		 upDirection() const;
 		glm::vec3		 rightDirection() const;

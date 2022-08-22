@@ -38,12 +38,12 @@ namespace Real {
 		dispatcher.dispatch<MouseScrolledEvent>(RE_BIND_EVENT_FN(EditorCamera::onMouseScroll));
 	}
 
-	glm::mat4 EditorCamera::viewPorjection() const {
+	glm::mat4 EditorCamera::viewProjection() const {
 		return projectionMatrix * viewMatrix;
 	}
 
 	glm::vec3 EditorCamera::upDirection() const {
-		return glm::rotate(orientation(),glm::vec3(0.0f,1.0f,0.0f));
+		return glm::rotate(orientation(), glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 
 	glm::vec3 EditorCamera::rightDirection() const {
@@ -51,7 +51,7 @@ namespace Real {
 	}
 
 	glm::vec3 EditorCamera::forwardDirection() const {
-		return glm::rotate(orientation(), glm::vec3(0.0f, 0.0f, -1.0f /*or -1?*/));
+		return glm::rotate(orientation(), glm::vec3(0.0f, 0.0f, -1.0f));
 	}
 
 	const glm::vec3& EditorCamera::position() const {
@@ -59,7 +59,7 @@ namespace Real {
 	}
 
 	glm::quat EditorCamera::orientation() const {
-		return glm::quat(glm::vec3(-camPitch, -camYaw,0.0f));
+		return glm::quat(glm::vec3(-camPitch, -camYaw, 0.0f));
 	}
 
 	float EditorCamera::pitch() const {
@@ -71,8 +71,8 @@ namespace Real {
 	}
 
 	void EditorCamera::updateProjection() {
-		aspectRatio = viewportWidth / viewportHeight;
-		projectionMatrix = glm::perspective(fov,aspectRatio,nearClip,farClip);
+		aspectRatio		 = viewportWidth / viewportHeight;
+		projectionMatrix = glm::perspective(fov, aspectRatio, nearClip, farClip);
 	}
 
 	void EditorCamera::updateView() {

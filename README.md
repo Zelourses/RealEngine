@@ -11,8 +11,10 @@ You can:
 + Resizing window!
 + Look at Cubes and ranbow triangle
 
-## How to build it?
+## How to build it
 By using [PreMake](https://github.com/premake/premake-core)  
+Also you need to have [Vulkan SDK](https://www.lunarg.com/vulkan-sdk/) installed with `VULKAN_SDK` environment variable that will be used for that.  
+After you will have `premake` and `vulkan sdk` installed, run
 `git clone --recursive` this project, then `cd RealEngine`  
 And just run `premake <build type>`  
 And then you will get project to run.  

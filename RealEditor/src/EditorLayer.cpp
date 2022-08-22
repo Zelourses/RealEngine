@@ -66,7 +66,6 @@ namespace Real {
 
 		framebuffer->unbind();
 	}
-
 	void EditorLayer::onImGUIRender() {
 		RE_PROFILE_FUNCTION();
 

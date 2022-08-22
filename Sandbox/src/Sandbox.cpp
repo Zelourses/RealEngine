@@ -209,7 +209,8 @@ private:
 
 class Sandbox : public Real::Application {
 public:
-	Sandbox() {
+	Sandbox(Application::CommandLineArgs args)
+		: Application(args) {
 		pushLayer(new Sandbox2D());
 	}
 	~Sandbox() {
@@ -218,6 +219,6 @@ public:
 
 };
 
-Real::Application* Real::createApplication() {
-	return new Sandbox();
+Real::Application* Real::createApplication(Application::CommandLineArgs args) {
+	return new Sandbox(args);
 }

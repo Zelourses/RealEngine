@@ -18,12 +18,12 @@ namespace Real {
 	}
 
 	Ref<Shader> Shader::create(const std::string& name,
-		const std::string& vertexSrc, const std::string& pixelSrc) {
+		const std::string& vertexSrc, const std::string& fragmentSrc) {
 		switch (Renderer::getRenderAPI()) {
 
 		case RendererAPI::API::None:
 			RE_CORE_ASSERT(false, "RendererAPI::None is not supported yet"); return nullptr;
-		case RendererAPI::API::OpenGL: return std::make_shared<OpenGLShader>(name, vertexSrc, pixelSrc);
+		case RendererAPI::API::OpenGL: return std::make_shared<OpenGLShader>(name, vertexSrc, fragmentSrc);
 		}
 
 		RE_CORE_ASSERT(false, "Unknown/Unsupported Renderer API");

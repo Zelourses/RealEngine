@@ -20,7 +20,7 @@ namespace Real {
 		virtual const std::string& getName() const = 0;
 
 		static Ref<Shader> create(const std::string& filePath);
-		static Ref<Shader> create(const std::string& name, const std::string& vertexSrc, const std::string& pixelSrc);
+		static Ref<Shader> create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
 	};
 
 	class ShaderLibrary {

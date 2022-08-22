@@ -34,6 +34,7 @@ project "Real"
 		"%{includeDir.entt}",
 		"%{includeDir.yamlcpp}",
 		"%{includeDir.ImGuizmo}",
+		"%{includeDir.vulkanSDK}",
 	}
 
 	links{
@@ -63,7 +64,7 @@ project "Real"
 			"RE_PLATFORM_WINDOWS",
 			-- turn off all non-essential windows things for faster pch compiling
 			"WIN32_LEAN_AND_MEAN",
-			"VC_EXTRALEAN"
+			"VC_EXTRALEAN",
 		}
 
 	filter "configurations:Debug"
@@ -71,6 +72,13 @@ project "Real"
 			"RE_DEBUG",
 			"RE_PROFILE"
 		}
+
+		links {
+			"%{library.ShaderC_debug}",
+			"%{library.SPIRVcross_debug}",
+			"%{library.SPIRVcrossGLSL_debug}",
+		}
+
 		runtime "Debug"
 		symbols "on"
 	
@@ -78,6 +86,13 @@ project "Real"
 		defines {
 			"RE_RELEASE"
 		}
+
+		links {
+			"%{library.ShaderC_release}",
+			"%{library.SPIRVcross_release}",
+			"%{library.SPIRVcrossGLSL_release}",
+		}
+
 		runtime "Release"
 		optimize "on"
 
@@ -85,5 +100,12 @@ project "Real"
 		defines {
 			"RE_DIST"
 		}
+
+		links {
+			"%{library.ShaderC_release}",
+			"%{library.SPIRVcross_release}",
+			"%{library.SPIRVcrossGLSL_release}",
+		}
+		
 		runtime "Release"
 		optimize "on"

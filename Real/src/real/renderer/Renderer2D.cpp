@@ -1,12 +1,13 @@
 #include "repch.h"
 #include "Renderer2D.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "Shader.h"
 #include "VertexArray.h"
 #include "RenderCommand.h"
+#include "UniformBuffer.h"
 
-#include <glm/gtc/matrix_transform.hpp>
-#include <platform/OpenGL/OpenGLShader.h>
 
 namespace Real {
 
@@ -44,7 +45,11 @@ namespace Real {
 		std::array<Ref<Texture2D>, maxTextureSlots> textureSlots;
 		unsigned									textureSlotIndex = 1; // 0 is white texture
 
-		glm::vec4 quadVertexPos[4];
+		glm::vec4 quadVertexPos[4] = {
+			{-0.5f, -0.5f, 0.0f, 1.0f},
+			{0.5f, -0.5f, 0.0f, 1.0f},
+			{0.5f, 0.5f, 0.0f, 1.0f},
+			{-0.5f, 0.5f, 0.0f, 1.0f}};
 
 		std::array<glm::vec2, 4> defaultTexCoords = {
 			// This is actually a hint to compiler
@@ -54,6 +59,13 @@ namespace Real {
 			{0.0f, 1.0f}};
 
 		Renderer2D::Statistics stats;
+
+		struct CameraData {
+			glm::mat4 viewProjection;
+		};
+
+		CameraData		   cameraBuffer{glm::mat4(0.0f)};
+		Ref<UniformBuffer> cameraUniformBuffer{};
 	};
 
 	static Renderer2DData data;
@@ -65,7 +77,7 @@ namespace Real {
 		data.quadVB = VertexBuffer::create(data.maxVertices * sizeof(QuadVertex));
 		data.quadVB->setLayout({
 			{Real::ShaderDataType::Float3, "position"},
-			{Real::ShaderDataType::Float2, "outTexCoords"},
+			{Real::ShaderDataType::Float2, "textCoordinates"},
 			{Real::ShaderDataType::Float4, "color"},
 			{Real::ShaderDataType::Float, "textureIndex"},
 			{Real::ShaderDataType::Float, "tilingFactor"},
@@ -106,12 +118,8 @@ namespace Real {
 		data.textureShader->bind();
 		data.textureShader->setIntArray("uTextures", samplers, data.maxTextureSlots);
 
-		data.textureSlots[0] = data.whiteTexture;
-
-		data.quadVertexPos[0] = {-0.5f, -0.5f, 0.0f, 1.0f};
-		data.quadVertexPos[1] = {0.5f, -0.5f, 0.0f, 1.0f};
-		data.quadVertexPos[2] = {0.5f, 0.5f, 0.0f, 1.0f};
-		data.quadVertexPos[3] = {-0.5f, 0.5f, 0.0f, 1.0f};
+		data.textureSlots[0]	 = data.whiteTexture;
+		data.cameraUniformBuffer = UniformBuffer::create(sizeof(Renderer2DData::CameraData), 0);
 
 		// Actually it's very dangerous to do something like that, because we are not 100% sure that
 		//  OpenGL function is actually read all lines here
@@ -131,10 +139,8 @@ namespace Real {
 	void Renderer2D::beginScene(const EditorCamera& camera) {
 		RE_PROFILE_FUNCTION();
 
-		auto&& viewProjection = camera.viewPorjection();
-
-		data.textureShader->bind();
-		data.textureShader->setMat4("viewProjection", viewProjection);
+		data.cameraBuffer.viewProjection = camera.viewProjection();
+		data.cameraUniformBuffer->setData(&data.cameraBuffer, sizeof(Renderer2DData::cameraBuffer));
 
 		reset();
 	}
@@ -142,10 +148,8 @@ namespace Real {
 	void Renderer2D::beginScene(const Camera& camera, const glm::mat4& transform) {
 		RE_PROFILE_FUNCTION();
 
-		auto&& viewProjection = camera.projection() * glm::inverse(transform);
-
-		data.textureShader->bind();
-		data.textureShader->setMat4("viewProjection", viewProjection);
+		data.cameraBuffer.viewProjection = camera.projection() * glm::inverse(transform);
+		data.cameraUniformBuffer->setData(&data.cameraBuffer, sizeof(Renderer2DData::cameraBuffer));
 
 		reset();
 	}
@@ -166,6 +170,7 @@ namespace Real {
 			data.textureSlots[i]->bind(i);
 		}
 
+		data.textureShader->bind();
 		RenderCommand::drawIndexed(data.quadVA, data.quadIndexCount);
 
 		++data.stats.drawCalls;
@@ -314,5 +319,4 @@ namespace Real {
 		fillQuad(transform, color, getTextureIndex(subTexture->getTexture()), tilingFactor, subTexture->getTexCoords(), entityId);
 		++data.stats.quadCount;
 	}
-
 }
